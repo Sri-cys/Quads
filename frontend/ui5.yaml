@@ -1,0 +1,11 @@
+specVersion: "3.0"
+metadata:
+  name: quads
+type: application
+resources:
+  configuration:
+    paths:
+      webapp: webapp
+server:
+  settings:
+    httpPort: 8080

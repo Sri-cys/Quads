@@ -1,0 +1,77 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Dialog
+        id="modifyPlanDialog"
+        title="Modify Plan Parameters: {mod>/plan_id} ({mod>/version})"
+        contentWidth="550px"
+        resizable="false">
+
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Text text="Modifying parameters triggers deterministic re-evaluation of feasibility, hard constraints, lead time, costs, and priority scoring." class="textMuted sapUiSmallMarginBottom" />
+
+                <Label text="Plan Strategy &amp; Source" class="bold" />
+                <Input value="{mod>/strategy} — {mod>/source_name}" editable="false" class="sapUiSmallMarginBottom" />
+
+                <Label text="Requested Recovery Volume (Units)" class="bold" />
+                <StepInput
+                    value="{mod>/requested_quantity}"
+                    min="50"
+                    max="5000"
+                    step="50"
+                    width="100%"
+                    class="sapUiSmallMarginBottom" />
+
+                <Label text="Transport Logistics Mode" class="bold" />
+                <Select
+                    selectedKey="{mod>/transport_mode}"
+                    width="100%"
+                    class="sapUiSmallMarginBottom">
+                    <core:Item key="AIR_EXPEDITED" text="Air Expedited (Fastest - 2 Days transit)" />
+                    <core:Item key="ROAD_EXPRESS" text="Road Express Dedicated (3 Days transit)" />
+                    <core:Item key="STANDARD_ROAD" text="Standard Road Freight (5 Days transit)" />
+                    <core:Item key="RAIL_INTERMODAL" text="Rail Intermodal Bulk (7 Days transit)" />
+                </Select>
+
+                <Label text="Manager Cost Ceiling / Budget Cap ($)" class="bold" />
+                <Input
+                    value="{mod>/max_cost_limit}"
+                    type="Number"
+                    placeholder="e.g. 50000 (leave blank for unconstrained)"
+                    class="sapUiSmallMarginBottom" />
+
+                <Label text="Manager Max Acceptable Recovery Time (Days)" class="bold" />
+                <Input
+                    value="{mod>/max_acceptable_delay_days}"
+                    type="Number"
+                    placeholder="e.g. 5 (leave blank for unconstrained)"
+                    class="sapUiSmallMarginBottom" />
+
+                <Label text="Planner Modification Rationale" class="bold" />
+                <TextArea
+                    value="{mod>/modification_notes}"
+                    rows="2"
+                    width="100%"
+                    placeholder="State reason for parameter override (e.g. Switching to Air Expedited to meet urgent assembly line deadline)..." />
+            </VBox>
+        </content>
+
+        <beginButton>
+            <Button
+                text="Recalculate &amp; Re-evaluate"
+                type="Emphasized"
+                icon="sap-icon://process"
+                press=".onConfirmModify" />
+        </beginButton>
+
+        <endButton>
+            <Button
+                text="Cancel"
+                press=".onCloseModifyDialog" />
+        </endButton>
+
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,42 @@
+[
+  {
+    "mode": "AIR_EXPEDITED",
+    "name": "Expedited Air Freight (Priority Cargo)",
+    "transit_days": 2,
+    "flat_cost": 1500.0,
+    "cost_per_unit": 6.50,
+    "reliability": 0.96,
+    "transit_risk_score": 0.08,
+    "description": "Direct international air freight charter with prioritized customs clearance."
+  },
+  {
+    "mode": "ROAD_EXPRESS",
+    "name": "Dedicated Road Express / Courier",
+    "transit_days": 3,
+    "flat_cost": 600.0,
+    "cost_per_unit": 3.00,
+    "reliability": 0.92,
+    "transit_risk_score": 0.12,
+    "description": "Dedicated dual-driver express transport via continental highway corridors."
+  },
+  {
+    "mode": "STANDARD_ROAD",
+    "name": "Standard Road Freight / LTL",
+    "transit_days": 5,
+    "flat_cost": 250.0,
+    "cost_per_unit": 1.20,
+    "reliability": 0.85,
+    "transit_risk_score": 0.20,
+    "description": "Standard scheduled commercial truck freight."
+  },
+  {
+    "mode": "RAIL_INTERMODAL",
+    "name": "Intermodal Rail Freight",
+    "transit_days": 6,
+    "flat_cost": 200.0,
+    "cost_per_unit": 0.90,
+    "reliability": 0.88,
+    "transit_risk_score": 0.15,
+    "description": "Scheduled rail container transport connecting industrial hubs."
+  }
+]

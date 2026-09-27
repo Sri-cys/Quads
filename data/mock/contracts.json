@@ -1,0 +1,82 @@
+[
+  {
+    "contract_id": "CTR-2024-MOBIS-001",
+    "supplier_id": "SUP-001",
+    "title": "Master Sourcing Agreement — Powertrain & Electronics",
+    "status": "ACTIVE",
+    "effective_date": "2024-01-01",
+    "expiry_date": "2027-12-31",
+    "clauses": [
+      {
+        "clause_reference": "Sec. 12.3",
+        "title": "Delay Liquidated Damages",
+        "terms": "Supplier shall credit 1.5% of shipment invoice value per business day of unexcused delay, capped at 15.0% of order value.",
+        "penalty_rebate_rate": 0.015,
+        "max_rebate": 0.15
+      },
+      {
+        "clause_reference": "Sec. 14.1",
+        "title": "Expedited Logistics Surcharge Sharing",
+        "terms": "In the event of packaging or manufacturing delay originating with supplier, supplier shall reimburse up to 60% of expedited freight surcharges upon submission of carrier air waybill.",
+        "cost_share_rate": 0.60
+      }
+    ]
+  },
+  {
+    "contract_id": "CTR-2025-XYZ-003",
+    "supplier_id": "SUP-003",
+    "title": "Secondary Sourcing Framework Agreement",
+    "status": "ACTIVE",
+    "effective_date": "2025-03-01",
+    "expiry_date": "2028-02-28",
+    "clauses": [
+      {
+        "clause_reference": "Sec. 6.2",
+        "title": "Emergency Allocation Commitment",
+        "terms": "Supplier maintains a standing reserved production buffer of up to 600 units/month for rapid allocation within 72 hours of emergency purchase order issuance.",
+        "lead_time_days": 3,
+        "buffer_capacity": 600
+      },
+      {
+        "clause_reference": "Sec. 8.1",
+        "title": "Emergency Procurement Premium",
+        "terms": "Orders triggered under 72h lead time SLA are billed at base contract price plus a negotiated 10% emergency surcharge.",
+        "price_surcharge_rate": 0.10
+      }
+    ]
+  },
+  {
+    "contract_id": "CTR-2023-ABC-002",
+    "supplier_id": "SUP-002",
+    "title": "Regional Secondary Supply Agreement",
+    "status": "ACTIVE",
+    "effective_date": "2023-06-01",
+    "expiry_date": "2026-12-31",
+    "clauses": [
+      {
+        "clause_reference": "Sec. 5.4",
+        "title": "Secondary Spot Capacity Cap",
+        "terms": "Supplier offers secondary supply allocation with maximum order quantity capped at 300 units per order and standard 6-day lead time.",
+        "lead_time_days": 6,
+        "buffer_capacity": 300
+      }
+    ]
+  },
+  {
+    "contract_id": "CTR-2024-BAVARIA-006",
+    "supplier_id": "SUP-006",
+    "title": "High-Precision Local Supply Agreement",
+    "status": "ACTIVE",
+    "effective_date": "2024-05-01",
+    "expiry_date": "2027-04-30",
+    "clauses": [
+      {
+        "clause_reference": "Sec. 4.1",
+        "title": "Local Hub Delivery SLA",
+        "terms": "Same-day or next-day dedicated road courier delivery for Munich Hub from Nuremberg facility; reliability guarantee 97%.",
+        "lead_time_days": 1,
+        "buffer_capacity": 2500
+      }
+    ]
+  }
+]

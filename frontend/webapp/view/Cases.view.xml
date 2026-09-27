@@ -1,0 +1,250 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.Cases"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+    <Page
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+        <content>
+            <VBox class="sapCorporatePageBody">
+
+                <!-- Page Header: Title + Subtitle -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
+                    <VBox>
+                        <Title text="DISRUPTION CASES" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Monitor active supply chain disruptions, buffer depletion, and operational exposure." class="sapCorporatePageSubtitle" />
+                    </VBox>
+                    <HBox alignItems="Center">
+                        <Button
+                            text="Refresh"
+                            type="Default"
+                            press=".onRefresh"
+                            class="sapUiTinyMarginEnd" />
+                        <Button
+                            text="+ New Disruption"
+                            type="Emphasized"
+                            press=".onNewDisruptionPress"
+                            class="sapBtnPrimary" />
+                    </HBox>
+                </HBox>
+
+                <!-- Modern Filter Toolbar Card -->
+                <VBox class="sapFilterCard">
+                    <layout:Grid
+                        defaultSpan="XL3 L3 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1">
+                        
+                        <!-- Search Input -->
+                        <VBox>
+                            <Label text="Search Disruptions" class="sapFilterLabel" />
+                            <SearchField
+                                id="caseSearchField"
+                                placeholder="Search by case ID, supplier, material..."
+                                search=".onSearch"
+                                width="100%" />
+                        </VBox>
+
+                        <!-- Severity Filter -->
+                        <VBox>
+                            <Label text="Severity Tier" class="sapFilterLabel" />
+                            <Select
+                                id="severityFilter"
+                                selectedKey="ALL"
+                                change=".onFilterChange"
+                                width="100%">
+                                <core:Item key="ALL" text="All Severities" />
+                                <core:Item key="CRITICAL" text="Critical (DoC &#x2264; 3d)" />
+                                <core:Item key="HIGH" text="High Risk" />
+                                <core:Item key="MEDIUM" text="Medium Risk" />
+                                <core:Item key="LOW" text="Low Risk" />
+                            </Select>
+                        </VBox>
+
+                        <!-- Status Filter -->
+                        <VBox>
+                            <Label text="Operational Status" class="sapFilterLabel" />
+                            <Select
+                                id="statusFilter"
+                                selectedKey="ALL"
+                                change=".onFilterChange"
+                                width="100%">
+                                <core:Item key="ALL" text="All Statuses" />
+                                <core:Item key="TRIAGED" text="Triaged" />
+                                <core:Item key="ANALYZED" text="Awaiting Checkpoint" />
+                                <core:Item key="CHECKPOINT_APPROVED" text="Checkpoint Approved" />
+                            </Select>
+                        </VBox>
+
+                        <!-- Supplier Filter -->
+                        <VBox>
+                            <Label text="Affected Supplier" class="sapFilterLabel" />
+                            <Select
+                                id="supplierFilter"
+                                selectedKey="ALL"
+                                change=".onFilterChange"
+                                width="100%">
+                                <core:Item key="ALL" text="All Suppliers" />
+                                <core:Item key="SUP-001" text="Hyundai Mobis (SUP-001)" />
+                                <core:Item key="SUP-002" text="ABC Components (SUP-002)" />
+                                <core:Item key="SUP-003" text="XYZ Auto Parts (SUP-003)" />
+                                <core:Item key="SUP-004" text="Nordic Hydraulic (SUP-004)" />
+                                <core:Item key="SUP-005" text="Pacific Harness (SUP-005)" />
+                                <core:Item key="SUP-006" text="Bavaria Fasteners (SUP-006)" />
+                            </Select>
+                        </VBox>
+                    </layout:Grid>
+
+                    <HBox alignItems="Center" class="sapFilterActionsRow">
+                        <Button
+                            id="btnGo"
+                            text="Go"
+                            type="Emphasized"
+                            press=".onSearch"
+                            class="sapBtnPrimary sapUiTinyMarginEnd" />
+                        <Button
+                            text="Adapt Filters"
+                            type="Transparent"
+                            press=".onAdaptFilters"
+                            class="sapUiTinyMarginEnd" />
+                        <Button
+                            text="Reset Filters"
+                            type="Transparent"
+                            press=".onResetFilters" />
+                    </HBox>
+                </VBox>
+
+                <!-- Disruption Cases Table Section -->
+                <VBox class="sapTableCard">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapTableCardHeader">
+                        <Title
+                            text="Disruption Cases ({casesModel>/totalFiltered})"
+                            level="H2"
+                            class="sapSectionTitle" />
+                        <HBox alignItems="Center">
+                            <Button
+                                icon="sap-icon://action-settings"
+                                type="Transparent"
+                                tooltip="Table Personalization"
+                                press=".onTableSettings"
+                                class="sapUiTinyMarginEnd" />
+                            <Button
+                                icon="sap-icon://excel-attachment"
+                                type="Transparent"
+                                tooltip="Export Table"
+                                press=".onExportSpreadsheet"
+                                class="sapUiTinyMarginEnd" />
+                            <Button
+                                text="+ New Disruption"
+                                type="Emphasized"
+                                press=".onNewDisruptionPress"
+                                class="sapBtnPrimary" />
+                        </HBox>
+                    </HBox>
+
+                    <Table
+                        id="casesTable"
+                        items="{casesModel>/items}"
+                        mode="MultiSelect"
+                        growing="true"
+                        growingThreshold="25"
+                        noDataText="No disruption cases found"
+                        class="sapEnterpriseTable">
+                        <columns>
+                            <Column width="7rem">
+                                <Text text="Case ID" class="sapColHeader" />
+                            </Column>
+                            <Column width="13rem">
+                                <Text text="Disruption" class="sapColHeader" />
+                            </Column>
+                            <Column width="11rem">
+                                <Text text="Supplier" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem">
+                                <Text text="Material" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem">
+                                <Text text="Plant" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem">
+                                <Text text="Severity" class="sapColHeader" />
+                            </Column>
+                            <Column width="8.5rem">
+                                <Text text="Status" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem" hAlign="Right">
+                                <Text text="Days of Cover" class="sapColHeader" />
+                            </Column>
+                            <Column width="7rem">
+                                <Text text="Stockout Date" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem">
+                                <Text text="Created On" class="sapColHeader" />
+                            </Column>
+                            <Column width="2.5rem" hAlign="Center">
+                                <Text text="" class="sapColHeader" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem
+                                vAlign="Middle"
+                                type="Navigation"
+                                press=".onSelectCase"
+                                class="sapEnterpriseRow">
+                                <cells>
+                                    <!-- Case ID: subtle SAP blue link -->
+                                    <Link
+                                        text="{casesModel>case_id}"
+                                        press=".onSelectCase"
+                                        class="sapCaseLink" />
+                                    <!-- Disruption: Name + subtext -->
+                                    <VBox>
+                                        <Text text="{casesModel>disruption_name}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>description}" class="sapRowSecondary" maxLines="1" />
+                                    </VBox>
+                                    <!-- Supplier -->
+                                    <Text text="{casesModel>supplier_display}" class="sapRowPrimary" />
+                                    <!-- Material -->
+                                    <Text text="{casesModel>material_id}" class="sapRowPrimary" />
+                                    <!-- Plant -->
+                                    <Text text="{casesModel>plant_id}" class="sapRowPrimary" />
+                                    <!-- Severity: Plain restrained text, NO capsules -->
+                                    <ObjectStatus
+                                        text="{casesModel>severity_text}"
+                                        state="{= ${casesModel>severity_text} === 'Critical' ? 'Error' : ${casesModel>severity_text} === 'High' ? 'Warning' : ${casesModel>severity_text} === 'Medium' ? 'Information' : 'Success' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Status: Plain restrained text, NO capsules -->
+                                    <ObjectStatus
+                                        text="{casesModel>status_text}"
+                                        state="{= ${casesModel>status_text} === 'Checkpoint Approved' ? 'Success' : ${casesModel>status_text} === 'Awaiting Checkpoint' ? 'Warning' : 'None' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Days of Cover -->
+                                    <Text
+                                        text="{= ${casesModel>doc_display} ? ${casesModel>doc_display} : '—' }"
+                                        class="sapRowPrimary" />
+                                    <!-- Stockout Date -->
+                                    <Text
+                                        text="{= ${casesModel>stockout_display} ? ${casesModel>stockout_display} : 'No Stockout' }"
+                                        class="sapRowSecondary" />
+                                    <!-- Created On -->
+                                    <Text
+                                        text="{casesModel>created_on}"
+                                        class="sapRowSecondary" />
+                                    <!-- Chevron Navigation -->
+                                    <core:Icon
+                                        src="sap-icon://navigation-right-arrow"
+                                        size="0.875rem"
+                                        class="sapNavChevron" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

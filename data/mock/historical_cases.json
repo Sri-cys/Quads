@@ -1,0 +1,58 @@
+[
+  {
+    "precedent_id": "HIST-2025-081",
+    "disruption_type": "PACKAGING_BOTTLENECK",
+    "material_id": "MAT-001",
+    "material_name": "Semiconductor Microcontroller MCU-32",
+    "disrupted_supplier_id": "SUP-001",
+    "strategy_used": "ALTERNATE_SUPPLIER",
+    "recovery_source": "SUP-003 (XYZ Auto Parts, Pune)",
+    "recovered_quantity": 500,
+    "recovery_days": 3,
+    "outcome_summary": "100% on-time delivery; assembly lines maintained 0 stockouts; cost variance +8.2% absorbed by customer SLA margin.",
+    "similarity_score": 0.94,
+    "success_rate": 0.98
+  },
+  {
+    "precedent_id": "HIST-2025-044",
+    "disruption_type": "LOGISTICS_DELAY",
+    "material_id": "MAT-001",
+    "material_name": "Semiconductor Microcontroller MCU-32",
+    "disrupted_supplier_id": "SUP-001",
+    "strategy_used": "INTER_PLANT_TRANSFER",
+    "recovery_source": "Austin Assembly Plant (PLANT-002)",
+    "recovered_quantity": 100,
+    "recovery_days": 2,
+    "outcome_summary": "Emergency air transfer mitigated critical 48h stockout gap while primary shipment was rerouted; zero line stoppage.",
+    "similarity_score": 0.88,
+    "success_rate": 0.95
+  },
+  {
+    "precedent_id": "HIST-2025-021",
+    "disruption_type": "FACTORY_INCIDENT",
+    "material_id": "MAT-002",
+    "material_name": "Lithium-Ion Battery Cell Pack 48V",
+    "disrupted_supplier_id": "SUP-002",
+    "strategy_used": "SPLIT_SOURCING",
+    "recovery_source": "50% Plant Transfer (Curitiba) + 50% Alternate Sourcing (Yokohama)",
+    "recovered_quantity": 400,
+    "recovery_days": 5,
+    "outcome_summary": "Dual-channel recovery balanced emergency air costs with bulk ocean buffer; plant downtime restricted to 4 hours.",
+    "similarity_score": 0.82,
+    "success_rate": 0.91
+  },
+  {
+    "precedent_id": "HIST-2024-118",
+    "disruption_type": "PORT_CONGESTION",
+    "material_id": "MAT-003",
+    "material_name": "Titanium Drive Shaft Model-T",
+    "disrupted_supplier_id": "SUP-003",
+    "strategy_used": "EXPEDITED_LOGISTICS",
+    "recovery_source": "Air Cargo Charter via Frankfurt Airport",
+    "recovered_quantity": 300,
+    "recovery_days": 2,
+    "outcome_summary": "Air freight bypass circumvented Rotterdam congestion; total arrival compressed by 4 days.",
+    "similarity_score": 0.85,
+    "success_rate": 0.96
+  }
+]

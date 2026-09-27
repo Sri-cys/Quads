@@ -1,0 +1,372 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.RecoveryPlanning"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f">
+
+    <Page
+        id="recoveryPlanningPage"
+        title="Quads Control Tower — Phase 2: Recovery Planning"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiContentPadding quadsPageBackground">
+
+        <headerContent>
+            <HBox alignItems="Center">
+                <ObjectStatus
+                    text="Phase 2: Recovery Planning"
+                    state="Information"
+                    inverted="true"
+                    class="sapUiSmallMarginEnd" />
+                <Button
+                    icon="sap-icon://refresh"
+                    text="Regenerate"
+                    type="Transparent"
+                    press=".onRefreshPlans"
+                    tooltip="Re-run discovery and deterministic ranking" />
+            </HBox>
+        </headerContent>
+
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- 1. Case & Disruption Context Summary Bar -->
+                <VBox class="sapContextCard sapUiSmallMarginBottom">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                        <HBox alignItems="Center">
+                            <core:Icon src="sap-icon://action" class="sapContextIcon" />
+                            <Title text="{rec>/case_id} — {rec>/disruption_name}" level="H2" class="sapContextTitle sapUiTinyMarginBegin" />
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Text text="Checkpoint 1 Priority: " class="bold sapUiTinyMarginEnd" />
+                            <ObjectStatus
+                                text="{rec>/priority}"
+                                state="{= ${rec>/priority} === 'TIME' ? 'Error' : (${rec>/priority} === 'COST' ? 'Success' : (${rec>/priority} === 'RISK' ? 'Warning' : 'Information')) }"
+                                inverted="true"
+                                class="bold" />
+                            <ObjectStatus
+                                text="{= ${rec>/checkpoint2_status} === 'RECOVERY_APPROVED' ? 'Approved (Locked)' : 'Awaiting Checkpoint 2' }"
+                                state="{= ${rec>/checkpoint2_status} === 'RECOVERY_APPROVED' ? 'Success' : 'Warning' }"
+                                class="sapUiSmallMarginBegin bold" />
+                        </HBox>
+                    </HBox>
+
+                    <layout:Grid
+                        defaultSpan="XL2 L3 M4 S6"
+                        hSpacing="1"
+                        vSpacing="1"
+                        class="sapUiSmallMarginTop">
+
+                        <VBox class="sapContextItem">
+                            <Text text="Affected Material" class="sapContextItemLabel" />
+                            <Text text="{rec>/material_name} ({rec>/material_id})" class="sapContextItemVal bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Destination Plant" class="sapContextItemLabel" />
+                            <Text text="{rec>/target_plant_name} ({rec>/target_plant_id})" class="sapContextItemVal bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Disrupted Supplier" class="sapContextItemLabel" />
+                            <Text text="{rec>/supplier_name} ({rec>/supplier_id})" class="sapContextItemVal" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Expected Delay" class="sapContextItemLabel" />
+                            <Text text="{rec>/expected_delay_days} Days" class="sapContextItemVal textWarning bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Target Recovery Volume" class="sapContextItemLabel" />
+                            <Text text="{rec>/target_quantity} Units" class="sapContextItemVal textCritical bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Days of Cover Buffer" class="sapContextItemLabel" />
+                            <Text text="{rec>/days_of_cover} Days" class="sapContextItemVal bold" />
+                        </VBox>
+                    </layout:Grid>
+                </VBox>
+
+                <!-- 2. AI Executive Recovery Briefing Card -->
+                <VBox class="sapContextCard sapUiSmallMarginBottom">
+                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                        <core:Icon src="sap-icon://lightbulb" class="sapContextIcon" color="#E9730C" />
+                        <Title text="Executive Recovery Briefing (Agent 2)" level="H3" class="sapContextTitle sapUiTinyMarginBegin" />
+                        <ObjectStatus
+                            text="{= ${rec>/ai_status} === 'AVAILABLE' ? 'AI Grounded' : 'Deterministic Synthesis' }"
+                            state="{= ${rec>/ai_status} === 'AVAILABLE' ? 'Success' : 'None' }"
+                            class="sapUiSmallMarginBegin" />
+                    </HBox>
+                    <Text text="{rec>/ai_briefing}" class="sapUiSmallMarginTop lineClamped" />
+                </VBox>
+
+                <!-- 3. Feasible Recovery Plans Section Header & Selected Notification -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                    <VBox>
+                        <Title text="Ranked Feasible Recovery Alternatives" level="H2" class="sapSectionTitle" />
+                        <Text text="Deterministic options scored and weighted by the manager's '{rec>/priority}' recovery priority." class="sapSectionSub" />
+                    </VBox>
+                    <HBox alignItems="Center">
+                        <Label text="Selected Plan for Approval:" class="bold sapUiTinyMarginEnd" />
+                        <ObjectStatus
+                            text="{= ${rec>/selectedPlanId} ? ${rec>/selectedPlanId} + ' (' + ${rec>/selectedPlanVersion} + ')' : 'None Selected' }"
+                            state="{= ${rec>/selectedPlanId} ? 'Success' : 'Warning' }"
+                            class="bold" />
+                    </HBox>
+                </HBox>
+
+                <!-- 4. Feasible Plans Grid -->
+                <layout:Grid
+                    defaultSpan="XL6 L6 M12 S12"
+                    hSpacing="1"
+                    vSpacing="1"
+                    content="{rec>/feasible_plans}">
+
+                    <VBox
+                        class="{= ${rec>plan_id} === ${rec>/selectedPlanId} ? 'sapChoiceCard sapChoiceSelected' : 'sapChoiceCard' }">
+
+                        <!-- Card Header -->
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                            <HBox alignItems="Center">
+                                <ObjectStatus
+                                    text="{= ${rec>score} >= 85 ? 'Top Recommendation' : 'Alternative' }"
+                                    state="{= ${rec>score} >= 85 ? 'Success' : 'None' }"
+                                    inverted="{= ${rec>score} >= 85 }"
+                                    class="bold sapUiTinyMarginEnd" />
+                                <Title text="{rec>plan_id} ({rec>version}): {rec>title}" level="H3" class="bold" />
+                            </HBox>
+                            <VBox alignItems="End">
+                                <HBox alignItems="Baseline">
+                                    <Text text="{rec>score}" class="bold textLarge" />
+                                    <Text text="/100" class="textMuted" />
+                                </HBox>
+                                <Text text="Score" class="sapContextItemLabel" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- Strategy & Source Tag -->
+                        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                            <ObjectStatus
+                                text="{rec>strategy}"
+                                state="Information"
+                                class="bold sapUiTinyMarginEnd" />
+                            <Text text="Source: {rec>source_name} ({rec>source_location})" class="textMuted" />
+                        </HBox>
+
+                        <!-- Core Metrics 4-Box Grid -->
+                        <layout:Grid
+                            defaultSpan="XL3 L3 M6 S6"
+                            hSpacing="0.5"
+                            vSpacing="0.5"
+                            class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Lead Time" class="sapContextItemLabel" />
+                                <Text text="{rec>recovery_days} Days" class="bold textLarge textPrimary" />
+                                <Text text="ETA: {rec>expected_arrival_date}" class="textMuted textSmall" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Recovered Qty" class="sapContextItemLabel" />
+                                <Text text="{rec>recovered_quantity} Units" class="bold textLarge" />
+                                <Text text="{rec>fulfillment_pct}% fulfillment" class="textSmall" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Total Cost" class="sapContextItemLabel" />
+                                <Text text="${= ${rec>total_cost} ? ${rec>total_cost}.toLocaleString() : '0' }" class="bold textLarge" />
+                                <Text text="Incl. Freight" class="textMuted textSmall" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Transport &amp; Risk" class="sapContextItemLabel" />
+                                <Text text="{rec>transport_name}" class="bold" />
+                                <ObjectStatus
+                                    text="{rec>operational_risk} Risk"
+                                    state="{= ${rec>operational_risk} === 'LOW' ? 'Success' : (${rec>operational_risk} === 'MEDIUM' ? 'Warning' : 'Error') }"
+                                    class="bold textSmall" />
+                            </VBox>
+                        </layout:Grid>
+
+                        <!-- Score Breakdown Snippet -->
+                        <VBox class="sapUiTinyMarginTop sapUiTinyMarginBottom sapBreakdownBox">
+                            <Text text="Score Rationale: {rec>score_breakdown/explanation}" class="textSmall" />
+                            <HBox class="sapUiTinyMarginTop" justifyContent="SpaceBetween">
+                                <Text text="Delivery Speed: {rec>score_breakdown/time_score} pts" class="textSmall bold" />
+                                <Text text="Cost Economy: {rec>score_breakdown/cost_score} pts" class="textSmall bold" />
+                                <Text text="Operational Safety: {rec>score_breakdown/risk_score} pts" class="textSmall bold" />
+                                <Text text="Fulfillment: {rec>score_breakdown/fulfillment_score} pts" class="textSmall bold" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- Evidence Indicators -->
+                        <HBox alignItems="Center" class="sapUiTinyMarginTop" wrap="Wrap">
+                            <ObjectStatus
+                                visible="{= ${rec>contract_evidence} !== null }"
+                                icon="sap-icon://document-text"
+                                text="Contracted ({rec>contract_evidence/contract_id})"
+                                state="Success"
+                                class="sapUiTinyMarginEnd textSmall" />
+                            <ObjectStatus
+                                visible="{= ${rec>historical_evidence}.length > 0 }"
+                                icon="sap-icon://history"
+                                text="Precedent Match ({rec>historical_evidence/0/precedent_id})"
+                                state="Information"
+                                class="sapUiTinyMarginEnd textSmall" />
+                            <ObjectStatus
+                                text="Feasible &amp; Validated"
+                                state="Success"
+                                class="textSmall bold" />
+                        </HBox>
+
+                        <!-- Card Action Buttons -->
+                        <HBox alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop">
+                            <Button
+                                text="Inspect Full Details"
+                                type="Transparent"
+                                icon="sap-icon://inspect"
+                                press=".onInspectPlan"
+                                class="sapUiTinyMarginEnd" />
+                            <Button
+                                text="Modify Parameters"
+                                type="Transparent"
+                                icon="sap-icon://edit"
+                                press=".onOpenModifyDialog"
+                                class="sapUiTinyMarginEnd" />
+                            <Button
+                                text="{= ${rec>plan_id} === ${rec>/selectedPlanId} ? 'Selected' : 'Select Plan' }"
+                                type="{= ${rec>plan_id} === ${rec>/selectedPlanId} ? 'Emphasized' : 'Default' }"
+                                icon="{= ${rec>plan_id} === ${rec>/selectedPlanId} ? 'sap-icon://accept' : 'sap-icon://cursor-arrow' }"
+                                press=".onSelectPlan" />
+                        </HBox>
+                    </VBox>
+                </layout:Grid>
+
+                <!-- 5. Rejected / Infeasible Alternatives Section -->
+                <Panel
+                    expandable="true"
+                    expanded="false"
+                    headerText="Infeasible / Rejected Alternatives ({= ${rec>/infeasible_plans} ? ${rec>/infeasible_plans}.length : 0 } Options Evaluated)"
+                    class="sapUiSmallMarginTop sapContextCard">
+
+                    <Table items="{rec>/infeasible_plans}" noDataText="No infeasible options identified.">
+                        <columns>
+                            <Column width="120px"><Text text="Plan ID" class="bold" /></Column>
+                            <Column><Text text="Recovery Strategy" class="bold" /></Column>
+                            <Column><Text text="Source" class="bold" /></Column>
+                            <Column><Text text="Reason for Infeasibility" class="bold textCritical" /></Column>
+                            <Column width="160px"><Text text="Violated Constraint" class="bold" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{rec>plan_id} ({rec>version})" class="bold" />
+                                    <Text text="{rec>strategy}" />
+                                    <Text text="{rec>source_name}" />
+                                    <Text text="{rec>infeasibility_reason}" class="textCritical bold" />
+                                    <ObjectStatus text="Hard Constraint Breach" state="Error" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </Panel>
+
+                <!-- 6. Human Checkpoint 2 Decision Governance Card -->
+                <VBox class="sapDecisionCard sapUiSmallMarginTop">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionHeader">
+                        <VBox>
+                            <Title text="CHECKPOINT 2: Recovery Plan Approval" level="H2" class="sapSectionTitle" />
+                            <Text text="The manager must make the final decision. The system recommends; it does not automatically execute." class="sapSectionSub" />
+                        </VBox>
+                        <HBox alignItems="Center">
+                            <ObjectStatus
+                                text="{= ${rec>/checkpoint2_status} === 'RECOVERY_APPROVED' ? 'Phase 2 Complete — Ready for Phase 3' : 'Awaiting Planner Approval' }"
+                                state="{= ${rec>/checkpoint2_status} === 'RECOVERY_APPROVED' ? 'Success' : 'Warning' }"
+                                inverted="true"
+                                class="bold" />
+                        </HBox>
+                    </HBox>
+
+                    <!-- Approved Notification Banner (when approved) -->
+                    <VBox
+                        visible="{= ${rec>/checkpoint2_status} === 'RECOVERY_APPROVED' }"
+                        class="sapPhase1Banner sapUiSmallMarginTop sapUiSmallMarginBottom">
+                        <HBox alignItems="Center">
+                            <core:Icon src="sap-icon://sys-enter-2" class="sapBannerIcon success" />
+                            <VBox class="sapUiSmallMarginBegin" width="100%">
+                                <Title text="Human Checkpoint 2 Approved — Plan Locked (Ready for Phase 3)" level="H3" class="sapBannerTitle" />
+                                <Text text="Recovery Plan {rec>/approved_plan_id} (Version: {rec>/approved_plan_version}) has been locked and certified in the audit trail. Phase 2 is complete. Autonomous execution is paused at the Phase 2 boundary. Click below to begin autonomous execution and monitoring." class="sapBannerText" />
+                                <Text text="Approval Timestamp: {rec>/checkpoint2_timestamp} | Decided By: SUPPLY_CHAIN_PLANNER" class="textMuted textSmall sapUiTinyMarginTop" />
+                                <HBox class="sapUiSmallMarginTop">
+                                    <Button
+                                        text="Proceed to Phase 3: Autonomous Execution &amp; Monitoring"
+                                        type="Emphasized"
+                                        icon="sap-icon://shipping-status"
+                                        press=".onProceedToExecution"
+                                        class="sapBtnPrimary" />
+                                </HBox>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Decision Inputs (enabled when not approved) -->
+                    <VBox visible="{= ${rec>/checkpoint2_status} !== 'RECOVERY_APPROVED' }" class="sapUiSmallMarginTop">
+                        <Label text="Selected Plan for Approval" class="bold" />
+                        <Input
+                            value="{= ${rec>/selectedPlanId} ? ${rec>/selectedPlanId} + ' (' + ${rec>/selectedPlanVersion} + ')' : '' }"
+                            editable="false"
+                            placeholder="Select one of the feasible plans above"
+                            class="sapUiSmallMarginBottom" />
+
+                        <Label text="Planner Rationale / Decision Justification (Optional)" class="bold" />
+                        <TextArea
+                            id="taRationale"
+                            value="{rec>/plannerRationale}"
+                            rows="2"
+                            width="100%"
+                            placeholder="State rationale (e.g. Prioritizing lead time to avert Munich hub stockout within 48h)..."
+                            class="sapUiSmallMarginBottom" />
+
+                        <!-- Action Buttons -->
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionActionsRow sapUiSmallMarginTop">
+                            <HBox alignItems="Center">
+                                <Button
+                                    text="Back to Checkpoint 1"
+                                    type="Transparent"
+                                    icon="sap-icon://nav-back"
+                                    press=".onBackToCheckpoint1"
+                                    class="sapBtnSecondary" />
+                            </HBox>
+
+                            <HBox alignItems="Center">
+                                <Button
+                                    text="Reject Proposals"
+                                    type="Reject"
+                                    icon="sap-icon://decline"
+                                    press=".onRejectCheckpoint2"
+                                    class="sapUiSmallMarginEnd" />
+                                <Button
+                                    text="Modify Plan Parameters"
+                                    type="Default"
+                                    icon="sap-icon://edit"
+                                    press=".onOpenModifyDialog"
+                                    class="sapUiSmallMarginEnd" />
+                                <Button
+                                    text="Approve Plan (Lock &amp; Execute)"
+                                    type="Emphasized"
+                                    icon="sap-icon://accept"
+                                    press=".onApproveCheckpoint2"
+                                    class="sapBtnPrimary" />
+                            </HBox>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,238 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Dialog
+        id="inspectPlanDialog"
+        title="Recovery Plan Inspection: {inspect>/plan_id} ({inspect>/version})"
+        contentWidth="850px"
+        contentHeight="650px"
+        resizable="true"
+        draggable="true">
+
+        <content>
+            <VBox class="sapUiSmallMargin">
+
+                <!-- Header Banner -->
+                <VBox class="sapContextCard sapUiSmallMarginBottom">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween">
+                        <VBox>
+                            <HBox alignItems="Center">
+                                <ObjectStatus
+                                    text="{inspect>/strategy}"
+                                    state="Information"
+                                    class="bold sapUiTinyMarginEnd" />
+                                <Title text="{inspect>/title}" level="H3" class="bold" />
+                            </HBox>
+                            <Text text="Source: {inspect>/source_name} ({inspect>/source_location})" class="textMuted sapUiTinyMarginTop" />
+                        </VBox>
+                        <VBox alignItems="End">
+                            <HBox alignItems="Baseline">
+                                <Text text="{inspect>/score}" class="bold textLarge" />
+                                <Text text="/100" class="textMuted" />
+                            </HBox>
+                            <ObjectStatus
+                                text="{= ${inspect>/is_feasible} ? 'Feasible &amp; Validated' : 'Infeasible' }"
+                                state="{= ${inspect>/is_feasible} ? 'Success' : 'Error' }"
+                                class="bold" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Key Metrics 4-Col Grid -->
+                <layout:Grid defaultSpan="XL3 L3 M6 S6" hSpacing="0.5" vSpacing="0.5" class="sapUiSmallMarginBottom">
+                    <VBox class="sapMetricBox">
+                        <Text text="Lead Time &amp; Arrival" class="sapContextItemLabel" />
+                        <Text text="{inspect>/recovery_days} Days" class="bold textLarge textPrimary" />
+                        <Text text="ETA: {inspect>/expected_arrival_date}" class="textMuted textSmall" />
+                    </VBox>
+
+                    <VBox class="sapMetricBox">
+                        <Text text="Fulfillment Volume" class="sapContextItemLabel" />
+                        <Text text="{inspect>/recovered_quantity} / {inspect>/target_quantity} Units" class="bold textLarge" />
+                        <Text text="{inspect>/fulfillment_pct}% fulfillment rate" class="textSmall" />
+                    </VBox>
+
+                    <VBox class="sapMetricBox">
+                        <Text text="Cost Breakdown" class="sapContextItemLabel" />
+                        <Text text="${= ${inspect>/total_cost} ? ${inspect>/total_cost}.toLocaleString() : '0' }" class="bold textLarge" />
+                        <Text text="Mat: ${inspect>/material_cost} | Freight: ${inspect>/freight_cost}" class="textMuted textSmall" />
+                    </VBox>
+
+                    <VBox class="sapMetricBox">
+                        <Text text="Logistics &amp; Risk" class="sapContextItemLabel" />
+                        <Text text="{inspect>/transport_name}" class="bold" />
+                        <ObjectStatus
+                            text="{inspect>/operational_risk} Operational Risk"
+                            state="{= ${inspect>/operational_risk} === 'LOW' ? 'Success' : (${inspect>/operational_risk} === 'MEDIUM' ? 'Warning' : 'Error') }"
+                            class="bold textSmall" />
+                    </VBox>
+                </layout:Grid>
+
+                <IconTabBar select="onTabSelect" class="sapUiNoContentPadding">
+                    <items>
+
+                        <!-- Tab 1: Constraints Evaluation -->
+                        <IconTabFilter text="Constraints ({= ${inspect>/constraints} ? ${inspect>/constraints}.length : 0 })" icon="sap-icon://checklist">
+                            <VBox class="sapUiSmallMargin">
+                                <Text text="Deterministic verification of hard operational boundaries and soft manager preferences." class="textMuted sapUiTinyMarginBottom" />
+                                <Table items="{inspect>/constraints}" noDataText="No constraints recorded.">
+                                    <columns>
+                                        <Column><Text text="Requirement" class="bold" /></Column>
+                                        <Column width="110px"><Text text="Type" class="bold" /></Column>
+                                        <Column width="120px"><Text text="Status" class="bold" /></Column>
+                                        <Column><Text text="Threshold" class="bold" /></Column>
+                                        <Column><Text text="Actual Evaluated" class="bold" /></Column>
+                                        <Column><Text text="Evaluation Result" class="bold" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{inspect>name}" class="bold" />
+                                                <ObjectStatus
+                                                    text="{inspect>constraint_type}"
+                                                    state="{= ${inspect>constraint_type} === 'HARD' ? 'Error' : 'Information' }" />
+                                                <ObjectStatus
+                                                    text="{= ${inspect>satisfied} ? 'Satisfied' : 'Violated' }"
+                                                    state="{= ${inspect>satisfied} ? 'Success' : 'Error' }"
+                                                    class="bold" />
+                                                <Text text="{inspect>threshold_value}" />
+                                                <Text text="{inspect>actual_value}" class="bold" />
+                                                <Text text="{inspect>reason}" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- Tab 2: Score Breakdown -->
+                        <IconTabFilter text="Score Rationale" icon="sap-icon://education">
+                            <VBox class="sapUiSmallMargin">
+                                <VBox class="sapBreakdownBox sapUiSmallMarginBottom">
+                                    <Text text="Deterministic Scoring Formula (Weighted 50% on priority: '{inspect>/manager_priority}'):" class="bold" />
+                                    <Text text="{inspect>/score_breakdown/explanation}" class="sapUiTinyMarginTop textSmall" />
+                                </VBox>
+
+                                <layout:Grid defaultSpan="XL3 L3 M6 S6" hSpacing="0.5" vSpacing="0.5">
+                                    <VBox class="sapMetricBox">
+                                        <Text text="Delivery Time Score" class="sapContextItemLabel" />
+                                        <Text text="{inspect>/score_breakdown/time_score} / 100" class="bold textLarge textPrimary" />
+                                        <Text text="Faster lead time yields higher pts" class="textMuted textSmall" />
+                                    </VBox>
+                                    <VBox class="sapMetricBox">
+                                        <Text text="Cost Economy Score" class="sapContextItemLabel" />
+                                        <Text text="{inspect>/score_breakdown/cost_score} / 100" class="bold textLarge" />
+                                        <Text text="Lower incremental cost yields higher pts" class="textMuted textSmall" />
+                                    </VBox>
+                                    <VBox class="sapMetricBox">
+                                        <Text text="Operational Risk Score" class="sapContextItemLabel" />
+                                        <Text text="{inspect>/score_breakdown/risk_score} / 100" class="bold textLarge" />
+                                        <Text text="Supplier &amp; route reliability" class="textMuted textSmall" />
+                                    </VBox>
+                                    <VBox class="sapMetricBox">
+                                        <Text text="Fulfillment Score" class="sapContextItemLabel" />
+                                        <Text text="{inspect>/score_breakdown/fulfillment_score} / 100" class="bold textLarge" />
+                                        <Text text="Volume recovered vs target gap" class="textMuted textSmall" />
+                                    </VBox>
+                                </layout:Grid>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- Tab 3: Commercial & Contract Evidence -->
+                        <IconTabFilter text="Contract Evidence" icon="sap-icon://document-text">
+                            <VBox class="sapUiSmallMargin">
+                                <VBox visible="{= ${inspect>/contract_evidence} !== null }">
+                                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                        <Title text="Governing Contract: {inspect>/contract_evidence/contract_id}" level="H4" class="bold" />
+                                        <ObjectStatus
+                                            text="{inspect>/contract_evidence/supplier_name}"
+                                            state="Success"
+                                            class="sapUiSmallMarginBegin" />
+                                    </HBox>
+                                    <Text text="Terms Summary: {inspect>/contract_evidence/terms_summary}" class="sapUiTinyMarginBottom" />
+                                    <Text text="Governing Law: {inspect>/contract_evidence/governing_law} | Active Through: {inspect>/contract_evidence/valid_to}" class="textMuted textSmall sapUiTinyMarginBottom" />
+
+                                    <Label text="Applicable Commercial Clauses:" class="bold sapUiTinyMarginTop" />
+                                    <List items="{inspect>/contract_evidence/clauses}" class="sapUiTinyMarginTop">
+                                        <StandardListItem
+                                            title="{inspect>clause_name} ({inspect>clause_code})"
+                                            description="{inspect>summary}"
+                                            icon="sap-icon://accept" />
+                                    </List>
+                                </VBox>
+                                <VBox visible="{= ${inspect>/contract_evidence} === null }" class="sapUiSmallMargin">
+                                    <Text text="No specific commercial contract found on file for this sourcing partner. Sourced under standard spot quotation terms." class="textMuted" />
+                                </VBox>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- Tab 4: Historical Precedents -->
+                        <IconTabFilter text="Historical Precedents" icon="sap-icon://history">
+                            <VBox class="sapUiSmallMargin">
+                                <Text text="Empirical precedents from historical disruptions (used as supporting evidence, not instructions):" class="textMuted sapUiTinyMarginBottom" />
+                                <Table items="{inspect>/historical_evidence}" noDataText="No relevant historical cases found.">
+                                    <columns>
+                                        <Column width="110px"><Text text="Case ID" class="bold" /></Column>
+                                        <Column><Text text="Disruption" class="bold" /></Column>
+                                        <Column><Text text="Applied Strategy" class="bold" /></Column>
+                                        <Column width="100px"><Text text="Similarity" class="bold" /></Column>
+                                        <Column width="110px"><Text text="Outcome" class="bold" /></Column>
+                                        <Column><Text text="Lessons Learned" class="bold" /></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{inspect>precedent_id}" class="bold" />
+                                                <Text text="{inspect>disruption_type}" />
+                                                <Text text="{inspect>strategy_used}" />
+                                                <Text text="{inspect>similarity_score}%" class="bold" />
+                                                <ObjectStatus
+                                                    text="{inspect>outcome}"
+                                                    state="{= ${inspect>outcome} === 'SUCCESS' ? 'Success' : 'Warning' }"
+                                                    class="bold" />
+                                                <Text text="{inspect>lessons_learned}" class="textSmall" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </VBox>
+                        </IconTabFilter>
+
+                        <!-- Tab 5: Trade-offs & Residual Risk -->
+                        <IconTabFilter text="Trade-offs &amp; Risks" icon="sap-icon://alert">
+                            <VBox class="sapUiSmallMargin">
+                                <VBox class="sapUiTinyMarginBottom">
+                                    <Label text="Residual Operational Risk:" class="bold" />
+                                    <Text text="{inspect>/residual_risk}" class="sapUiTinyMarginTop" />
+                                </VBox>
+                                <VBox class="sapUiTinyMarginTop">
+                                    <Label text="Strategic Trade-offs:" class="bold" />
+                                    <Text text="{inspect>/trade_offs}" class="sapUiTinyMarginTop" />
+                                </VBox>
+                            </VBox>
+                        </IconTabFilter>
+
+                    </items>
+                </IconTabBar>
+
+            </VBox>
+        </content>
+
+        <beginButton>
+            <Button
+                text="Select This Plan"
+                type="Emphasized"
+                icon="sap-icon://accept"
+                press=".onSelectPlanFromDialog" />
+        </beginButton>
+
+        <endButton>
+            <Button
+                text="Close"
+                press=".onCloseInspectDialog" />
+        </endButton>
+
+    </Dialog>
+</core:FragmentDefinition>

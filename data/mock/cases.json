@@ -1,0 +1,98 @@
+[
+  {
+    "case_id": "CASE-0001",
+    "disruption_type": "PACKAGING_BOTTLENECK",
+    "description": "Supplier shipment delayed by 5 days due to packaging bottleneck.",
+    "supplier_id": "SUP-001",
+    "material_id": "MAT-001",
+    "plant_id": "PLANT-001",
+    "expected_delay_days": 5,
+    "affected_quantity": 500,
+    "detected_at": "2026-09-27T06:00:00Z",
+    "status": "TRIAGED"
+  },
+  {
+    "case_id": "CASE-0002",
+    "disruption_type": "FACTORY_INCIDENT",
+    "description": "Factory fire halted lithium battery production line.",
+    "supplier_id": "SUP-002",
+    "material_id": "MAT-002",
+    "plant_id": "PLANT-002",
+    "expected_delay_days": 14,
+    "affected_quantity": 400,
+    "detected_at": "2026-09-27T06:15:00Z",
+    "status": "TRIAGED"
+  },
+  {
+    "case_id": "CASE-0003",
+    "disruption_type": "PORT_CONGESTION",
+    "description": "Customs inspection hold at Rotterdam port for 6 days.",
+    "supplier_id": "SUP-003",
+    "material_id": "MAT-003",
+    "plant_id": "PLANT-001",
+    "expected_delay_days": 6,
+    "affected_quantity": 300,
+    "detected_at": "2026-09-27T06:30:00Z",
+    "status": "TRIAGED"
+  },
+  {
+    "case_id": "CASE-0004",
+    "disruption_type": "MATERIAL_SHORTAGE",
+    "description": "Raw material steel shortage caused 7-day machining delay.",
+    "supplier_id": "SUP-004",
+    "material_id": "MAT-004",
+    "plant_id": "PLANT-003",
+    "expected_delay_days": 7,
+    "affected_quantity": 200,
+    "detected_at": "2026-09-27T06:45:00Z",
+    "status": "TRIAGED"
+  },
+  {
+    "case_id": "CASE-0005",
+    "disruption_type": "WEATHER_EVENT",
+    "description": "Typhoon delayed air cargo connection out of Tokyo by 4 days.",
+    "supplier_id": "SUP-005",
+    "material_id": "MAT-005",
+    "plant_id": "PLANT-002",
+    "expected_delay_days": 4,
+    "affected_quantity": 500,
+    "detected_at": "2026-09-27T07:00:00Z",
+    "status": "TRIAGED"
+  },
+  {
+    "case_id": "CASE-0006",
+    "disruption_type": "LOGISTICS_DELAY",
+    "description": "Carrier freight congestion added 8 days to ocean transit.",
+    "supplier_id": "SUP-001",
+    "material_id": "MAT-006",
+    "plant_id": "PLANT-001",
+    "expected_delay_days": 8,
+    "affected_quantity": 350,
+    "detected_at": "2026-09-27T07:15:00Z",
+    "status": "TRIAGED"
+  },
+  {
+    "case_id": "CASE-0007",
+    "disruption_type": "CARRIER_SCHEDULE_CHANGE",
+    "description": "Minor rail schedule rescheduling resulting in 2-day transit delay.",
+    "supplier_id": "SUP-006",
+    "material_id": "MAT-007",
+    "plant_id": "PLANT-001",
+    "expected_delay_days": 2,
+    "affected_quantity": 2000,
+    "detected_at": "2026-09-27T07:30:00Z",
+    "status": "TRIAGED"
+  },
+  {
+    "case_id": "CASE-0008",
+    "disruption_type": "EQUIPMENT_BREAKDOWN",
+    "description": "Truck mechanical breakdown en route to port, 3 days delay.",
+    "supplier_id": "SUP-004",
+    "material_id": "MAT-008",
+    "plant_id": "PLANT-003",
+    "expected_delay_days": 3,
+    "affected_quantity": 1000,
+    "detected_at": "2026-09-27T07:45:00Z",
+    "status": "TRIAGED"
+  }
+]

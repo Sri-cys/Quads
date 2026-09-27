@@ -1,0 +1,80 @@
+[
+  {
+    "material_id": "MAT-001",
+    "plant_id": "PLANT-001",
+    "quantity": 150,
+    "reserved_quantity": 100
+  },
+  {
+    "material_id": "MAT-001",
+    "plant_id": "PLANT-002",
+    "quantity": 250,
+    "reserved_quantity": 50
+  },
+  {
+    "material_id": "MAT-001",
+    "plant_id": "PLANT-003",
+    "quantity": 120,
+    "reserved_quantity": 40
+  },
+  {
+    "material_id": "MAT-002",
+    "plant_id": "PLANT-002",
+    "quantity": 80,
+    "reserved_quantity": 80
+  },
+  {
+    "material_id": "MAT-002",
+    "plant_id": "PLANT-001",
+    "quantity": 300,
+    "reserved_quantity": 60
+  },
+  {
+    "material_id": "MAT-003",
+    "plant_id": "PLANT-001",
+    "quantity": 240,
+    "reserved_quantity": 40
+  },
+  {
+    "material_id": "MAT-003",
+    "plant_id": "PLANT-002",
+    "quantity": 200,
+    "reserved_quantity": 50
+  },
+  {
+    "material_id": "MAT-004",
+    "plant_id": "PLANT-003",
+    "quantity": 180,
+    "reserved_quantity": 30
+  },
+  {
+    "material_id": "MAT-004",
+    "plant_id": "PLANT-001",
+    "quantity": 220,
+    "reserved_quantity": 40
+  },
+  {
+    "material_id": "MAT-005",
+    "plant_id": "PLANT-002",
+    "quantity": 600,
+    "reserved_quantity": 100
+  },
+  {
+    "material_id": "MAT-006",
+    "plant_id": "PLANT-001",
+    "quantity": 450,
+    "reserved_quantity": 90
+  },
+  {
+    "material_id": "MAT-007",
+    "plant_id": "PLANT-001",
+    "quantity": 5000,
+    "reserved_quantity": 500
+  },
+  {
+    "material_id": "MAT-008",
+    "plant_id": "PLANT-003",
+    "quantity": 1500,
+    "reserved_quantity": 250
+  }
+]

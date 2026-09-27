@@ -1,0 +1,181 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.Checkpoint1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+    <Page
+        id="checkpoint1Page"
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+        <content>
+            <VBox class="sapCorporatePageBody">
+
+                <!-- Page Header: Title + Subtitle + Back Link -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
+                    <VBox>
+                        <Title text="CHECKPOINT 1" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Select the primary business recovery objective that will guide automated mitigation planning." class="sapCorporatePageSubtitle" />
+                    </VBox>
+                    <Link
+                        text="&#x2190; Back to Cases"
+                        press=".onBackToCases"
+                        class="sapBackLink" />
+                </HBox>
+
+                <!-- 1. Impact Context Summary Strip (Horizontal 4-column) -->
+                <VBox class="sapImpactContextCard">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapContextCardHeader">
+                        <HBox alignItems="Center">
+                            <Text text="CASE IMPACT CONTEXT" class="sapContextTitle" />
+                            <Text text="•" class="sapContextDot" />
+                            <Text text="{cp>/case_id}" class="sapContextCaseId" />
+                        </HBox>
+                        <ObjectStatus
+                            text="{= ${cp>/status} === 'CHECKPOINT_APPROVED' ? 'Checkpoint Approved' : 'Awaiting Human Decision' }"
+                            state="{= ${cp>/status} === 'CHECKPOINT_APPROVED' ? 'Success' : 'Warning' }"
+                            class="sapPlainStatus" />
+                    </HBox>
+
+                    <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1">
+                        <VBox class="sapContextItem">
+                            <Text text="Days of Cover" class="sapContextItemLabel" />
+                            <Text text="{= ${cp>/impact/days_of_cover} !== undefined ? ${cp>/impact/days_of_cover} + ' Days' : '—' }" class="sapContextItemVal textCritical bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Stockout Hazard Date" class="sapContextItemLabel" />
+                            <Text text="{cp>/impact/stockout_date}" class="sapContextItemVal textDark" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Supply Gap Deficit" class="sapContextItemLabel" />
+                            <Text text="{= ${cp>/impact/supply_gap_quantity} !== undefined ? ${cp>/impact/supply_gap_quantity} + ' Units' : '0 Units' }" class="sapContextItemVal textWarning bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Operational Severity" class="sapContextItemLabel" />
+                            <Text text="{cp>/severity}" class="sapContextItemVal textCritical bold" />
+                        </VBox>
+                    </layout:Grid>
+                </VBox>
+
+                <!-- 2. Four Horizontal Recovery Strategic Objective Cards -->
+                <VBox class="sapDecisionCard">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionHeader">
+                        <VBox>
+                            <Title text="Recovery Strategic Objectives" level="H2" class="sapSectionTitle" />
+                            <Text text="Choose the operational optimization criterion that will govern Agent 2 solution generation." class="sapSectionSub" />
+                        </VBox>
+                    </HBox>
+
+                    <layout:Grid
+                        defaultSpan="XL3 L3 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1"
+                        class="sapDecisionGrid">
+
+                        <!-- Option 1: TIME -->
+                        <VBox
+                            class="{= ${cp>/selectedPriority} === 'TIME' ? 'sapChoiceCard sapChoiceSelected' : 'sapChoiceCard' }"
+                            press=".onSelectTime">
+                            <RadioButton
+                                text="TIME"
+                                selected="{= ${cp>/selectedPriority} === 'TIME' }"
+                                select=".onRadioSelect"
+                                groupName="recoveryObjective"
+                                class="sapChoiceRadio" />
+                            <Text text="Fastest recovery" class="sapChoiceHighlight" />
+                            <Text text="Expedite shipment via premium air freight or alternative carrier. Prioritizes shortest lead time to prevent assembly stoppage." class="sapChoiceDesc" />
+                        </VBox>
+
+                        <!-- Option 2: COST -->
+                        <VBox
+                            class="{= ${cp>/selectedPriority} === 'COST' ? 'sapChoiceCard sapChoiceSelected' : 'sapChoiceCard' }"
+                            press=".onSelectCost">
+                            <RadioButton
+                                text="COST"
+                                selected="{= ${cp>/selectedPriority} === 'COST' }"
+                                select=".onRadioSelect"
+                                groupName="recoveryObjective"
+                                class="sapChoiceRadio" />
+                            <Text text="Lowest recovery cost" class="sapChoiceHighlight" />
+                            <Text text="Standard freight routing and volume allocation. Avoids premium expediting surcharges and minimizes budget impact." class="sapChoiceDesc" />
+                        </VBox>
+
+                        <!-- Option 3: RISK -->
+                        <VBox
+                            class="{= ${cp>/selectedPriority} === 'RISK' ? 'sapChoiceCard sapChoiceSelected' : 'sapChoiceCard' }"
+                            press=".onSelectRisk">
+                            <RadioButton
+                                text="RISK"
+                                selected="{= ${cp>/selectedPriority} === 'RISK' }"
+                                select=".onRadioSelect"
+                                groupName="recoveryObjective"
+                                class="sapChoiceRadio" />
+                            <Text text="Lowest operational risk" class="sapChoiceHighlight" />
+                            <Text text="Multi-source allocation with top-tier reliability partners. Maximizes operational stability across downstream supply nodes." class="sapChoiceDesc" />
+                        </VBox>
+
+                        <!-- Option 4: BALANCED -->
+                        <VBox
+                            class="{= ${cp>/selectedPriority} === 'BALANCED' ? 'sapChoiceCard sapChoiceSelected' : 'sapChoiceCard' }"
+                            press=".onSelectBalanced">
+                            <RadioButton
+                                text="BALANCED"
+                                selected="{= ${cp>/selectedPriority} === 'BALANCED' }"
+                                select=".onRadioSelect"
+                                groupName="recoveryObjective"
+                                class="sapChoiceRadio" />
+                            <Text text="Balanced objective" class="sapChoiceHighlight" />
+                            <Text text="Multi-criteria optimization balancing lead-time recovery, freight expenditure, and supplier risk profile." class="sapChoiceDesc" />
+                        </VBox>
+                    </layout:Grid>
+
+                    <!-- Decision Action Row -->
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionActionsRow">
+                        <HBox alignItems="Center">
+                            <Button
+                                text="Back to Impact Analysis"
+                                type="Transparent"
+                                press=".onBackToImpact"
+                                class="sapBtnSecondary" />
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <Button
+                                id="btnApproveCheckpoint"
+                                text="{= ${cp>/status} === 'CHECKPOINT_APPROVED' ? 'Decision Approved (Locked)' : 'Approve &amp; Continue' }"
+                                icon="sap-icon://accept"
+                                type="Emphasized"
+                                enabled="{= ${cp>/status} !== 'CHECKPOINT_APPROVED' }"
+                                press=".onApproveDecision"
+                                class="sapBtnPrimary" />
+                        </HBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Phase 1 Boundary Hand-Off Panel (shown when approved) -->
+                <VBox
+                    visible="{= ${cp>/status} === 'CHECKPOINT_APPROVED' }"
+                    class="sapPhase1Banner">
+                    <HBox alignItems="Center">
+                        <core:Icon src="sap-icon://sys-enter-2" class="sapBannerIcon success" />
+                        <VBox class="sapUiSmallMarginBegin" width="100%">
+                            <Title text="Human Checkpoint 1 Approved — Ready for Phase 2" level="H3" class="sapBannerTitle" />
+                            <Text text="Recovery objective '{cp>/selectedPriority}' has been locked in the audit log. The system is ready to explore realistic recovery alternatives (Alternate Suppliers, Plant Transfers, Split Sourcing, Expedited Logistics) in Phase 2." class="sapBannerText" />
+                            <HBox class="sapUiSmallMarginTop" justifyContent="End">
+                                <Button
+                                    text="Proceed to Phase 2: Recovery Planning &amp; Optimization"
+                                    icon="sap-icon://navigation-right-arrow"
+                                    type="Emphasized"
+                                    press=".onProceedToPhase2" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

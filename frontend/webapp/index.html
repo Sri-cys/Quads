@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Control Tower</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script
+        id="sap-ui-bootstrap"
+        src="https://ui5.sap.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-resourceroots='{
+            "com.quads.supplychain": "./"
+        }'
+        data-sap-ui-libs="sap.m,sap.ui.core,sap.ui.layout,sap.tnt,sap.f"
+        data-sap-ui-compatversion="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frameoptions="trusted">
+    </script>
+    <script>
+        sap.ui.getCore().attachInit(function () {
+            sap.ui.require([
+                "sap/m/Shell",
+                "sap/ui/core/ComponentContainer"
+            ], function (Shell, ComponentContainer) {
+                new Shell({
+                    appWidthLimited: false,
+                    app: new ComponentContainer({
+                        height: "100%",
+                        name: "com.quads.supplychain",
+                        settings: {
+                            id: "quadsApp"
+                        },
+                        async: true
+                    })
+                }).placeAt("content");
+            });
+        });
+    </script>
+</head>
+<body class="sapUiBody sapUiSizeCompact" id="content">
+</body>
+</html>

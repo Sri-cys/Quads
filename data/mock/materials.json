@@ -1,0 +1,50 @@
+[
+  {
+    "material_id": "MAT-001",
+    "name": "Semiconductor Microcontroller MCU-32",
+    "category": "Electronics",
+    "unit_cost": 45.00
+  },
+  {
+    "material_id": "MAT-002",
+    "name": "Lithium-Ion Battery Cell Pack 48V",
+    "category": "Energy",
+    "unit_cost": 120.00
+  },
+  {
+    "material_id": "MAT-003",
+    "name": "Titanium Drive Shaft Model-T",
+    "category": "Powertrain",
+    "unit_cost": 250.00
+  },
+  {
+    "material_id": "MAT-004",
+    "name": "High-Pressure Hydraulic Valve H-90",
+    "category": "Hydraulics",
+    "unit_cost": 85.00
+  },
+  {
+    "material_id": "MAT-005",
+    "name": "Automotive Wiring Harness Main Loom",
+    "category": "Electrical",
+    "unit_cost": 35.00
+  },
+  {
+    "material_id": "MAT-006",
+    "name": "Optical Sensor LiDAR Array",
+    "category": "Sensors",
+    "unit_cost": 60.00
+  },
+  {
+    "material_id": "MAT-007",
+    "name": "Heavy Duty Hex Bolt Assembly M12",
+    "category": "Fasteners",
+    "unit_cost": 4.50
+  },
+  {
+    "material_id": "MAT-008",
+    "name": "Silicone Seal Gasket Set G-4",
+    "category": "Polymers",
+    "unit_cost": 8.20
+  }
+]

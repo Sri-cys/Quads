@@ -1,0 +1,157 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.Monitoring"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="monitoringPage"
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+
+        <content>
+            <VBox class="sapQuadsPageBody">
+
+                <!-- Page Title -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageTitleArea">
+                    <VBox>
+                        <Title text="Monitoring" level="H1" class="sapPageH1" />
+                        <Text text="Tracking the approved recovery against the planned baseline." class="sapPageSubtitle" />
+                    </VBox>
+                    <Button text="Refresh Telemetry" icon="sap-icon://refresh" type="Transparent" press=".onRefresh" />
+                </HBox>
+
+                <!-- ═══ LEVEL 1: What is happening? ═══ -->
+
+                <!-- ON TRACK -->
+                <HBox visible="{= ${mon>/track_status} === 'ON_TRACK' }" alignItems="Center" class="sapStatusBanner sapStatusSuccess">
+                    <core:Icon src="sap-icon://sys-enter-2" class="sapStatusBannerIcon success" />
+                    <VBox class="sapUiSmallMarginBegin">
+                        <Text text="ON TRACK" class="sapStatusBannerTitle" />
+                        <Text text="Recovery is progressing within planned parameters. No manager action required." class="sapStatusBannerText" />
+                    </VBox>
+                </HBox>
+
+                <!-- AT RISK -->
+                <HBox visible="{= ${mon>/track_status} === 'AT_RISK' }" alignItems="Center" class="sapStatusBanner sapStatusWarning">
+                    <core:Icon src="sap-icon://alert" class="sapStatusBannerIcon warning" />
+                    <VBox class="sapUiSmallMarginBegin">
+                        <Text text="AT RISK — DELIVERY MAY BE DELAYED" class="sapStatusBannerTitle" />
+                        <Text text="ETA has slipped. If delay exceeds tolerance, escalation will be required." class="sapStatusBannerText" />
+                    </VBox>
+                </HBox>
+
+                <!-- DELAYED -->
+                <HBox visible="{= ${mon>/track_status} === 'DELAYED' }" alignItems="Center" class="sapStatusBanner sapStatusWarning">
+                    <core:Icon src="sap-icon://history" class="sapStatusBannerIcon warning" />
+                    <VBox class="sapUiSmallMarginBegin">
+                        <Text text="DELAYED — TOLERANCE EXCEEDED" class="sapStatusBannerTitle" />
+                        <Text text="{= 'Delay of +' + ${mon>/delay_days} + ' days exceeds the allowed tolerance. Manager review required.' }" class="sapStatusBannerText" />
+                    </VBox>
+                </HBox>
+
+                <!-- COMPLETED -->
+                <HBox visible="{= ${mon>/track_status} === 'COMPLETED' }" alignItems="Center" class="sapStatusBanner sapStatusSuccess">
+                    <core:Icon src="sap-icon://sys-enter-2" class="sapStatusBannerIcon success" />
+                    <VBox class="sapUiSmallMarginBegin">
+                        <Text text="RECOVERY COMPLETED" class="sapStatusBannerTitle" />
+                        <Text text="All material delivered within tolerance. Case resolved and outcome archived." class="sapStatusBannerText" />
+                    </VBox>
+                </HBox>
+
+                <!-- FAILED -->
+                <HBox visible="{= ${mon>/track_status} === 'FAILED' }" alignItems="Center" class="sapStatusBanner sapStatusError">
+                    <core:Icon src="sap-icon://alert" class="sapStatusBannerIcon error" />
+                    <VBox class="sapUiSmallMarginBegin">
+                        <Text text="RECOVERY FAILED" class="sapStatusBannerTitle" />
+                        <Text text="The approved recovery plan can no longer satisfy the recovery requirement. Return to Recovery Planning." class="sapStatusBannerText" />
+                    </VBox>
+                </HBox>
+
+                <!-- Awaiting first event -->
+                <HBox visible="{= ${mon>/track_status} === 'PENDING' }" alignItems="Center" class="sapStatusBanner sapStatusNeutral">
+                    <core:Icon src="sap-icon://clock" class="sapStatusBannerIcon info" />
+                    <VBox class="sapUiSmallMarginBegin">
+                        <Text text="EXECUTION INITIATED — AWAITING FIRST TELEMETRY EVENT" class="sapStatusBannerTitle" />
+                        <Text text="Monitoring has started. Tracking updates will appear below as they are received." class="sapStatusBannerText" />
+                    </VBox>
+                </HBox>
+
+                <!-- ═══ LEVEL 2: Planned vs Actual comparison ═══ -->
+                <VBox class="sapContentCard">
+                    <Text text="PLANNED vs ACTUAL" class="sapCardTitle" />
+                    <table class="sapCompareTable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>PLANNED</th>
+                                <th>ACTUAL / CURRENT</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="colLabel">Quantity</td>
+                                <td class="colPlanned">{mon>/planned_quantity} units</td>
+                                <td class="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'colActual ontrack' : (${mon>/actual_quantity} > 0 ? 'colActual delayed' : 'colActual') }">{= ${mon>/actual_quantity} > 0 ? ${mon>/actual_quantity} + ' units' : '—' }</td>
+                                <td class="colStatus"><ObjectStatus text="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'Fulfilled' : (${mon>/actual_quantity} > 0 ? 'Partial' : 'Pending') }" state="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'Success' : (${mon>/actual_quantity} > 0 ? 'Warning' : 'None') }" /></td>
+                            </tr>
+                            <tr>
+                                <td class="colLabel">Arrival</td>
+                                <td class="colPlanned">{mon>/planned_arrival}</td>
+                                <td class="{= ${mon>/delay_days} > 2 ? 'colActual failed' : (${mon>/delay_days} > 0 ? 'colActual delayed' : 'colActual ontrack') }">{= ${mon>/current_eta} || '—' }</td>
+                                <td class="colStatus"><ObjectStatus text="{= ${mon>/delay_days} === 0 ? 'On Schedule' : ('+' + ${mon>/delay_days} + 'd late') }" state="{= ${mon>/delay_days} > 2 ? 'Error' : (${mon>/delay_days} > 0 ? 'Warning' : 'Success') }" /></td>
+                            </tr>
+                            <tr>
+                                <td class="colLabel">Cost</td>
+                                <td class="colPlanned">${= ${mon>/planned_cost} ? ${mon>/planned_cost}.toLocaleString() : '0' }</td>
+                                <td class="colActual">${= ${mon>/actual_cost} ? ${mon>/actual_cost}.toLocaleString() : '—' }</td>
+                                <td class="colStatus"><ObjectStatus text="{= ${mon>/cost_variance} > 0 ? '+$' + ${mon>/cost_variance} + ' overrun' : 'Nominal' }" state="{= ${mon>/cost_variance} > 0 ? 'Warning' : 'Success' }" /></td>
+                            </tr>
+                            <tr>
+                                <td class="colLabel">Status</td>
+                                <td class="colPlanned">{mon>/planned_status}</td>
+                                <td class="colActual ontrack">{mon>/current_status}</td>
+                                <td class="colStatus"><ObjectStatus text="{mon>/track_status_display}" state="{mon>/track_state}" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </VBox>
+
+                <!-- ═══ LEVEL 2: Telemetry Timeline ═══ -->
+                <VBox class="sapContentCard">
+                    <Text text="TELEMETRY TIMELINE" class="sapCardTitle" />
+                    <List id="timelineList" items="{mon>/tracking_events}" noDataText="No telemetry events received yet.">
+                        <CustomListItem>
+                            <HBox alignItems="FlexStart" class="sapTimelineItem">
+                                <VBox class="{= ${mon>status} === 'DELIVERED' ? 'sapTimelineIcon done' : (${mon>status} === 'FAILED' ? 'sapTimelineIcon failed' : (${mon>status} === 'DELAYED' ? 'sapTimelineIcon delayed' : 'sapTimelineIcon active')) }">
+                                    <core:Icon src="{= ${mon>status} === 'DELIVERED' ? 'sap-icon://accept' : (${mon>status} === 'FAILED' ? 'sap-icon://sys-cancel' : (${mon>status} === 'DELAYED' ? 'sap-icon://history' : 'sap-icon://shipping-status')) }" />
+                                </VBox>
+                                <VBox class="sapTimelineContent sapUiSmallMarginBegin">
+                                    <Text text="{= ${mon>status}.replace(/_/g,' ') }" class="sapTimelineStatus" />
+                                    <Text text="{mon>timestamp}" class="sapTimelineTime" />
+                                    <Text text="{mon>description}" class="sapTimelineDesc" />
+                                    <Text visible="{= !!${mon>location} }" text="{mon>location}" class="sapTimelineDesc textMuted" />
+                                </VBox>
+                            </HBox>
+                        </CustomListItem>
+                    </List>
+                </VBox>
+
+                <!-- ═══ LEVEL 3: Next action ═══ -->
+                <HBox visible="{= ${mon>/track_status} === 'COMPLETED' }" justifyContent="End" class="mb16">
+                    <Button text="View Outcome →" type="Emphasized" icon="sap-icon://sys-enter-2" press=".onGoToOutcome" class="sapBtnSuccess" />
+                </HBox>
+                <HBox visible="{= ${mon>/track_status} === 'FAILED' }" justifyContent="End" class="mb16">
+                    <Button text="Return to Recovery Planning" type="Emphasized" icon="sap-icon://journey-change" press=".onReturnToPlanning" class="sapBtnPrimary" />
+                </HBox>
+                <HBox visible="{= ${mon>/track_status} !== 'COMPLETED' &amp;&amp; ${mon>/track_status} !== 'FAILED' }" justifyContent="SpaceBetween" class="mb16">
+                    <Button text="← Back to Execution" type="Transparent" press=".onGoToExecution" />
+                    <Text text="No action required." class="textMuted textSmall" visible="{= ${mon>/track_status} === 'ON_TRACK' }" />
+                </HBox>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

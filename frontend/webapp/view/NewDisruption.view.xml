@@ -1,0 +1,218 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.NewDisruption"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+    <Page
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+        <content>
+            <VBox class="sapCorporatePageBody sapNewDisruptionPageBody">
+
+                <!-- 1. Single Horizontal Header Row -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow sapNewDisruptionHeaderRow">
+                    <VBox class="sapPageHeaderLeftCol">
+                        <Title text="REGISTER NEW SUPPLY CHAIN DISRUPTION" level="H1" class="sapCorporatePageTitle sapNewDisruptionTitle" />
+                        <Text text="Capture a disruption signal to automatically assess operational impact." class="sapCorporatePageSubtitle sapNewDisruptionSubtitle" />
+                    </VBox>
+                    <Link
+                        text="&#x2190; Back to Cases"
+                        press=".onNavBack"
+                        class="sapBackLink sapNewDisruptionBackLink" />
+                </HBox>
+
+                <!-- 2. Compact Informational Area: Before You Begin (60–72px) -->
+                <HBox alignItems="Center" class="sapBeforeYouBeginCard">
+                    <core:Icon src="sap-icon://information" class="sapBeforeYouBeginIcon" />
+                    <VBox class="sapBeforeYouBeginTextCol">
+                        <Text text="Before you begin" class="sapBeforeYouBeginTitle" />
+                        <Text text="Submit a disruption signal to create a case, calculate deterministic impact, and prepare the case for human decision-making." class="sapBeforeYouBeginDesc" />
+                    </VBox>
+                </HBox>
+
+                <!-- 3. Visual Workflow Indicator (Compact Horizontal) -->
+                <HBox alignItems="Center" justifyContent="Center" class="sapWorkflowIndicatorRow">
+                    <HBox alignItems="Center" class="sapWorkflowStep active">
+                        <core:Icon src="sap-icon://circle-task" class="sapWorkflowDot active" />
+                        <Text text="01 Capture Signal" class="sapWorkflowText active" />
+                    </HBox>
+                    <core:Icon src="sap-icon://navigation-right-arrow" class="sapWorkflowArrow" />
+                    <HBox alignItems="Center" class="sapWorkflowStep">
+                        <core:Icon src="sap-icon://circle-task-2" class="sapWorkflowDot inactive" />
+                        <Text text="02 Analyze Impact" class="sapWorkflowText inactive" />
+                    </HBox>
+                    <core:Icon src="sap-icon://navigation-right-arrow" class="sapWorkflowArrow" />
+                    <HBox alignItems="Center" class="sapWorkflowStep">
+                        <core:Icon src="sap-icon://circle-task-2" class="sapWorkflowDot inactive" />
+                        <Text text="03 Human Checkpoint" class="sapWorkflowText inactive" />
+                    </HBox>
+                </HBox>
+
+                <!-- 4. Single Primary White Form Surface (1200–1320px wide) -->
+                <VBox class="sapFormCardWide">
+
+                    <!-- Section 01: Disruption Signal -->
+                    <VBox class="sapFormSectionWide">
+                        <HBox alignItems="Center" class="sapSectionHeadingRow">
+                            <Text text="01" class="sapSectionNumberBadge" />
+                            <VBox class="sapSectionTitleCol">
+                                <Title text="DISRUPTION SIGNAL" level="H3" class="sapSectionHeadingTitle" />
+                                <Text text="Classify the incident and describe the root cause." class="sapSectionHeadingSub" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignItems="Start" class="sapFormRowSection1">
+                            <!-- Disruption Type (approx 32% width) -->
+                            <VBox class="sapFieldGroup sapColDisruptionType">
+                                <Label text="Disruption Type" required="true" class="sapFieldLabel" />
+                                <Select
+                                    id="disruptionTypeSelect"
+                                    selectedKey="{newCase>/disruption_type}"
+                                    width="100%"
+                                    class="sapFieldControl">
+                                    <core:Item key="SUPPLIER_DELAY" text="Supplier Shipment Delay" />
+                                    <core:Item key="PORT_CONGESTION" text="Port Congestion / Customs Hold" />
+                                    <core:Item key="FACTORY_INCIDENT" text="Supplier Factory Incident" />
+                                    <core:Item key="MATERIAL_SHORTAGE" text="Raw Material Shortage" />
+                                    <core:Item key="WEATHER_EVENT" text="Severe Weather Disruption" />
+                                    <core:Item key="LOGISTICS_DELAY" text="Logistics Route Delay" />
+                                    <core:Item key="EQUIPMENT_BREAKDOWN" text="Machining Equipment Breakdown" />
+                                    <core:Item key="CARRIER_SCHEDULE_CHANGE" text="Carrier Schedule Change" />
+                                </Select>
+                            </VBox>
+
+                            <!-- Description (approx 68% width) -->
+                            <VBox class="sapFieldGroup sapColDescription">
+                                <Label text="Description &amp; Root Cause" required="true" class="sapFieldLabel" />
+                                <TextArea
+                                    id="descriptionInput"
+                                    value="{newCase>/description}"
+                                    width="100%"
+                                    rows="3"
+                                    placeholder="Describe what happened, when it occurred, and the expected operational impact."
+                                    class="sapFieldControl sapDescriptionTextArea" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Section 02: Affected Supply Chain -->
+                    <VBox class="sapFormSectionWide">
+                        <HBox alignItems="Center" class="sapSectionHeadingRow">
+                            <Text text="02" class="sapSectionNumberBadge" />
+                            <VBox class="sapSectionTitleCol">
+                                <Title text="AFFECTED SUPPLY CHAIN" level="H3" class="sapSectionHeadingTitle" />
+                                <Text text="Identify the supplier, material and manufacturing location." class="sapSectionHeadingSub" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignItems="Start" class="sapFormRowSection2">
+                            <!-- Supplier (approx 33.3% width) -->
+                            <VBox class="sapFieldGroup sapColSupplyChain">
+                                <Label text="Affected Supplier" required="true" class="sapFieldLabel" />
+                                <Select
+                                    id="supplierSelect"
+                                    selectedKey="{newCase>/supplier_id}"
+                                    items="{masterData>/suppliers}"
+                                    width="100%"
+                                    class="sapFieldControl">
+                                    <core:Item key="{masterData>supplier_id}" text="{masterData>name} ({masterData>supplier_id})" />
+                                </Select>
+                            </VBox>
+
+                            <!-- Material (approx 33.3% width) -->
+                            <VBox class="sapFieldGroup sapColSupplyChain">
+                                <Label text="Affected Material" required="true" class="sapFieldLabel" />
+                                <Select
+                                    id="materialSelect"
+                                    selectedKey="{newCase>/material_id}"
+                                    items="{masterData>/materials}"
+                                    width="100%"
+                                    class="sapFieldControl">
+                                    <core:Item key="{masterData>material_id}" text="{masterData>name} ({masterData>material_id})" />
+                                </Select>
+                            </VBox>
+
+                            <!-- Plant (approx 33.3% width) -->
+                            <VBox class="sapFieldGroup sapColSupplyChain">
+                                <Label text="Target Manufacturing Plant" required="true" class="sapFieldLabel" />
+                                <Select
+                                    id="plantSelect"
+                                    selectedKey="{newCase>/plant_id}"
+                                    items="{masterData>/plants}"
+                                    width="100%"
+                                    class="sapFieldControl">
+                                    <core:Item key="{masterData>plant_id}" text="{masterData>name} ({masterData>plant_id})" />
+                                </Select>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Section 03: Impact Parameters -->
+                    <VBox class="sapFormSectionWide sapFormSectionLast">
+                        <HBox alignItems="Center" class="sapSectionHeadingRow">
+                            <Text text="03" class="sapSectionNumberBadge" />
+                            <VBox class="sapSectionTitleCol">
+                                <Title text="IMPACT PARAMETERS" level="H3" class="sapSectionHeadingTitle" />
+                                <Text text="Define the expected delay and volume at risk." class="sapSectionHeadingSub" />
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignItems="Start" class="sapFormRowSection3">
+                            <!-- Expected Delay Stepper (approx 50% width) -->
+                            <VBox class="sapFieldGroup sapColImpact">
+                                <Label text="Expected Delay" required="true" class="sapFieldLabel" />
+                                <StepInput
+                                    id="expectedDelayInput"
+                                    value="{newCase>/expected_delay_days}"
+                                    min="1"
+                                    max="60"
+                                    step="1"
+                                    width="100%"
+                                    class="sapFieldControl sapStepInputField" />
+                                <Text text="Days" class="sapFieldUnitBottomHint" />
+                            </VBox>
+
+                            <!-- Affected Quantity Input (approx 50% width) -->
+                            <VBox class="sapFieldGroup sapColImpact">
+                                <Label text="Affected Quantity" required="true" class="sapFieldLabel" />
+                                <Input
+                                    id="affectedQuantityInput"
+                                    value="{newCase>/affected_quantity}"
+                                    type="Number"
+                                    placeholder="500"
+                                    width="100%"
+                                    class="sapFieldControl" />
+                                <Text text="Units" class="sapFieldUnitBottomHint" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- 5. Compact Action Footer Inside Form -->
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapFormFooterInside">
+                        <HBox alignItems="Center" class="sapFormFooterNoteRow">
+                            <core:Icon src="sap-icon://sys-enter-2" class="sapFooterCheckIcon" />
+                            <Text text="Agent 1 will calculate deterministic supply-chain impact after submission." class="sapFooterNoteText" />
+                        </HBox>
+
+                        <HBox alignItems="Center" class="sapFormBtnGroup">
+                            <Button
+                                text="Reset"
+                                press=".onResetDefaults"
+                                class="sapBtnResetSecondary" />
+                            <Button
+                                id="btnAnalyzeDisruption"
+                                text="Analyze Disruption"
+                                icon="sap-icon://navigation-right-arrow"
+                                iconFirst="false"
+                                type="Emphasized"
+                                press=".onSubmitAndAnalyze"
+                                class="sapBtnAnalyzePrimary" />
+                        </HBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

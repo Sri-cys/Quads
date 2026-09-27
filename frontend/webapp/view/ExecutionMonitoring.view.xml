@@ -1,0 +1,206 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.ExecutionMonitoring"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="executionMonitoringPage"
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+
+        <content>
+            <VBox class="sapQuadsPageBody">
+
+                <!-- Page Title -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageTitleArea">
+                    <VBox>
+                        <Title text="Execution" level="H1" class="sapPageH1" />
+                        <Text text="Initiate and track the approved recovery action." class="sapPageSubtitle" />
+                    </VBox>
+                    <Button text="Refresh" icon="sap-icon://refresh" type="Transparent" press=".onRefreshProgress" />
+                </HBox>
+
+                <!-- ═══ PENDING EXECUTION: Not yet started ═══ -->
+                <VBox visible="{exec>/pending_execution}">
+
+                    <!-- Level 1: Gate status -->
+                    <HBox alignItems="Center" class="sapStatusBanner sapStatusGate">
+                        <core:Icon src="sap-icon://decision" class="sapStatusBannerIcon gate" />
+                        <VBox class="sapUiSmallMarginBegin">
+                            <Text text="AWAITING EXECUTION TRIGGER" class="sapStatusBannerTitle" />
+                            <Text text="Checkpoint 2 has been approved. Review the plan below and initiate the execution action." class="sapStatusBannerText" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Level 2: Approved plan summary -->
+                    <VBox class="sapContentCard">
+                        <Text text="APPROVED RECOVERY PLAN" class="sapCardTitle" />
+                        <layout:Grid defaultSpan="XL3 L3 M4 S6" hSpacing="1" vSpacing="1">
+                            <VBox>
+                                <Text text="Plan ID" class="sapKpiLabel" />
+                                <Text text="{exec>/approved_plan/plan_id} · {exec>/approved_plan/version}" class="bold textDark" style="font-size:14px" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Strategy" class="sapKpiLabel" />
+                                <Text text="{exec>/approved_plan/strategy}" class="bold" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Supplier / Source" class="sapKpiLabel" />
+                                <Text text="{exec>/approved_plan/source_name}" class="textDark" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Target Plant" class="sapKpiLabel" />
+                                <Text text="{exec>/approved_plan/destination_name}" class="bold" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Quantity" class="sapKpiLabel" />
+                                <Text text="{exec>/approved_plan/recovered_quantity} units" class="bold textDark" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Transport" class="sapKpiLabel" />
+                                <Text text="{exec>/approved_plan/transport_name}" class="textDark" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Expected Arrival" class="sapKpiLabel" />
+                                <Text text="{exec>/approved_plan/expected_delivery_date}" class="bold textSuccess" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Estimated Cost" class="sapKpiLabel" />
+                                <Text text="${= ${exec>/approved_plan/total_cost} ? ${exec>/approved_plan/total_cost}.toLocaleString() : '0' }" class="bold" />
+                            </VBox>
+                        </layout:Grid>
+
+                        <HBox class="sapDecisionBar">
+                            <Button text="Back to Recovery Planning" icon="sap-icon://nav-back" type="Transparent" press=".onReturnToPlanning" class="sapUiSmallMarginEnd" />
+                            <Button text="Initiate Execution Action" icon="sap-icon://shipping-status" type="Emphasized" press=".onStartExecutionAction" class="sapBtnPrimary" />
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+
+                <!-- ═══ EXECUTION IN PROGRESS / COMPLETE ═══ -->
+                <VBox visible="{= !${exec>/pending_execution} }">
+
+                    <!-- Level 1: Status banner -->
+                    <HBox visible="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" alignItems="Center" class="sapStatusBanner sapStatusInfo">
+                        <core:Icon src="sap-icon://shipping-status" class="sapStatusBannerIcon info" />
+                        <VBox class="sapUiSmallMarginBegin">
+                            <Text text="{= ${exec>/execution_status} === 'ACCEPTED' ? 'ORDER ACCEPTED — AWAITING SUPPLIER CONFIRMATION' : ${exec>/execution_status}.replace(/_/g,' ') }" class="sapStatusBannerTitle" />
+                            <Text text="Plan {exec>/baseline/plan_id} · {exec>/baseline/plan_version} is executing. Use Monitoring to track progress." class="sapStatusBannerText" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox visible="{exec>/is_success}" alignItems="Center" class="sapStatusBanner sapStatusSuccess">
+                        <core:Icon src="sap-icon://sys-enter-2" class="sapStatusBannerIcon success" />
+                        <VBox class="sapUiSmallMarginBegin">
+                            <Text text="RECOVERY COMPLETED — CASE RESOLVED" class="sapStatusBannerTitle" />
+                            <Text text="All material delivered within tolerance. View the Outcome page for the final summary." class="sapStatusBannerText" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox visible="{exec>/is_failed}" alignItems="Center" class="sapStatusBanner sapStatusError">
+                        <core:Icon src="sap-icon://alert" class="sapStatusBannerIcon error" />
+                        <VBox class="sapUiSmallMarginBegin">
+                            <Text text="EXECUTION FAILED — RECOVERY PLANNING REQUIRED" class="sapStatusBannerTitle" />
+                            <Text text="{exec>/failure_reason}" class="sapStatusBannerText" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Level 2: Execution baseline + plan version -->
+                    <VBox class="sapContentCard">
+                        <Text text="EXECUTION BASELINE" class="sapCardTitle" />
+                        <layout:Grid defaultSpan="XL3 L3 M4 S6" hSpacing="1" vSpacing="1">
+                            <VBox>
+                                <Text text="Approved Plan" class="sapKpiLabel" />
+                                <Text text="{exec>/baseline/plan_id} · {exec>/baseline/plan_version}" class="bold textPrimary" style="font-size:14px" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Strategy" class="sapKpiLabel" />
+                                <Text text="{exec>/baseline/strategy}" class="bold" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Source" class="sapKpiLabel" />
+                                <Text text="{exec>/baseline/source_name} · {exec>/baseline/source_location}" class="textDark" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Target Plant" class="sapKpiLabel" />
+                                <Text text="{exec>/baseline/target_plant_name}" class="bold" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Planned Quantity" class="sapKpiLabel" />
+                                <Text text="{exec>/baseline/planned_quantity} units" class="bold" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Planned Arrival" class="sapKpiLabel" />
+                                <Text text="{exec>/baseline/planned_arrival_date}" class="bold" />
+                            </VBox>
+                            <VBox>
+                                <Text text="SAP Reference" class="sapKpiLabel" />
+                                <Text text="{exec>/action/external_reference}" class="textDark textSmall" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Carrier" class="sapKpiLabel" />
+                                <Text text="{exec>/action/carrier_name}" class="textDark" />
+                            </VBox>
+                        </layout:Grid>
+                    </VBox>
+
+                    <!-- Level 2: Navigate to monitoring -->
+                    <HBox visible="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" justifyContent="End" class="mb16">
+                        <Button text="Go to Monitoring →" type="Emphasized" icon="sap-icon://trip-report" press=".onGoToMonitoring" class="sapBtnPrimary" />
+                    </HBox>
+                    <HBox visible="{exec>/is_success}" justifyContent="End" class="mb16">
+                        <Button text="View Outcome →" type="Emphasized" icon="sap-icon://sys-enter-2" press=".onGoToOutcome" class="sapBtnSuccess" />
+                    </HBox>
+                    <HBox visible="{exec>/is_failed}" justifyContent="End" class="mb16">
+                        <Button text="Return to Recovery Planning" type="Emphasized" icon="sap-icon://journey-change" press=".onReturnToPlanning" class="sapBtnPrimary" />
+                    </HBox>
+
+                    <!-- Level 3: Telemetry Simulator (expandable) -->
+                    <Panel expandable="true" expanded="true"
+                        headerText="Telematics Simulator — Simulate SAP Carrier Events"
+                        class="sapExpandPanel">
+                        <VBox class="sapUiSmallMargin">
+                            <Text text="Simulate real-time events from carrier telemetry / SAP TM adapter." class="textMuted textSmall mb8" />
+                            <HBox wrap="Wrap" class="sapSimButtons">
+                                <Button text="1 · Supplier Confirmed" icon="sap-icon://supplier"         type="Default"    press=".onSimulateSupplierConfirmed" enabled="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                <Button text="2 · Dispatched"         icon="sap-icon://shipping-status"  type="Default"    press=".onSimulateDispatched"        enabled="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                <Button text="3 · In Transit"         icon="sap-icon://map"              type="Default"    press=".onSimulateInTransit"         enabled="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                <Button text="4 · Delay +2d"          icon="sap-icon://history"          type="Attention"  press=".onSimulateDelay"             enabled="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                <Button text="5 · Delivered ✓"        icon="sap-icon://sys-enter-2"      type="Emphasized" press=".onSimulateDelivered"         enabled="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" class="sapBtnSuccess sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+                                <Button text="6 · Failure ✗"          icon="sap-icon://alert"            type="Reject"     press=".onSimulateFailure"           enabled="{= !${exec>/is_success} &amp;&amp; !${exec>/is_failed} }" class="sapUiTinyMarginBottom" />
+                            </HBox>
+                        </VBox>
+                    </Panel>
+
+                    <!-- Level 3: Audit trail (collapsed) -->
+                    <Panel expandable="true" expanded="false"
+                        headerText="Audit Trail ({= ${exec>/audit_events} ? ${exec>/audit_events}.length : 0 } events)"
+                        class="sapExpandPanel mt8">
+                        <Table items="{exec>/audit_events}" noDataText="No audit events yet.">
+                            <columns>
+                                <Column width="180px"><Text text="Timestamp" class="bold" /></Column>
+                                <Column width="200px"><Text text="Event" class="bold" /></Column>
+                                <Column width="160px"><Text text="Actor" class="bold" /></Column>
+                                <Column><Text text="Details" class="bold" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{exec>timestamp}" class="textSmall textMuted" />
+                                        <ObjectStatus text="{exec>event}" state="Information" class="bold" />
+                                        <Text text="{exec>actor}" class="bold" />
+                                        <Text text="{exec>details}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
+                </VBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

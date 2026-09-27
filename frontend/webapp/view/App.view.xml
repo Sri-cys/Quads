@@ -1,0 +1,104 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    displayBlock="true"
+    height="100%">
+    <VBox fitContainer="true" class="sapCorporateAppWrapper">
+
+        <!-- Top Navigation Header -->
+        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapCorporateTopHeader">
+            <HBox alignItems="Center" class="sapBrandGroup">
+                <Image src="img/sap-logo.svg" height="24px" class="sapLogoHeaderImg" tooltip="SAP" />
+                <Text text="Quads" class="sapBrandQuadsText" />
+                <Text text="|" class="sapBrandSeparator" />
+                <Text text="Supply Chain Control Tower" class="sapBrandControlTowerText" />
+            </HBox>
+
+            <HBox alignItems="Center" class="sapTopNavList">
+                <Button id="topNavDashboard"     text="Dashboard"      type="Transparent" press=".onTopNavDashboard"     class="sapTopNavItem" />
+                <Button id="topNavCases"         text="Cases"          type="Transparent" press=".onTopNavCases"         class="sapTopNavItem" />
+                <Button id="topNavNewDisruption" text="New Disruption" type="Transparent" press=".onTopNavNewDisruption" class="sapTopNavItem" />
+            </HBox>
+
+            <HBox alignItems="Center" class="sapTopUtilities">
+                <Button icon="sap-icon://search"          type="Transparent" tooltip="Search Cases" press=".onSearchPress"       class="sapHeaderUtilityBtn" />
+                <Button icon="sap-icon://bell"            type="Transparent" tooltip="Alerts"       press=".onNotificationPress" class="sapHeaderUtilityBtn" />
+                <Button icon="sap-icon://action-settings" type="Transparent" tooltip="Settings"     press=".onSettingsPress"     class="sapHeaderUtilityBtn" />
+                <HBox alignItems="Center" class="sapUserAvatarGroup">
+                    <Avatar initials="SC" displaySize="XS" class="sapHeaderUserAvatar" press=".onUserPress" />
+                </HBox>
+            </HBox>
+        </HBox>
+
+        <!-- Case Workflow Stepper Bar (visible when a case is active on workflow pages) -->
+        <HBox
+            id="workflowStepperBar"
+            visible="{= !!${app>/selectedCaseId} &amp;&amp; ${app>/currentRoute} !== 'dashboard' &amp;&amp; ${app>/currentRoute} !== 'cases' &amp;&amp; ${app>/currentRoute} !== 'newDisruption' }"
+            alignItems="Center"
+            class="sapWorkflowStepperBar">
+
+            <!-- Case ID + status -->
+            <VBox class="sapWorkflowCaseLabel">
+                <Text text="{app>/selectedCaseId}" class="bold textDark" />
+                <Text text="{app>/caseStatusText}" class="sapWorkflowCaseSub" />
+            </VBox>
+
+            <!-- 1. Impact -->
+            <Button id="wfBtn1" text="1 · Impact"
+                type="{= ${app>/stageStep} === 1 ? 'Emphasized' : 'Transparent' }"
+                press=".onNavWorkflowImpact"
+                class="{= ${app>/stageStep} > 1 ? 'sapWfStep wfDone' : (${app>/stageStep} === 1 ? 'sapWfStep wfActive' : 'sapWfStep') }" />
+            <core:Icon src="sap-icon://slim-arrow-right" class="sapWfArrow" />
+
+            <!-- 2. Checkpoint 1 -->
+            <Button id="wfBtn2" text="2 · Checkpoint 1"
+                type="{= ${app>/stageStep} === 2 ? 'Emphasized' : 'Transparent' }"
+                press=".onNavWorkflowCp1"
+                class="{= ${app>/stageStep} > 2 ? 'sapWfStep wfCheckpoint wfDone' : (${app>/stageStep} === 2 ? 'sapWfStep wfCheckpoint wfActive' : 'sapWfStep wfCheckpoint') }" />
+            <core:Icon src="sap-icon://slim-arrow-right" class="sapWfArrow" />
+
+            <!-- 3. Recovery Planning -->
+            <Button id="wfBtn3" text="3 · Recovery Planning"
+                type="{= ${app>/stageStep} === 3 ? 'Emphasized' : 'Transparent' }"
+                press=".onNavWorkflowRecovery"
+                class="{= ${app>/stageStep} > 3 ? 'sapWfStep wfDone' : (${app>/stageStep} === 3 ? 'sapWfStep wfActive' : 'sapWfStep') }" />
+            <core:Icon src="sap-icon://slim-arrow-right" class="sapWfArrow" />
+
+            <!-- 4. Checkpoint 2 -->
+            <Button id="wfBtn4" text="4 · Checkpoint 2"
+                type="{= ${app>/stageStep} === 4 ? 'Emphasized' : 'Transparent' }"
+                press=".onNavWorkflowCp2"
+                class="{= ${app>/stageStep} > 4 ? 'sapWfStep wfCheckpoint wfDone' : (${app>/stageStep} === 4 ? 'sapWfStep wfCheckpoint wfActive' : 'sapWfStep wfCheckpoint') }" />
+            <core:Icon src="sap-icon://slim-arrow-right" class="sapWfArrow" />
+
+            <!-- 5. Execution -->
+            <Button id="wfBtn5" text="5 · Execution"
+                type="{= ${app>/stageStep} === 5 ? 'Emphasized' : 'Transparent' }"
+                press=".onNavWorkflowExecution"
+                class="{= ${app>/stageStep} > 5 ? 'sapWfStep wfDone' : (${app>/stageStep} === 5 ? 'sapWfStep wfActive' : 'sapWfStep') }" />
+            <core:Icon src="sap-icon://slim-arrow-right" class="sapWfArrow" />
+
+            <!-- 6. Monitoring -->
+            <Button id="wfBtn6" text="6 · Monitoring"
+                type="{= ${app>/stageStep} === 6 ? 'Emphasized' : 'Transparent' }"
+                press=".onNavWorkflowMonitoring"
+                class="{= ${app>/stageStep} > 6 ? 'sapWfStep wfDone' : (${app>/stageStep} === 6 ? 'sapWfStep wfActive' : 'sapWfStep') }" />
+            <core:Icon src="sap-icon://slim-arrow-right" class="sapWfArrow" />
+
+            <!-- 7. Outcome -->
+            <Button id="wfBtn7" text="7 · Outcome"
+                type="{= ${app>/stageStep} === 7 ? 'Emphasized' : 'Transparent' }"
+                press=".onNavWorkflowOutcome"
+                class="{= ${app>/stageStep} === 7 ? 'sapWfStep wfActive' : 'sapWfStep' }" />
+        </HBox>
+
+        <!-- Main Content Canvas -->
+        <NavContainer id="pageContainer" class="sapCorporateNavContainer">
+            <layoutData>
+                <FlexItemData growFactor="1" shrinkFactor="1" baseSize="auto" />
+            </layoutData>
+        </NavContainer>
+    </VBox>
+</mvc:View>

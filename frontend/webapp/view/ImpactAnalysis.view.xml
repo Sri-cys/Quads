@@ -1,0 +1,304 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.ImpactAnalysis"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+    <Page
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+        <content>
+            <VBox class="sapCorporatePageBody">
+
+                <!-- Page Header: Title + Context Badge + Action Buttons -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
+                    <VBox>
+                        <Title text="IMPACT ANALYSIS" level="H1" class="sapCorporatePageTitle" />
+                        <HBox alignItems="Center" class="sapCaseMetaTagRow">
+                            <Text text="CASE:" class="sapMetaLabel" />
+                            <Text text="{impact>/case/case_id}" class="sapMetaValueBold" />
+                            <Text text="•" class="sapMetaDot" />
+                            <Text text="{impact>/case/supplier_id}" class="sapMetaValue" />
+                            <Text text="/" class="sapMetaSlash" />
+                            <Text text="{impact>/case/material_id}" class="sapMetaValue" />
+                            <Text text="/" class="sapMetaSlash" />
+                            <Text text="{impact>/case/plant_id}" class="sapMetaValue" />
+                        </HBox>
+                    </VBox>
+                    <HBox alignItems="Center">
+                        <Button
+                            text="Re-Analyze"
+                            type="Default"
+                            press=".onReAnalyze"
+                            class="sapUiTinyMarginEnd" />
+                        <Button
+                            text="Proceed to Checkpoint 1 &#x2192;"
+                            type="Emphasized"
+                            press=".onProceedCheckpoint"
+                            class="sapBtnPrimary" />
+                    </HBox>
+                </HBox>
+
+                <!-- 1. Four High-Impact Metric Cards (Horizontal) -->
+                <layout:Grid
+                    defaultSpan="XL3 L3 M6 S12"
+                    hSpacing="1"
+                    vSpacing="1"
+                    class="sapImpactMetricGrid">
+                    
+                    <!-- Days of Cover -->
+                    <VBox class="sapImpactMetricCard criticalHighlight">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween">
+                            <Text text="Days of Cover (DoC)" class="sapMetricHeaderTitle" />
+                            <core:Icon src="sap-icon://time-entry-request" class="sapMetricIcon critical" />
+                        </HBox>
+                        <Text text="{= ${impact>/deterministic/days_of_cover} !== undefined ? ${impact>/deterministic/days_of_cover} + ' Days' : '—' }" class="sapMetricLargeNumber textCritical" />
+                        <Text text="Stockout threshold: &#x2264; 3 Days" class="sapMetricFootnote" />
+                    </VBox>
+
+                    <!-- Stockout Date -->
+                    <VBox class="sapImpactMetricCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween">
+                            <Text text="Calculated Stockout Date" class="sapMetricHeaderTitle" />
+                            <core:Icon src="sap-icon://calendar" class="sapMetricIcon info" />
+                        </HBox>
+                        <Text text="{impact>/deterministic/stockout_date_formatted}" class="sapMetricLargeNumber textDark" />
+                        <Text text="Immediate assembly risk date" class="sapMetricFootnote" />
+                    </VBox>
+
+                    <!-- Supply Gap -->
+                    <VBox class="sapImpactMetricCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween">
+                            <Text text="Supply Gap Quantity" class="sapMetricHeaderTitle" />
+                            <core:Icon src="sap-icon://product" class="sapMetricIcon warning" />
+                        </HBox>
+                        <Text text="{= ${impact>/deterministic/supply_gap_quantity} !== undefined ? ${impact>/deterministic/supply_gap_quantity} + ' Units' : '0 Units' }" class="sapMetricLargeNumber textWarning" />
+                        <Text text="Net replenishment deficit" class="sapMetricFootnote" />
+                    </VBox>
+
+                    <!-- Calculated Severity -->
+                    <VBox class="sapImpactMetricCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween">
+                            <Text text="Operational Severity" class="sapMetricHeaderTitle" />
+                            <core:Icon src="sap-icon://status-critical" class="sapMetricIcon critical" />
+                        </HBox>
+                        <Text text="{impact>/deterministic/severity}" class="sapMetricLargeNumber textCritical" />
+                        <Text text="Safety Stock Breach: YES" class="sapMetricFootnote" />
+                    </VBox>
+                </layout:Grid>
+
+                <!-- 2. Supply Chain Impact Visual Chain -->
+                <VBox class="sapVisualChainCard">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapChainHeaderBar">
+                        <VBox>
+                            <Title text="SUPPLY CHAIN IMPACT FLOW" level="H3" class="sapSectionTitleSmall" />
+                            <Text text="Propagation trajectory across interconnected network nodes." class="sapSectionSubSmall" />
+                        </VBox>
+                        <Text text="Automated Triage Trace" class="sapTagNeutral" />
+                    </HBox>
+
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapChainNodesRow">
+                        <!-- Node 1: Supplier -->
+                        <VBox class="sapChainNode">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://supplier" class="sapChainIcon" />
+                                <Text text="SUPPLIER" class="sapChainNodeTag" />
+                            </HBox>
+                            <Text text="{impact>/downstream/affected_supplier/name}" class="sapChainNodeTitle" />
+                            <Text text="{impact>/downstream/affected_supplier/id}" class="sapChainNodeSub" />
+                        </VBox>
+
+                        <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
+
+                        <!-- Node 2: Material -->
+                        <VBox class="sapChainNode">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://product" class="sapChainIcon" />
+                                <Text text="MATERIAL" class="sapChainNodeTag" />
+                            </HBox>
+                            <Text text="{impact>/downstream/affected_material/name}" class="sapChainNodeTitle" />
+                            <Text text="{impact>/downstream/affected_material/id}" class="sapChainNodeSub" />
+                        </VBox>
+
+                        <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
+
+                        <!-- Node 3: Plant -->
+                        <VBox class="sapChainNode">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://factory" class="sapChainIcon" />
+                                <Text text="PLANT NODE" class="sapChainNodeTag" />
+                            </HBox>
+                            <Text text="{impact>/downstream/affected_plant/name}" class="sapChainNodeTitle" />
+                            <Text text="{impact>/downstream/affected_plant/id}" class="sapChainNodeSub" />
+                        </VBox>
+
+                        <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
+
+                        <!-- Node 4: Production Exposure -->
+                        <VBox class="sapChainNode">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://alert" class="sapChainIcon warning" />
+                                <Text text="PRODUCTION RISK" class="sapChainNodeTag" />
+                            </HBox>
+                            <Text text="{impact>/downstream/production_risk}" class="sapChainNodeTitle" maxLines="1" />
+                            <Text text="Buffer Depletion Hazard" class="sapChainNodeSub" />
+                        </VBox>
+
+                        <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
+
+                        <!-- Node 5: Financial Exposure -->
+                        <VBox class="sapChainNode">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://money-bills" class="sapChainIcon" />
+                                <Text text="DEMAND EXPOSURE" class="sapChainNodeTag" />
+                            </HBox>
+                            <Text text="{impact>/downstream/financial_exposure_display}" class="sapChainNodeTitle textCritical" />
+                            <Text text="1 Purchase Order Impacted" class="sapChainNodeSub" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- 3. Two-Column Analytics: Inventory Coverage vs Deterministic Engine -->
+                <layout:Grid
+                    defaultSpan="XL6 L6 M12 S12"
+                    hSpacing="1"
+                    vSpacing="1"
+                    class="sapOverviewGrid">
+
+                    <!-- Left: Inventory Coverage -->
+                    <VBox class="sapOverviewCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                            <Title text="INVENTORY &amp; SAFETY STOCK EXPOSURE" level="H3" class="sapCardSectionTitle" />
+                            <Text text="Warehouse Buffer Telemetry" class="sapCardSectionSub" />
+                        </HBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Current Available Inventory" class="sapMetricLabel" />
+                                <Text text="{= ${impact>/deterministic/available_inventory} !== undefined ? ${impact>/deterministic/available_inventory} + ' Units' : '—' }" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Daily Assembly Consumption" class="sapMetricLabel" />
+                                <Text text="{= ${impact>/deterministic/daily_demand} !== undefined ? ${impact>/deterministic/daily_demand} + ' Units / Day' : '—' }" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Safety Stock Threshold Level" class="sapMetricLabel" />
+                                <Text text="{= ${impact>/deterministic/safety_stock_level} !== undefined ? ${impact>/deterministic/safety_stock_level} + ' Units' : '—' }" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Safety Stock Breach Status" class="sapMetricLabel bold" />
+                                <Text text="{= ${impact>/deterministic/safety_stock_breached} ? 'BREACHED (Safety threshold exceeded)' : 'MAINTAINED' }" class="sapMetricVal textCritical bold" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Right: Deterministic Calculation Log -->
+                    <VBox class="sapOverviewCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                            <Title text="DETERMINISTIC RULE ENGINE" level="H3" class="sapCardSectionTitle" />
+                            <Text text="Python Deterministic Service" class="sapCardSectionSub" />
+                        </HBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Mathematical Formulation" class="sapMetricLabel" />
+                                <Text text="DoC = Available Inventory / Daily Demand" class="sapMetricVal code" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Replenishment Delay Delta" class="sapMetricLabel" />
+                                <Text text="+5.0 Business Days" class="sapMetricVal bold textWarning" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Affected Purchase Orders" class="sapMetricLabel" />
+                                <Text text="{= ${impact>/downstream/affected_pos} ? ${impact>/downstream/affected_pos}.length + ' Purchase Orders' : '1 Purchase Order' }" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Deterministic Certification" class="sapMetricLabel" />
+                                <Text text="Verified Zero AI Hallucination" class="sapMetricVal textSuccess bold" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                </layout:Grid>
+
+                <!-- 4. Agent 1 Assessment (AI-Assisted Operational Reasoning) -->
+                <VBox class="sapAiAssessmentCard">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapAiHeaderBar">
+                        <HBox alignItems="Center">
+                            <Title text="AGENT 1 ASSESSMENT" level="H2" class="sapAiTitle" />
+                            <Text text="•" class="sapAiDot" />
+                            <Text text="AI-Assisted Operational Reasoning" class="sapAiSub" />
+                        </HBox>
+                        <HBox alignItems="Center" class="sapGeminiBadge">
+                            <core:Icon src="sap-icon://ai" class="sapGeminiIcon" />
+                            <Text text="Powered by Gemini AI" class="sapGeminiText" />
+                        </HBox>
+                    </HBox>
+
+                    <!-- Fallback Notice if Gemini unavailable -->
+                    <HBox visible="{= !${impact>/ai/situation} }" class="sapInfoBanner sapUiTinyMarginBottom">
+                        <core:Icon src="sap-icon://information" class="sapInfoBannerIcon" />
+                        <Text text="AI explanation temporarily unavailable. Deterministic impact analysis remains available." class="sapInfoBannerText" />
+                    </HBox>
+
+                    <!-- 4 Structured Decision Blocks -->
+                    <layout:Grid
+                        defaultSpan="XL3 L3 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1"
+                        class="sapAiGrid">
+
+                        <VBox class="sapAiBlock">
+                            <Text text="1. SITUATION" class="sapAiBlockTag" />
+                            <Text text="{= ${impact>/ai/situation} ? ${impact>/ai/situation} : 'Supplier shipment delayed by 5 days due to packaging bottleneck. Replenishment postponed.' }" class="sapAiBlockText" />
+                        </VBox>
+
+                        <VBox class="sapAiBlock">
+                            <Text text="2. OPERATIONAL IMPACT" class="sapAiBlockTag" />
+                            <Text text="{= ${impact>/ai/impact} ? ${impact>/ai/impact} : 'Inventory buffer drops to 2 days of cover, breaching safety stock threshold within 48 hours.' }" class="sapAiBlockText" />
+                        </VBox>
+
+                        <VBox class="sapAiBlock">
+                            <Text text="3. KEY RISKS" class="sapAiBlockTag" />
+                            <Text text="{= ${impact>/ai/risks} ? ${impact>/ai/risks} : 'Assembly line stoppage risk at Munich plant. Production halts unless expedited or rerouted.' }" class="sapAiBlockText" />
+                        </VBox>
+
+                        <VBox class="sapAiBlock highlight">
+                            <Text text="4. STRATEGIC ASSESSMENT" class="sapAiBlockTag" />
+                            <Text text="{= ${impact>/ai/recommendation} ? ${impact>/ai/recommendation} : 'Immediate recovery orchestration required at Human Checkpoint 1 to select recovery objective.' }" class="sapAiBlockText" />
+                        </VBox>
+                    </layout:Grid>
+                </VBox>
+
+                <!-- Bottom Action Row -->
+                <HBox alignItems="Center" justifyContent="End" class="sapPageActionsRow">
+                    <Button
+                        text="Proceed to Checkpoint 1 &#x2192;"
+                        icon="sap-icon://decision"
+                        type="Emphasized"
+                        press=".onProceedCheckpoint"
+                        class="sapBtnPrimary" />
+                </HBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

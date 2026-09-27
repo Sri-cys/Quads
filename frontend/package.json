@@ -1,0 +1,22 @@
+{
+  "name": "quads-supply-chain-frontend",
+  "version": "1.0.0",
+  "description": "Quads - Agentic Supply Chain Control Tower (SAPUI5)",
+  "scripts": {
+    "start": "ui5 serve --port 8080",
+    "serve": "ui5 serve --port 8080",
+    "build": "ui5 build"
+  },
+  "keywords": [
+    "sapui5",
+    "fiori",
+    "supply-chain",
+    "control-tower",
+    "quads"
+  ],
+  "author": "QuadS | PSGITECH220 | SAP Hackfest 2026",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@ui5/cli": "^3.9.0"
+  }
+}

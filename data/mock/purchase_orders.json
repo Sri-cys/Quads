@@ -1,0 +1,74 @@
+[
+  {
+    "po_id": "PO-001",
+    "supplier_id": "SUP-001",
+    "material_id": "MAT-001",
+    "plant_id": "PLANT-001",
+    "quantity": 500,
+    "expected_delivery_date": "2026-10-05T08:00:00Z",
+    "status": "OPEN"
+  },
+  {
+    "po_id": "PO-002",
+    "supplier_id": "SUP-002",
+    "material_id": "MAT-002",
+    "plant_id": "PLANT-002",
+    "quantity": 400,
+    "expected_delivery_date": "2026-10-02T10:00:00Z",
+    "status": "OPEN"
+  },
+  {
+    "po_id": "PO-003",
+    "supplier_id": "SUP-003",
+    "material_id": "MAT-003",
+    "plant_id": "PLANT-001",
+    "quantity": 300,
+    "expected_delivery_date": "2026-10-04T12:00:00Z",
+    "status": "OPEN"
+  },
+  {
+    "po_id": "PO-004",
+    "supplier_id": "SUP-004",
+    "material_id": "MAT-004",
+    "plant_id": "PLANT-003",
+    "quantity": 200,
+    "expected_delivery_date": "2026-10-06T14:00:00Z",
+    "status": "OPEN"
+  },
+  {
+    "po_id": "PO-005",
+    "supplier_id": "SUP-005",
+    "material_id": "MAT-005",
+    "plant_id": "PLANT-002",
+    "quantity": 500,
+    "expected_delivery_date": "2026-10-10T09:00:00Z",
+    "status": "OPEN"
+  },
+  {
+    "po_id": "PO-006",
+    "supplier_id": "SUP-001",
+    "material_id": "MAT-006",
+    "plant_id": "PLANT-001",
+    "quantity": 350,
+    "expected_delivery_date": "2026-10-12T11:00:00Z",
+    "status": "OPEN"
+  },
+  {
+    "po_id": "PO-007",
+    "supplier_id": "SUP-006",
+    "material_id": "MAT-007",
+    "plant_id": "PLANT-001",
+    "quantity": 2000,
+    "expected_delivery_date": "2026-10-20T16:00:00Z",
+    "status": "OPEN"
+  },
+  {
+    "po_id": "PO-008",
+    "supplier_id": "SUP-004",
+    "material_id": "MAT-008",
+    "plant_id": "PLANT-003",
+    "quantity": 1000,
+    "expected_delivery_date": "2026-10-25T15:00:00Z",
+    "status": "OPEN"
+  }
+]
