@@ -3,63 +3,53 @@
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout">
 
-    <VBox class="sapCaseWorkflowHeaderContainer sapUiSmallMarginBottom">
-        <!-- Top Row: Case ID, Description, Severity, Status, Stage, Last Updated -->
+    <VBox class="sapCaseWorkflowHeaderContainer">
+        <!-- Top Row: Case ID · Title | Meta info right -->
         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapCaseHeaderTopRow">
-            <HBox alignItems="Center" class="sapCaseHeaderInfoGroup">
+            <HBox alignItems="Center">
                 <Text text="{app>/selectedCaseId}" class="sapCaseHeaderId" />
                 <Text text="·" class="sapCaseHeaderDot" />
-                <Title text="{app>/caseTitle}" level="H2" class="sapCaseHeaderTitle" />
+                <Title text="{app>/caseTitle}" level="H3" class="sapCaseHeaderTitle" />
             </HBox>
             <HBox alignItems="Center" class="sapCaseHeaderMetaGroup">
                 <Text text="Severity:" class="sapCaseMetaLabel sapUiTinyMarginEnd" />
                 <ObjectStatus
                     text="{app>/caseSeverity}"
                     state="{= ${app>/caseSeverity} === 'CRITICAL' ? 'Error' : (${app>/caseSeverity} === 'HIGH' ? 'Warning' : 'Success') }"
-                    class="bold sapUiSmallMarginEnd" />
-
+                    class="sapUiSmallMarginEnd" />
                 <Text text="Status:" class="sapCaseMetaLabel sapUiTinyMarginEnd" />
                 <ObjectStatus
                     text="{app>/caseStatusText}"
                     state="Information"
-                    class="bold sapUiSmallMarginEnd" />
-
-                <Text text="Stage:" class="sapCaseMetaLabel sapUiTinyMarginEnd" />
-                <ObjectStatus
-                    text="{app>/currentStageName}"
-                    state="None"
-                    class="bold sapUiSmallMarginEnd" />
-
+                    class="sapUiSmallMarginEnd" />
                 <Text text="{app>/lastUpdated}" class="textMuted textSmall" />
             </HBox>
         </HBox>
 
-        <!-- Bottom Row: Strict 8-Stage Process Indicator -->
+        <!-- Stage Progress Bar: 8 Stages, compact, no lock emoji clutter -->
         <HBox alignItems="Center" class="sapCaseStageIndicatorRow">
+
+            <!-- 1. CASE -->
             <!-- 1. CASE -->
             <ObjectStatus
-                text="{= ${app>/stageStep} > 1 ? '✓ CASE' : (${app>/activeStep} === 1 ? '● CASE' : 'CASE') }"
-                icon="{= ${app>/stageStep} > 1 ? 'sap-icon://accept' : (${app>/activeStep} === 1 ? 'sap-icon://record' : 'sap-icon://circle-task') }"
-                state="{= ${app>/activeStep} === 1 ? 'Information' : (${app>/stageStep} > 1 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 1 }"
+                text="Case"
+                icon="{= ${app>/stageStep} > 1 ? 'sap-icon://accept' : (${app>/activeStep} === 1 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 1 ? 'sapStageNode active' : (${app>/stageStep} > 1 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="1" />
                 </customData>
             </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
-            <!-- 2. IMPACT -->
+            <!-- 2. IMPACT ANALYSIS -->
             <ObjectStatus
-                text="{= ${app>/stageStep} > 2 ? '✓ IMPACT' : (${app>/activeStep} === 2 ? '● IMPACT' : (${app>/stageStep} >= 2 ? 'IMPACT' : '🔒 IMPACT')) }"
-                icon="{= ${app>/stageStep} > 2 ? 'sap-icon://accept' : (${app>/activeStep} === 2 ? 'sap-icon://record' : (${app>/stageStep} >= 2 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
-                state="{= ${app>/activeStep} === 2 ? 'Information' : (${app>/stageStep} > 2 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 2 }"
+                text="Impact Analysis"
+                icon="{= ${app>/stageStep} > 2 ? 'sap-icon://accept' : (${app>/activeStep} === 2 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 2 ? 'sapStageNode active' : (${app>/stageStep} > 2 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="2" />
                 </customData>
@@ -68,43 +58,37 @@
 
             <!-- 3. PRIORITY -->
             <ObjectStatus
-                text="{= ${app>/stageStep} > 3 ? '✓ PRIORITY' : (${app>/activeStep} === 3 ? '● PRIORITY' : (${app>/stageStep} >= 3 ? 'PRIORITY' : '🔒 PRIORITY')) }"
-                icon="{= ${app>/stageStep} > 3 ? 'sap-icon://accept' : (${app>/activeStep} === 3 ? 'sap-icon://record' : (${app>/stageStep} >= 3 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
-                state="{= ${app>/activeStep} === 3 ? 'Information' : (${app>/stageStep} > 3 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 3 }"
+                text="Priority"
+                icon="{= ${app>/stageStep} > 3 ? 'sap-icon://accept' : (${app>/activeStep} === 3 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 3 ? 'sapStageNode active' : (${app>/stageStep} > 3 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="3" />
                 </customData>
             </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
-            <!-- 4. RECOVERY PLANS -->
+            <!-- 4. CONSTRAINTS -->
             <ObjectStatus
-                text="{= ${app>/stageStep} > 4 ? '✓ RECOVERY PLANS' : (${app>/activeStep} === 4 ? '● RECOVERY PLANS' : (${app>/stageStep} >= 4 ? 'RECOVERY PLANS' : '🔒 RECOVERY PLANS')) }"
-                icon="{= ${app>/stageStep} > 4 ? 'sap-icon://accept' : (${app>/activeStep} === 4 ? 'sap-icon://record' : (${app>/stageStep} >= 4 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
-                state="{= ${app>/activeStep} === 4 ? 'Information' : (${app>/stageStep} > 4 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 4 }"
+                text="Constraints"
+                icon="{= ${app>/stageStep} > 4 ? 'sap-icon://accept' : (${app>/activeStep} === 4 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 4 ? 'sapStageNode active' : (${app>/stageStep} > 4 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="4" />
                 </customData>
             </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
-            <!-- 5. EVALUATION -->
+            <!-- 5. RECOVERY PLANNING -->
             <ObjectStatus
-                text="{= ${app>/stageStep} > 5 ? '✓ EVALUATION' : (${app>/activeStep} === 5 ? '● EVALUATION' : (${app>/stageStep} >= 5 ? 'EVALUATION' : '🔒 EVALUATION')) }"
-                icon="{= ${app>/stageStep} > 5 ? 'sap-icon://accept' : (${app>/activeStep} === 5 ? 'sap-icon://record' : (${app>/stageStep} >= 5 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
-                state="{= ${app>/activeStep} === 5 ? 'Information' : (${app>/stageStep} > 5 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 5 }"
+                text="Recovery Planning"
+                icon="{= ${app>/stageStep} > 5 ? 'sap-icon://accept' : (${app>/activeStep} === 5 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 5 ? 'sapStageNode active' : (${app>/stageStep} > 5 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="5" />
                 </customData>
@@ -113,13 +97,11 @@
 
             <!-- 6. DECISION -->
             <ObjectStatus
-                text="{= ${app>/stageStep} > 6 ? '✓ DECISION' : (${app>/activeStep} === 6 ? '● DECISION' : (${app>/stageStep} >= 6 ? 'DECISION' : '🔒 DECISION')) }"
-                icon="{= ${app>/stageStep} > 6 ? 'sap-icon://accept' : (${app>/activeStep} === 6 ? 'sap-icon://record' : (${app>/stageStep} >= 6 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
-                state="{= ${app>/activeStep} === 6 ? 'Information' : (${app>/stageStep} > 6 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 6 }"
+                text="Decision"
+                icon="{= ${app>/stageStep} > 6 ? 'sap-icon://accept' : (${app>/activeStep} === 6 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 6 ? 'sapStageNode active' : (${app>/stageStep} > 6 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="6" />
                 </customData>
@@ -128,13 +110,11 @@
 
             <!-- 7. EXECUTION & MONITORING -->
             <ObjectStatus
-                text="{= ${app>/stageStep} > 7 ? '✓ EXECUTION &amp; MONITORING' : (${app>/activeStep} === 7 ? '● EXECUTION &amp; MONITORING' : (${app>/stageStep} >= 7 ? 'EXECUTION &amp; MONITORING' : '🔒 EXECUTION &amp; MONITORING')) }"
-                icon="{= ${app>/stageStep} > 7 ? 'sap-icon://accept' : (${app>/activeStep} === 7 ? 'sap-icon://record' : (${app>/stageStep} >= 7 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
-                state="{= ${app>/activeStep} === 7 ? 'Information' : (${app>/stageStep} > 7 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 7 }"
+                text="Execution &amp; Monitoring"
+                icon="{= ${app>/stageStep} > 7 ? 'sap-icon://accept' : (${app>/activeStep} === 7 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 7 ? 'sapStageNode active' : (${app>/stageStep} > 7 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="7" />
                 </customData>
@@ -143,13 +123,11 @@
 
             <!-- 8. OUTCOME -->
             <ObjectStatus
-                text="{= ${app>/stageStep} >= 8 ? (${app>/activeStep} === 8 ? '● OUTCOME' : '✓ OUTCOME') : '🔒 OUTCOME' }"
-                icon="{= ${app>/stageStep} >= 8 ? (${app>/activeStep} === 8 ? 'sap-icon://flag' : 'sap-icon://accept') : 'sap-icon://locked' }"
-                state="{= ${app>/activeStep} === 8 ? 'Information' : (${app>/stageStep} >= 8 ? 'Success' : 'None') }"
-                inverted="{= ${app>/activeStep} === 8 }"
+                text="Outcome"
+                icon="{= ${app>/stageStep} >= 8 ? (${app>/activeStep} === 8 ? 'sap-icon://circle-task' : 'sap-icon://accept') : 'sap-icon://circle-task-2' }"
                 active="true"
                 press=".onWorkflowStagePress"
-                class="sapStageBadge">
+                class="{= ${app>/activeStep} === 8 ? 'sapStageNode active' : (${app>/stageStep} >= 8 ? 'sapStageNode passed' : 'sapStageNode') }">
                 <customData>
                     <core:CustomData key="step" value="8" />
                 </customData>

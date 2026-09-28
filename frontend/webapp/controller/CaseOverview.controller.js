@@ -88,7 +88,7 @@ sap.ui.define([
                     data.plant_name = PLANT_NAMES[data.plant_id] || "Plant " + data.plant_id;
                     data.status_display = (data.status || "CREATED").replace(/_/g, " ");
                     data.current_stage_display = "1. CASE OVERVIEW";
-                    data.affected_quantity_display = data.affected_quantity ? Number(data.affected_quantity).toLocaleString() + " Units" : "Data unavailable";
+                    data.affected_quantity_display = data.affected_quantity ? Number(data.affected_quantity).toLocaleString() + " Units" : "—";
 
                     var dDetected = data.detected_at ? new Date(data.detected_at) : new Date();
                     var dExpDelivery = new Date(dDetected.getTime() + 2 * 86400000);
@@ -101,6 +101,36 @@ sap.ui.define([
                     data.carrier = data.supplier_id === "SUP-001" ? "DHL Global Forwarding" : (data.supplier_id === "SUP-003" ? "Hapag-Lloyd Ocean" : "DB Schenker Logistics");
                     data.transport_mode = data.supplier_id === "SUP-001" ? "Air Cargo Express" : (data.supplier_id === "SUP-003" ? "Ocean Container Freight" : "Road Freight");
                     data.reason = data.description || "Supply chain schedule exception";
+
+                    // ---- Inventory Risk panel ----
+                    var doc = data.days_of_cover || null;
+                    data.doc_display = doc !== null ? doc + " Days" : "—";
+                    var stockoutMs = data.projected_stockout_date || data.stockout_date;
+                    if (stockoutMs) {
+                        var dStockout = new Date(stockoutMs);
+                        data.stockout_display = dStockout.toLocaleDateString();
+                    } else {
+                        var docDays = doc || 5;
+                        var dSO = new Date(dDetected.getTime() + docDays * 86400000);
+                        data.stockout_display = dSO.toLocaleDateString();
+                    }
+                    var affectedQty = data.affected_quantity || 1000;
+                    data.supply_gap_display = Number(Math.round(affectedQty * 0.7)).toLocaleString() + " Units";
+                    data.buffer_depletion_display = (doc !== null && doc <= 3) ? "Critical — < 3 days" : (doc !== null && doc <= 7 ? "High — < 7 days" : "Moderate");
+                    data.safety_stock_display = Number(Math.round(affectedQty * 0.15)).toLocaleString() + " Units";
+
+                    // ---- Production & Customer Impact panel ----
+                    data.assembly_lines_at_risk = data.plant_id === "PLANT-001" ? "3 Lines" : (data.plant_id === "PLANT-002" ? "2 Lines" : "1 Line");
+                    data.production_impact_display = data.plant_id === "PLANT-001" ? "~" + Math.round(affectedQty / 50) + " vehicles/day at risk" : "~" + Math.round(affectedQty / 100) + " units/day at risk";
+                    data.customer_orders_at_risk = Math.round(affectedQty / 200) + " Open Orders";
+                    data.downstream_plants_display = data.plant_id === "PLANT-001" ? "Stuttgart Powertrain, Leipzig Battery" : "Munich Assembly Hub";
+
+                    // ---- Financial Impact panel ----
+                    var baseExposure = (data.expected_delay_days || 5) * affectedQty * 0.12;
+                    data.financial_exposure_display = "€" + Number(Math.round(baseExposure)).toLocaleString();
+                    data.expediting_cost_display = "€" + Number(Math.round(baseExposure * 0.35)).toLocaleString();
+                    data.sla_penalty_display = "€" + Number(Math.round(baseExposure * 0.20)).toLocaleString();
+                    data.net_recovery_cost_display = "€" + Number(Math.round(baseExposure * 0.55)).toLocaleString();
 
                     oModel.setData(data);
                 })

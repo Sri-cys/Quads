@@ -144,6 +144,30 @@ sap.ui.define([
                             c.status_css = "quadsTextSecondary";
                         }
 
+                        // Workflow Stage display from status
+                        var stageMap = {
+                            "CREATED":              "1. Case Overview",
+                            "TRIAGED":              "1. Case Overview",
+                            "ANALYZED":             "2. Impact Analysis",
+                            "AWAITING_CHECKPOINT_1": "3. Checkpoint 1",
+                            "CHECKPOINT_APPROVED":  "3. Checkpoint 1 ✓",
+                            "CONSTRAINTS_ANALYZED": "4. Constraints",
+                            "AWAITING_CHECKPOINT_2": "5. Recovery Planning",
+                            "RECOVERY_APPROVED":    "6. Final Decision",
+                            "EXECUTION_IN_PROGRESS": "7. Execution",
+                            "MONITORING":           "7. Monitoring",
+                            "RESOLVED":             "8. Outcome ✓"
+                        };
+                        c.current_stage_display = stageMap[c.status] || c.current_stage || "1. Case Overview";
+
+                        // Parse numeric days_of_cover for conditional styling
+                        var docLookup = DOC_LOOKUP[c.case_id];
+                        if (docLookup) {
+                            c.days_of_cover = parseFloat(docLookup.doc);
+                        } else {
+                            c.days_of_cover = c.expected_delay_days || null;
+                        }
+
                         // Created on format
                         if (c.detected_at) {
                             try {

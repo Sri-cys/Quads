@@ -15,17 +15,19 @@
                 <!-- Page Header: Title + Subtitle -->
                 <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
                     <VBox>
-                        <Title text="DISRUPTION CASES" level="H1" class="sapCorporatePageTitle" />
-                        <Text text="Monitor active supply chain disruptions, buffer depletion, and operational exposure." class="sapCorporatePageSubtitle" />
+                        <Title text="Disruption Cases" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Monitor active supply chain disruptions, inventory buffer depletion, and operational exposure across all suppliers." class="sapCorporatePageSubtitle" />
                     </VBox>
                     <HBox alignItems="Center">
                         <Button
                             text="Refresh"
+                            icon="sap-icon://refresh"
                             type="Default"
                             press=".onRefresh"
-                            class="sapUiTinyMarginEnd" />
+                            class="sapUiSmallMarginEnd" />
                         <Button
-                            text="+ New Disruption"
+                            text="New Disruption"
+                            icon="sap-icon://add"
                             type="Emphasized"
                             press=".onNewDisruptionPress"
                             class="sapBtnPrimary" />
@@ -121,28 +123,27 @@
                 <!-- Disruption Cases Table Section -->
                 <VBox class="sapTableCard">
                     <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapTableCardHeader">
-                        <Title
-                            text="Disruption Cases ({casesModel>/totalFiltered})"
-                            level="H2"
-                            class="sapSectionTitle" />
                         <HBox alignItems="Center">
-                            <Button
-                                icon="sap-icon://action-settings"
-                                type="Transparent"
-                                tooltip="Table Personalization"
-                                press=".onTableSettings"
-                                class="sapUiTinyMarginEnd" />
+                            <Title
+                                text="Disruption Cases"
+                                level="H2"
+                                class="sapSectionTitle" />
+                            <Text
+                                text=" ({casesModel>/totalFiltered})"
+                                class="textMuted sapUiTinyMarginBegin" />
+                        </HBox>
+                        <HBox alignItems="Center">
                             <Button
                                 icon="sap-icon://excel-attachment"
                                 type="Transparent"
-                                tooltip="Export Table"
+                                tooltip="Export to Spreadsheet"
                                 press=".onExportSpreadsheet"
                                 class="sapUiTinyMarginEnd" />
                             <Button
-                                text="+ New Disruption"
-                                type="Emphasized"
-                                press=".onNewDisruptionPress"
-                                class="sapBtnPrimary" />
+                                icon="sap-icon://action-settings"
+                                type="Transparent"
+                                tooltip="Table Settings"
+                                press=".onTableSettings" />
                         </HBox>
                     </HBox>
 
@@ -155,28 +156,31 @@
                         noDataText="No disruption cases found"
                         class="sapEnterpriseTable">
                         <columns>
-                            <Column width="7rem">
+                            <Column width="8rem">
                                 <Text text="Case ID" class="sapColHeader" />
                             </Column>
-                            <Column width="13rem">
+                            <Column width="14rem">
                                 <Text text="Disruption" class="sapColHeader" />
                             </Column>
                             <Column width="11rem">
                                 <Text text="Supplier" class="sapColHeader" />
                             </Column>
-                            <Column width="6.5rem">
+                            <Column width="7rem">
                                 <Text text="Material" class="sapColHeader" />
                             </Column>
-                            <Column width="6.5rem">
+                            <Column width="6rem">
                                 <Text text="Plant" class="sapColHeader" />
                             </Column>
-                            <Column width="6.5rem">
+                            <Column width="7rem">
                                 <Text text="Severity" class="sapColHeader" />
                             </Column>
-                            <Column width="8.5rem">
+                            <Column width="9rem">
                                 <Text text="Status" class="sapColHeader" />
                             </Column>
-                            <Column width="6.5rem" hAlign="Right">
+                            <Column width="10rem">
+                                <Text text="Workflow Stage" class="sapColHeader" />
+                            </Column>
+                            <Column width="6rem" hAlign="Right">
                                 <Text text="Days of Cover" class="sapColHeader" />
                             </Column>
                             <Column width="7rem">
@@ -196,36 +200,44 @@
                                 press=".onSelectCase"
                                 class="sapEnterpriseRow">
                                 <cells>
-                                    <!-- Case ID: subtle SAP blue link -->
+                                    <!-- Case ID -->
                                     <Link
                                         text="{casesModel>case_id}"
                                         press=".onSelectCase"
                                         class="sapCaseLink" />
-                                    <!-- Disruption: Name + subtext -->
+                                    <!-- Disruption: Name + description subtext -->
                                     <VBox>
                                         <Text text="{casesModel>disruption_name}" class="sapRowPrimary" />
                                         <Text text="{casesModel>description}" class="sapRowSecondary" maxLines="1" />
                                     </VBox>
-                                    <!-- Supplier -->
-                                    <Text text="{casesModel>supplier_display}" class="sapRowPrimary" />
+                                    <!-- Supplier: Name -->
+                                    <VBox>
+                                        <Text text="{casesModel>supplier_display}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>supplier_id}" class="sapRowSecondary" />
+                                    </VBox>
                                     <!-- Material -->
                                     <Text text="{casesModel>material_id}" class="sapRowPrimary" />
                                     <!-- Plant -->
                                     <Text text="{casesModel>plant_id}" class="sapRowPrimary" />
-                                    <!-- Severity: Plain restrained text, NO capsules -->
+                                    <!-- Severity -->
                                     <ObjectStatus
                                         text="{casesModel>severity_text}"
                                         state="{= ${casesModel>severity_text} === 'Critical' ? 'Error' : ${casesModel>severity_text} === 'High' ? 'Warning' : ${casesModel>severity_text} === 'Medium' ? 'Information' : 'Success' }"
                                         class="sapPlainStatus" />
-                                    <!-- Status: Plain restrained text, NO capsules -->
+                                    <!-- Operational Status -->
                                     <ObjectStatus
                                         text="{casesModel>status_text}"
                                         state="{= ${casesModel>status_text} === 'Checkpoint Approved' ? 'Success' : ${casesModel>status_text} === 'Awaiting Checkpoint' ? 'Warning' : 'None' }"
                                         class="sapPlainStatus" />
+                                    <!-- Workflow Stage -->
+                                    <ObjectStatus
+                                        text="{casesModel>current_stage_display}"
+                                        state="Information"
+                                        class="sapPlainStatus" />
                                     <!-- Days of Cover -->
                                     <Text
                                         text="{= ${casesModel>doc_display} ? ${casesModel>doc_display} : '—' }"
-                                        class="sapRowPrimary" />
+                                        class="{= ${casesModel>days_of_cover} !== null &amp;&amp; ${casesModel>days_of_cover} &lt;= 3 ? 'sapRowPrimary textCritical bold' : 'sapRowPrimary' }" />
                                     <!-- Stockout Date -->
                                     <Text
                                         text="{= ${casesModel>stockout_display} ? ${casesModel>stockout_display} : 'No Stockout' }"

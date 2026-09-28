@@ -19,8 +19,8 @@
                 <!-- Page Header: Title + Context Subtitle + Conditional Action Buttons -->
                 <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
                     <VBox>
-                        <Title text="IMPACT ANALYSIS" level="H1" class="sapCorporatePageTitle" />
-                        <Text text="{impact>/case/case_id} · Agent 1 Deterministic &amp; Cross-Functional Disruption Triage" class="sapCorporatePageSubtitle bold" />
+                        <Title text="Impact Analysis" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="{impact>/case/case_id} · Agent 1 — Deterministic &amp; Cross-Functional Disruption Triage" class="sapCorporatePageSubtitle" />
                     </VBox>
                     <HBox alignItems="Center">
                         <Link
@@ -78,19 +78,19 @@
                 <!-- Running Indicator Banner (Real Backend Telemetry Progress) -->
                 <VBox
                     visible="{= ${impact>/analysisState} === 'RUNNING' }"
-                    class="sapChoiceCard sapUiSmallMarginBottom"
-                    style="border-left: 4px solid #0A6ED1; background: #F0F7FF; padding: 24px;">
-                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
-                        <HBox alignItems="Center">
-                            <BusyIndicator size="1.3rem" class="sapUiSmallMarginEnd" />
+                    class="sapFioriMessageStrip info sapUiSmallMarginBottom"
+                    style="display: block; padding: 16px;">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween">
+                        <HBox alignItems="Center" class="sapMBusyIndicatorBox">
+                            <BusyIndicator size="1.2rem" class="sapUiSmallMarginEnd" />
                             <VBox>
-                                <Title text="IMPACT ANALYSIS" level="H2" class="bold textDark" />
-                                <Text text="Agent 1 — Triage &amp; Impact Analysis" class="textMuted bold" />
+                                <Text text="Agent 1: Impact analysis in progress..." class="bold textPrimary" />
+                                <Text text="Processing cross-functional disruption telemetry from backend..." class="textSmall textDark" />
                             </VBox>
                         </HBox>
                         <ObjectStatus text="● RUNNING" state="Information" class="bold" inverted="true" />
                     </HBox>
-                    <VBox class="sapUiSmallMarginTop" items="{impact>/steps}">
+                    <VBox class="sapUiSmallMarginTop" items="{impact>/steps}" style="padding-left: 2.2rem;">
                         <HBox alignItems="Center" class="sapUiTinyMarginBottom">
                             <core:Icon
                                 src="{= ${impact>status} === 'COMPLETED' ? 'sap-icon://accept' : (${impact>status} === 'RUNNING' ? 'sap-icon://record' : 'sap-icon://circle-task') }"
@@ -102,7 +102,6 @@
                                 class="{= ${impact>status} === 'RUNNING' ? 'bold textPrimary' : (${impact>status} === 'COMPLETED' ? 'textDark' : 'textMuted') }" />
                         </HBox>
                     </VBox>
-                    <Text text="Processing cross-functional disruption telemetry from backend..." class="textMuted textSmall sapUiSmallMarginTop" />
                 </VBox>
 
                 <!-- Content Area: Rendered when analysis is COMPLETED -->

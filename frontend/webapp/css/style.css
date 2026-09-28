@@ -2398,4 +2398,1698 @@ html, body {
     border-radius: 4px !important;
 }
 
+/* ====================================================================
+   QUADS — Comprehensive UI Refinements v2
+   Cases, CaseOverview, Checkpoint1, Global Spacing
+   ==================================================================== */
+
+/* ---- Filter Card (Cases page) ---- */
+.sapFilterCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+.sapFilterLabel {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #475569 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 5px !important;
+    display: block !important;
+}
+
+.sapFilterActionsRow {
+    margin-top: 14px !important;
+    padding-top: 14px !important;
+    border-top: 1px solid #F1F5F9 !important;
+    gap: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* ---- Cases Table Card ---- */
+.sapTableCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    margin-top: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.sapTableCardHeader {
+    margin-bottom: 16px !important;
+    align-items: center !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    padding-bottom: 14px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+}
+
+/* Enterprise table refinements */
+.sapEnterpriseTable.sapMList {
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+}
+
+.sapEnterpriseTable .sapMListTblHeader {
+    background: #F8FAFC !important;
+    border-bottom: 2px solid #E2E8F0 !important;
+}
+
+.sapEnterpriseTable .sapMListTblHeaderCell {
+    padding: 10px 12px !important;
+}
+
+.sapEnterpriseTable .sapMListTblCell {
+    padding: 12px 12px !important;
+    vertical-align: middle !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.sapEnterpriseRow.sapMLIB:hover {
+    background: #F8FAFC !important;
+}
+
+.sapColHeader.sapMText {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+.sapCaseLink.sapMLnk {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #0A6ED1 !important;
+}
+
+.sapCaseLink.sapMLnk:hover {
+    text-decoration: underline !important;
+    color: #0854A0 !important;
+}
+
+.sapRowPrimary.sapMText {
+    font-size: 13px !important;
+    color: #1D2D3E !important;
+    font-weight: 500 !important;
+}
+
+.sapRowSecondary.sapMText {
+    font-size: 11.5px !important;
+    color: #64748B !important;
+    margin-top: 2px !important;
+    display: block !important;
+}
+
+.sapPlainStatus.sapMObjStatus {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+.sapNavChevron {
+    color: #94A3B8 !important;
+    font-size: 12px !important;
+}
+
+/* ---- Case Overview Cards ---- */
+.sapContextCard {
+    background: #FFFFFF !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+    padding: 22px 26px !important;
+    margin-bottom: 20px !important;
+}
+
+.sapContextIcon {
+    font-size: 18px !important;
+    margin-right: 10px !important;
+    color: #0A6ED1 !important;
+}
+
+.sapContextTitle.sapMTitle {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+}
+
+.sapContextItem {
+    padding: 14px 16px !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+}
+
+.sapContextItemLabel.sapMText {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #64748B !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 4px !important;
+    display: block !important;
+}
+
+.sapContextItemVal.sapMText {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1D2D3E !important;
+}
+
+/* Overview grid cards (logistics / schedule cards) */
+.sapOverviewGrid.sapUiRespGrid {
+    gap: 0 !important;
+}
+
+.sapOverviewCard {
+    background: #FFFFFF !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    padding: 20px 22px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    margin-bottom: 20px !important;
+}
+
+/* Fix SAP Grid gap for Overview 2-col */
+.sapOverviewGrid.sapUiRespGrid > div:first-child .sapOverviewCard {
+    margin-right: 10px;
+}
+
+.sapOverviewHeader {
+    margin-bottom: 16px !important;
+    padding-bottom: 12px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.sapMetricIcon.info { color: #0A6ED1 !important; font-size: 16px !important; }
+.sapMetricIcon.warning { color: #E9730C !important; font-size: 16px !important; }
+.sapMetricIcon.critical { color: #BB0000 !important; font-size: 16px !important; }
+.sapMetricIcon.success { color: #107E3E !important; font-size: 16px !important; }
+
+.sapMetricRow {
+    padding: 10px 0 !important;
+    border-bottom: 1px solid #F8FAFC !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.sapMetricRow:last-child {
+    border-bottom: none !important;
+}
+
+.sapMetricRow > .sapMFlexBox {
+    width: 100% !important;
+}
+
+.sapMetricLabel.sapMText {
+    font-size: 12px !important;
+    color: #64748B !important;
+    font-weight: 500 !important;
+}
+
+.sapMetricVal.sapMText {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1D2D3E !important;
+}
+
+/* Workflow Progression Guidance Card */
+.sapVisualChainCard {
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 18px 22px !important;
+    margin-top: 20px !important;
+    margin-bottom: 0 !important;
+}
+
+.sapChainHeaderBar {
+    margin-bottom: 12px !important;
+}
+
+/* ---- Checkpoint 1 — Priority Selection Cards (3×2 grid) ---- */
+/* Fix DecisionCard container */
+.sapDecisionCard {
+    background: #FFFFFF !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    padding: 24px 26px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+    margin-bottom: 20px !important;
+}
+
+.sapDecisionHeader {
+    margin-bottom: 20px !important;
+    padding-bottom: 16px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.sapDecisionGrid.sapUiRespGrid {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 14px !important;
+    margin-top: 4px !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.sapDecisionGrid.sapUiRespGrid > div {
+    flex: 0 0 calc(33.333% - 10px) !important;
+    width: calc(33.333% - 10px) !important;
+    max-width: calc(33.333% - 10px) !important;
+    min-width: 160px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Each priority card */
+.sapChoiceCard {
+    background: #FFFFFF !important;
+    border: 1.5px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    padding: 18px 18px 14px 18px !important;
+    cursor: pointer !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+    min-height: 150px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+.sapChoiceCard:hover {
+    border-color: #0A6ED1 !important;
+    box-shadow: 0 3px 10px rgba(10,110,209,0.10) !important;
+}
+
+.sapChoiceCard.sapChoiceSelected {
+    border: 2px solid #0A6ED1 !important;
+    background: #EBF5FF !important;
+    box-shadow: 0 0 0 3px rgba(10,110,209,0.08) !important;
+}
+
+.sapChoiceHeaderRow {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 8px !important;
+}
+
+.sapChoiceIcon.sapUiIcon {
+    font-size: 18px !important;
+    color: #0A6ED1 !important;
+    margin-right: 8px !important;
+}
+
+.sapChoiceTitle.sapMText {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #1D2D3E !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+}
+
+.sapChoiceCheckIcon.sapUiIcon {
+    font-size: 16px !important;
+    color: #0A6ED1 !important;
+}
+
+.sapChoiceSubtitle.sapMText {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #0A6ED1 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+}
+
+.sapChoiceDesc.sapMText {
+    font-size: 11.5px !important;
+    color: #64748B !important;
+    line-height: 1.45 !important;
+    flex: 1 !important;
+}
+
+/* Action row inside choice card */
+.sapChoiceCard > .sapMFlexBox:last-child {
+    margin-top: auto !important;
+}
+
+/* Decision actions bar */
+.sapDecisionActionsRow {
+    padding-top: 20px !important;
+    border-top: 1px solid #E2E8F0 !important;
+    margin-top: 22px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+/* Priority saved banner */
+.sapPhase1Banner {
+    background: #F0FDF4 !important;
+    border: 1px solid #BBF7D0 !important;
+    border-radius: 8px !important;
+    padding: 18px 22px !important;
+    margin-top: 16px !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+}
+
+.sapBannerIcon.success {
+    font-size: 20px !important;
+    color: #107E3E !important;
+    flex-shrink: 0 !important;
+}
+
+.sapBannerTitle.sapMTitle {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #14532D !important;
+    margin-bottom: 4px !important;
+}
+
+.sapBannerText.sapMText {
+    font-size: 12.5px !important;
+    color: #166534 !important;
+}
+
+/* Compact Case Context Bar spacing fix */
+.sapCompactContextBar {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 14px 22px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
+}
+
+.sapCompactContextList {
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+.sapContextChip {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 18px !important;
+    border-right: 1px solid #E2E8F0 !important;
+}
+
+.sapContextChip:first-child {
+    padding-left: 0 !important;
+}
+
+.sapContextChip:last-child {
+    border-right: none !important;
+}
+
+.sapContextChipLabel.sapMText {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #94A3B8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 3px !important;
+}
+
+.sapContextChipVal.sapMText {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+}
+
+/* ---- Global Page Header Row ---- */
+.sapPageHeaderRow {
+    margin-bottom: 20px !important;
+    padding-bottom: 0 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+}
+
+.sapCorporatePageTitle.sapMTitle {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 !important;
+}
+
+.sapCorporatePageSubtitle.sapMText {
+    font-size: 13px !important;
+    color: #6A6D70 !important;
+    margin-top: 4px !important;
+    line-height: 1.4 !important;
+}
+
+/* ---- Dashboard Active Case Card improvements ---- */
+.sapCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+    margin-bottom: 20px !important;
+}
+
+/* ---- Section titles unified ---- */
+.sapSectionTitle.sapMTitle {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+}
+
+.sapSectionSub.sapMText {
+    font-size: 12.5px !important;
+    color: #64748B !important;
+    margin-top: 3px !important;
+}
+
+.sapCardSectionTitle.sapMTitle {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.03em !important;
+}
+
+/* ---- Generic SAP table fixes ---- */
+.sapMListTbl .sapMListTblHeaderCell {
+    background: #F8FAFC !important;
+    padding: 10px 12px !important;
+}
+
+.sapMListTbl .sapMListTblCell {
+    padding: 10px 12px !important;
+    vertical-align: middle !important;
+}
+
+/* ---- ImpactAnalysis page section cards ---- */
+.sapImpactContextCard {
+    background: #FFFFFF !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+/* ---- Phase banner (success state) ---- */
+.sapPhase1Banner > .sapMFlexBox {
+    gap: 16px !important;
+    align-items: flex-start !important;
+}
+
+/* ---- Recovery plan cards ---- */
+.sapRecoveryPlanCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 18px 22px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    margin-bottom: 12px !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.sapRecoveryPlanCard:hover {
+    border-color: #93C5FD !important;
+    box-shadow: 0 2px 8px rgba(0,112,242,0.07) !important;
+}
+
+.sapRecoveryPlanCard.sapChoiceSelected {
+    background: #EBF5FF !important;
+    border: 2px solid #0A6ED1 !important;
+}
+
+/* ---- Expand panel cards ---- */
+.sapExpandPanel.sapMPanel {
+    background: #FFFFFF !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    margin-bottom: 16px !important;
+}
+
+.sapExpandPanel.sapMPanel > .sapMPanelHdr {
+    padding: 14px 20px !important;
+    border-radius: 8px 8px 0 0 !important;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1D2D3E !important;
+}
+
+.sapExpandPanel.sapMPanel > .sapMPanelContent {
+    padding: 16px 20px !important;
+}
+
+/* ---- Decision view card ---- */
+.sapDecisionCard.sapMPanel,
+.sapDecisionCard {
+    border-radius: 8px !important;
+}
+
+/* ---- Outcome page hero ---- */
+.sapOutcomeHero {
+    border-radius: 10px !important;
+    padding: 36px 28px !important;
+}
+
+/* ---- Execution monitoring ---- */
+.sapExecCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    margin-bottom: 18px !important;
+}
+
+/* ---- AI assessment card ---- */
+.sapAiAssessmentCard {
+    background: #FFFFFF !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    margin-bottom: 20px !important;
+}
+
+/* ---- KPI Impact metric ---- */
+.sapImpactMetricCard {
+    background: #FFFFFF !important;
+    border: 1px solid #D9D9D9 !important;
+    border-radius: 8px !important;
+    padding: 18px 20px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    transition: box-shadow 0.15s ease !important;
+}
+
+.sapImpactMetricCard:hover {
+    box-shadow: 0 3px 10px rgba(0,0,0,0.07) !important;
+}
+
+.sapImpactMetricCard.criticalHighlight {
+    border-left: 3px solid #BB0000 !important;
+}
+
+/* ---- General KPI cards ---- */
+.sapKpiCard {
+    border-radius: 8px !important;
+    padding: 16px 18px !important;
+}
+
+/* ---- CaseWorkflow Header strip ---- */
+.sapCaseWorkflowHeaderContainer {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 14px 20px !important;
+    margin-bottom: 18px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
+}
+
+/* ---- Button improvements ---- */
+.sapBtnPrimary.sapMBtn .sapMBtnInner {
+    border-radius: 5px !important;
+    height: 36px !important;
+    line-height: 34px !important;
+}
+
+/* ---- Scrollbar polish ---- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #F8FAFC; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* ---- ObjectStatus badge improvements ---- */
+.sapMObjStatus {
+    border-radius: 4px !important;
+}
+
+/* ---- Back link clean up ---- */
+.sapBackLink.sapMLnk {
+    font-size: 13px !important;
+    color: #0A6ED1 !important;
+    font-weight: 500 !important;
+}
+
+/* ---- Table no-data text ---- */
+.sapMListNoData {
+    padding: 32px 0 !important;
+    font-size: 13px !important;
+    color: #64748B !important;
+}
+
+
+/* ====================================================================
+   QUADS — Case Overview Page (Reference Image Layout)
+   ==================================================================== */
+
+/* Page body wrapper — narrower max-width with side padding */
+.sapCOPageBody {
+    max-width: 1200px !important;
+    width: calc(100% - 48px) !important;
+    margin: 0 auto !important;
+    padding: 20px 0 48px 0 !important;
+}
+
+/* Back link bar */
+.sapCOBackBar {
+    margin-bottom: 16px !important;
+}
+
+.sapCOBackLink.sapMLnk,
+.sapCOBackLink {
+    font-size: 13px !important;
+    color: #0A6ED1 !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+
+.sapCOBackLink.sapMLnk:hover,
+.sapCOBackLink:hover {
+    color: #0854A0 !important;
+    text-decoration: underline !important;
+}
+
+/* ===== Case Header Card ===== */
+.sapCOHeaderCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+    margin-bottom: 16px !important;
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+}
+
+/* Alert icon box — salmon/red rounded square */
+.sapCOAlertIconBox {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    background: #FFF1F2 !important;
+    border: 1px solid #FECDD3 !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+.sapCOAlertIcon.sapUiIcon {
+    font-size: 22px !important;
+    color: #E11D48 !important;
+}
+
+/* Left side: case ID + description */
+.sapCOHeaderLeft {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    gap: 16px !important;
+}
+
+.sapCOCaseId.sapMTitle {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    color: #1D2D3E !important;
+    margin: 0 0 4px 0 !important;
+    line-height: 1.2 !important;
+}
+
+.sapCOCaseDesc.sapMText {
+    font-size: 13px !important;
+    color: #475569 !important;
+    line-height: 1.4 !important;
+}
+
+/* Right side: meta blocks */
+.sapCOHeaderMeta {
+    flex-shrink: 0 !important;
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+.sapCOMetaBlock {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding: 0 24px !important;
+    border-right: 1px solid #E2E8F0 !important;
+}
+
+.sapCOMetaBlock:last-child {
+    border-right: none !important;
+    padding-right: 0 !important;
+}
+
+.sapCOMetaDivider {
+    width: 1px !important;
+    background: #E2E8F0 !important;
+    align-self: stretch !important;
+}
+
+.sapCOMetaLabel.sapMText {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #94A3B8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 4px !important;
+}
+
+/* Impact level badge */
+.sapCOImpactBadge.sapMObjStatus {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border-radius: 20px !important;
+    padding: 3px 12px !important;
+}
+
+/* Approval status badge */
+.sapCOApprovalBadge.sapMObjStatus {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border-radius: 20px !important;
+    padding: 3px 12px !important;
+    background: #FFFBEB !important;
+    border: 1px solid #FDE68A !important;
+    color: #92400E !important;
+}
+
+/* Calendar icon + date */
+.sapCOCalIcon.sapUiIcon {
+    font-size: 15px !important;
+    color: #64748B !important;
+    margin-right: 6px !important;
+}
+
+.sapCOMetaVal.sapMText {
+    font-size: 12.5px !important;
+    color: #1D2D3E !important;
+    line-height: 1.35 !important;
+}
+
+/* ===== Two-column grid ===== */
+.sapCOTwoColGrid.sapUiRespGrid {
+    margin-bottom: 0 !important;
+}
+
+/* ===== Section Cards ===== */
+.sapCOSectionCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 8px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    margin-bottom: 16px !important;
+    box-sizing: border-box !important;
+}
+
+/* Section header: icon + title */
+.sapCOSectionHeader {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 18px !important;
+    padding-bottom: 14px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.sapCOSectionIcon.sapUiIcon {
+    font-size: 18px !important;
+    color: #0A6ED1 !important;
+    background: #EFF6FF !important;
+    border-radius: 6px !important;
+    padding: 6px !important;
+    flex-shrink: 0 !important;
+}
+
+.sapCOSectionTitle.sapMTitle {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    margin: 0 !important;
+}
+
+/* Detail rows: label | value */
+.sapCODetailRow {
+    display: flex !important;
+    align-items: baseline !important;
+    padding: 9px 0 !important;
+    border-bottom: 1px solid #F8FAFC !important;
+    min-height: 36px !important;
+}
+
+.sapCODetailRow:last-child {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+}
+
+.sapCODetailLabel.sapMText {
+    flex: 0 0 52% !important;
+    width: 52% !important;
+    font-size: 13px !important;
+    color: #64748B !important;
+    font-weight: 400 !important;
+    padding-right: 12px !important;
+    line-height: 1.4 !important;
+}
+
+.sapCODetailValue.sapMText {
+    flex: 1 1 auto !important;
+    font-size: 13px !important;
+    color: #1D2D3E !important;
+    font-weight: 500 !important;
+    word-break: break-word !important;
+    line-height: 1.4 !important;
+}
+
+/* ===== Inventory Details Card ===== */
+.sapCOInventoryCard {
+    margin-bottom: 16px !important;
+}
+
+.sapCOInvCol {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding-right: 16px !important;
+}
+
+.sapCOInvMetric {
+    padding: 10px 0 !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.sapCOInvMetric:last-child {
+    border-bottom: none !important;
+}
+
+.sapCOInvLabel.sapMText {
+    font-size: 12px !important;
+    color: #64748B !important;
+    font-weight: 400 !important;
+    margin-bottom: 3px !important;
+    display: block !important;
+}
+
+.sapCOInvValue.sapMText {
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    color: #0A6ED1 !important;
+    line-height: 1.2 !important;
+    display: block !important;
+}
+
+/* Alert info box inside inventory */
+.sapCOInvAlertBox {
+    background: #EFF6FF !important;
+    border: 1px solid #BFDBFE !important;
+    border-radius: 6px !important;
+    padding: 10px 14px !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+}
+
+.sapCOInvAlertIcon.sapUiIcon {
+    font-size: 16px !important;
+    color: #0A6ED1 !important;
+    flex-shrink: 0 !important;
+    margin-top: 1px !important;
+}
+
+.sapCOInvAlertText.sapMText {
+    font-size: 12.5px !important;
+    color: #1E3A8A !important;
+    line-height: 1.45 !important;
+}
+
+/* ===== Action footer bar ===== */
+.sapCOActionBar {
+    padding-top: 8px !important;
+}
+
+/* Responsive: stack columns on tablet */
+@media (max-width: 1024px) {
+    .sapCOHeaderCard {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    .sapCOHeaderMeta {
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+    .sapCOMetaBlock {
+        border-right: none !important;
+        padding: 0 12px 0 0 !important;
+    }
+    .sapCODetailLabel.sapMText {
+        flex: 0 0 45% !important;
+    }
+}
+
+/* ====================================================================
+   QUADS — Fiori Refinement v3
+   Object Page, Stage Nodes, Form Rows, Message Strip, Page Actions
+   ==================================================================== */
+
+/* ---- Workflow Stage Header Container ---- */
+.sapCaseWorkflowHeaderContainer {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    padding: 10px 16px !important;
+    margin-bottom: 16px !important;
+    box-shadow: none !important;
+}
+
+.sapCaseHeaderTopRow {
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+    margin-bottom: 8px !important;
+}
+
+.sapCaseHeaderId {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #0A6ED1 !important;
+}
+
+.sapCaseHeaderDot {
+    margin: 0 6px !important;
+    color: #CBD5E1 !important;
+    font-size: 13px !important;
+}
+
+.sapCaseHeaderTitle {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1D2D3E !important;
+}
+
+.sapCaseHeaderMetaGroup {
+    gap: 0 !important;
+}
+
+.sapCaseMetaLabel {
+    font-size: 11px !important;
+    color: #94A3B8 !important;
+    font-weight: 500 !important;
+}
+
+/* ---- Stage Indicator Strip ---- */
+.sapCaseStageIndicatorRow {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding: 2px 0 !important;
+}
+
+.sapCaseStageIndicatorRow::-webkit-scrollbar { display: none; }
+
+/* Stage Node: base */
+.sapStageNode {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
+    color: #94A3B8 !important;
+    white-space: nowrap !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.sapStageNode .sapUiIcon,
+.sapStageNodeIcon {
+    font-size: 10px !important;
+    color: #CBD5E1 !important;
+}
+
+/* Active stage */
+.sapStageNode.active {
+    background: #EBF5FF !important;
+    color: #0A6ED1 !important;
+    font-weight: 700 !important;
+}
+
+.sapStageNode.active .sapUiIcon,
+.sapStageNode.active .sapStageNodeIcon {
+    color: #0A6ED1 !important;
+}
+
+/* Passed/completed stage */
+.sapStageNode.passed {
+    color: #107E3E !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+}
+
+.sapStageNode.passed .sapUiIcon,
+.sapStageNode.passed .sapStageNodeIcon {
+    color: #107E3E !important;
+}
+
+/* Arrow between stages */
+.sapStageArrow {
+    font-size: 8px !important;
+    color: #E2E8F0 !important;
+    flex-shrink: 0 !important;
+}
+
+/* ---- Fiori Object Page Header ---- */
+.sapFioriObjectHeader {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    padding: 16px 20px 0 20px !important;
+    margin-bottom: 16px !important;
+}
+
+.sapObjHeaderIdRow {
+    margin-bottom: 4px !important;
+}
+
+.sapObjHeaderId {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #0A6ED1 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.03em !important;
+}
+
+.sapObjHeaderDot {
+    margin: 0 6px !important;
+    color: #CBD5E1 !important;
+    font-size: 12px !important;
+}
+
+.sapObjHeaderSeverityBadge {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    border-radius: 3px !important;
+}
+
+.sapObjHeaderTitle {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    margin: 0 0 4px 0 !important;
+    line-height: 1.2 !important;
+}
+
+.sapObjHeaderDesc {
+    font-size: 13px !important;
+    color: #64748B !important;
+    margin-bottom: 14px !important;
+    line-height: 1.4 !important;
+}
+
+/* Attribute strip below title */
+.sapObjAttrStrip {
+    border-top: 1px solid #F1F5F9 !important;
+    padding: 12px 0 12px 0 !important;
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+}
+
+.sapObjAttr {
+    padding: 0 20px !important;
+    border-right: 1px solid #E2E8F0 !important;
+    flex-shrink: 0 !important;
+}
+
+.sapObjAttr:first-child { padding-left: 0 !important; }
+.sapObjAttr:last-child { border-right: none !important; }
+
+.sapObjAttrLabel {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #94A3B8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 3px !important;
+    display: block !important;
+}
+
+.sapObjAttrVal {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1D2D3E !important;
+    white-space: nowrap !important;
+}
+
+/* ---- Fiori Sections ---- */
+.sapFioriSection {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    margin-bottom: 12px !important;
+    overflow: hidden !important;
+}
+
+.sapFioriSectionHeader {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px 20px !important;
+    background: #F8FAFC !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+}
+
+.sapSectionNum {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    border-radius: 50% !important;
+    background: #0A6ED1 !important;
+    color: #FFFFFF !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+}
+
+.sapFioriSectionTitle {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    margin: 0 !important;
+}
+
+.sapFioriSectionBody {
+    padding: 16px 20px !important;
+}
+
+/* ---- Fiori Form Rows (Label | Value) ---- */
+.sapFormRow {
+    display: flex !important;
+    align-items: flex-start !important;
+    padding: 8px 0 !important;
+    border-bottom: 1px solid #F8FAFC !important;
+    gap: 0 !important;
+}
+
+.sapFormRowLast {
+    border-bottom: none !important;
+}
+
+.sapFormLabel {
+    flex: 0 0 180px !important;
+    min-width: 180px !important;
+    max-width: 180px !important;
+    font-size: 12px !important;
+    color: #64748B !important;
+    font-weight: 500 !important;
+    padding-top: 1px !important;
+    line-height: 1.4 !important;
+}
+
+.sapFormVal {
+    flex: 1 !important;
+    font-size: 13px !important;
+    color: #1D2D3E !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+    word-break: break-word !important;
+}
+
+/* ---- Inventory KPI Strip ---- */
+.sapInventoryKpi {
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    padding: 12px 14px !important;
+}
+
+.sapInventoryKpiLabel {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #94A3B8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 4px !important;
+    display: block !important;
+}
+
+.sapInventoryKpiVal {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    line-height: 1.2 !important;
+}
+
+/* ---- Inventory financial metrics row ---- */
+.sapInventoryFinRow {
+    margin-top: 12px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid #F1F5F9 !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+}
+
+.sapInventoryFinRow .sapFormRow {
+    flex-direction: column !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+    min-width: 120px !important;
+}
+
+.sapInventoryFinRow .sapFormLabel {
+    flex: none !important;
+    min-width: unset !important;
+    max-width: unset !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #94A3B8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 3px !important;
+}
+
+.sapInventoryFinRow .sapFormVal {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+/* ---- Fiori Message Strip ---- */
+.sapFioriMessageStrip {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    padding: 10px 14px !important;
+    border-radius: 4px !important;
+    margin-bottom: 12px !important;
+    margin-top: 4px !important;
+}
+
+.sapFioriMessageStrip.warning {
+    background: #FEF3C7 !important;
+    border: 1px solid #FCD34D !important;
+}
+
+.sapFioriMessageStrip.info {
+    background: #EFF6FF !important;
+    border: 1px solid #BFDBFE !important;
+}
+
+.sapFioriMessageStrip.error {
+    background: #FFF1F2 !important;
+    border: 1px solid #FECDD3 !important;
+}
+
+.sapFioriMessageStrip.success {
+    background: #F0FDF4 !important;
+    border: 1px solid #BBF7D0 !important;
+}
+
+.sapMsgStripIcon {
+    font-size: 14px !important;
+    flex-shrink: 0 !important;
+    margin-top: 1px !important;
+}
+
+.sapFioriMessageStrip.warning .sapMsgStripIcon { color: #D97706 !important; }
+.sapFioriMessageStrip.info    .sapMsgStripIcon { color: #0A6ED1 !important; }
+.sapFioriMessageStrip.error   .sapMsgStripIcon { color: #DC2626 !important; }
+.sapFioriMessageStrip.success .sapMsgStripIcon { color: #107E3E !important; }
+
+.sapMsgStripText {
+    font-size: 12.5px !important;
+    color: #1D2D3E !important;
+    line-height: 1.45 !important;
+}
+
+/* ---- Page Actions Row (footer bar) ---- */
+.sapPageActionsRow {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 16px 0 8px 0 !important;
+    margin-top: 8px !important;
+    border-top: 1px solid #E2E8F0 !important;
+}
+
+/* ---- Back Link ---- */
+.sapBackLink.sapMLnk {
+    font-size: 13px !important;
+    color: #0A6ED1 !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+
+.sapBackLink.sapMLnk:hover {
+    text-decoration: underline !important;
+    color: #0854A0 !important;
+}
+
+/* ---- Page Header Row spacing ---- */
+.sapPageHeaderRow {
+    margin-bottom: 16px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+}
+
+.sapCorporatePageTitle {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 !important;
+}
+
+.sapCorporatePageSubtitle {
+    font-size: 12.5px !important;
+    color: #64748B !important;
+    margin-top: 3px !important;
+    font-weight: 400 !important;
+}
+
+/* ---- Fix: Remove dark BusyIndicator circles from DOM when hidden ---- */
+.sapMBusyIndicator:not([style*="display"]) {
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+/* Prevent BusyIndicator overflow creating floating artifacts */
+.sapFioriMessageStrip .sapMBusyIndicator {
+    flex-shrink: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+/* ---- Fix: sapStageBadge (old ObjectStatus badges in workflow) ---- */
+/* These were producing dark circular inverted badges; now replaced by sapStageNode */
+.sapStageBadge {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    border-radius: 3px !important;
+}
+
+/* ---- Impact Analysis KPI Cards compact size ---- */
+.sapImpactMetricCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    padding: 14px 16px !important;
+    box-shadow: none !important;
+}
+
+.sapImpactMetricCard.criticalHighlight {
+    border-left: 3px solid #DC2626 !important;
+}
+
+.sapMetricHeaderTitle {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #64748B !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+.sapMetricLargeNumber {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    color: #1D2D3E !important;
+    line-height: 1.15 !important;
+    margin: 6px 0 4px 0 !important;
+}
+
+.sapMetricFootnote {
+    font-size: 10.5px !important;
+    color: #94A3B8 !important;
+    line-height: 1.35 !important;
+}
+
+/* ---- sapMetricBox: compact grid item ---- */
+.sapMetricBox {
+    padding: 10px 12px !important;
+    background: #F8FAFC !important;
+    border-radius: 5px !important;
+    border: 1px solid #E2E8F0 !important;
+    min-height: 60px !important;
+}
+
+/* ---- Impact Analysis Section Cards ---- */
+.sapOverviewCard {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    padding: 16px 18px !important;
+    box-shadow: none !important;
+}
+
+.sapOverviewHeader {
+    margin-bottom: 12px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    min-height: 36px !important;
+}
+
+.sapCardSectionTitle {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+}
+
+.sapCardSectionSub {
+    font-size: 11px !important;
+    color: #94A3B8 !important;
+    margin-top: 2px !important;
+}
+
+.sapMetricRow {
+    padding: 8px 0 !important;
+    border-bottom: 1px solid #F8FAFC !important;
+}
+
+.sapMetricRow:last-child { border-bottom: none !important; }
+
+.sapMetricLabel {
+    font-size: 12px !important;
+    color: #475569 !important;
+    font-weight: 400 !important;
+}
+
+.sapMetricVal {
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #1D2D3E !important;
+    text-align: right !important;
+}
+
+.sapMetricIcon { font-size: 14px !important; }
+.sapMetricIcon.info     { color: #0A6ED1 !important; }
+.sapMetricIcon.warning  { color: #D97706 !important; }
+.sapMetricIcon.critical { color: #DC2626 !important; }
+.sapMetricIcon.success  { color: #107E3E !important; }
+
+/* ---- AI Assessment Card ---- */
+.sapAiAssessmentCard {
+    background: #FAFBFC !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    padding: 16px 18px !important;
+}
+
+.sapAiHeaderBar {
+    margin-bottom: 14px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.sapAiTitle {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+}
+
+.sapAiDot {
+    margin: 0 6px !important;
+    color: #CBD5E1 !important;
+}
+
+.sapAiSub {
+    font-size: 12px !important;
+    color: #64748B !important;
+}
+
+.sapAiBlock {
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 5px !important;
+    padding: 10px 12px !important;
+}
+
+.sapAiBlock.highlight {
+    border-color: #0A6ED1 !important;
+    background: #EBF5FF !important;
+}
+
+.sapAiBlockTag {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #94A3B8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    margin-bottom: 4px !important;
+    display: block !important;
+}
+
+.sapAiBlockText {
+    font-size: 11.5px !important;
+    color: #334155 !important;
+    line-height: 1.45 !important;
+}
+
+/* ---- Visual Chain Card (Impact propagation) ---- */
+.sapVisualChainCard {
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    padding: 14px 18px !important;
+    margin-bottom: 12px !important;
+}
+
+.sapChainHeaderBar {
+    margin-bottom: 12px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+}
+
+.sapChainNodesRow {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+.sapChainNode {
+    flex: 1 !important;
+    min-width: 110px !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 5px !important;
+    padding: 10px 12px !important;
+}
+
+.sapChainIcon {
+    font-size: 12px !important;
+    color: #0A6ED1 !important;
+    margin-right: 4px !important;
+}
+
+.sapChainNodeTag {
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    color: #64748B !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}
+
+.sapChainNodeTitle {
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    margin: 4px 0 2px 0 !important;
+    display: block !important;
+}
+
+.sapChainNodeSub {
+    font-size: 11px !important;
+    color: #64748B !important;
+}
+
+.sapChainArrow {
+    font-size: 10px !important;
+    color: #CBD5E1 !important;
+    flex-shrink: 0 !important;
+    align-self: center !important;
+}
+
+/* ---- Section title helpers ---- */
+.sapSectionTitleSmall {
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    color: #1D2D3E !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+}
+
+.sapSectionSubSmall {
+    font-size: 11.5px !important;
+    color: #64748B !important;
+    margin-top: 2px !important;
+}
+
+.sapTagNeutral {
+    font-size: 11px !important;
+    color: #64748B !important;
+    background: #F1F5F9 !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+
+/* ---- Utility helpers ---- */
+.textCritical  { color: #DC2626 !important; }
+.textWarning   { color: #D97706 !important; }
+.textSuccess   { color: #107E3E !important; }
+.textPrimary   { color: #0A6ED1 !important; }
+.textMuted     { color: #94A3B8 !important; }
+.textDark      { color: #1D2D3E !important; }
+.textSmall     { font-size: 11px !important; }
+.textMedium    { font-size: 13px !important; }
+.textLarge     { font-size: 16px !important; }
+.bold          { font-weight: 700 !important; }
+
+/* ---- Prevent BusyIndicator anchor dots from floating ---- */
+.sapMBusyIndicatorBox {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Ensure hidden sections don't leak layout */
+[visible="false"] { display: none !important; }
 
