@@ -3,8 +3,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/ui/core/Fragment"
-], function (Controller, JSONModel, MessageBox, MessageToast, Fragment) {
+    "sap/ui/core/Fragment",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (Controller, JSONModel, MessageBox, MessageToast, Fragment, WorkflowNavHelper) {
     "use strict";
 
     return Controller.extend("com.quads.supplychain.controller.Decision", {
@@ -12,6 +13,8 @@ sap.ui.define([
             var oModel = new JSONModel({
                 decisionState: "PENDING", // PENDING, APPROVED, REJECTED
                 case_id: "",
+                feasible_plans: [],
+                infeasible_plans: [],
                 selectedPlan: {},
                 plannerRationale: "",
                 approvalTimestamp: "",
@@ -58,37 +61,30 @@ sap.ui.define([
             ])
             .then(function (results) {
                 var caseData = results[0] || {};
-                var planSet = results[1];
+                var planSet = results[1] || {};
 
-                // Route guard: Feasible plans must exist before final decision can be made
-                if (!planSet || !planSet.feasible_plans || planSet.feasible_plans.length === 0) {
-                    MessageBox.warning(
-                        "Recovery plans have not been generated yet for " + sCaseId + ".\n\nPlease generate and review plans in Stage 5 before making a final decision.",
-                        {
-                            title: "Workflow Stage Locked",
-                            onClose: function () {
-                                that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
-                            }
-                        }
-                    );
-                    return;
+                var feasible = planSet.feasible_plans || [];
+                var infeasible = planSet.infeasible_plans || [];
+
+                var bApproved = caseData.checkpoint2_decision === "APPROVE" ||
+                                caseData.status === "PLAN_APPROVED" ||
+                                caseData.status === "RECOVERY_APPROVED" ||
+                                caseData.status === "EXECUTION" ||
+                                caseData.status === "EXECUTION_IN_PROGRESS" ||
+                                caseData.status === "RESOLVED";
+
+                var selectedPlan = {};
+                if (bApproved && caseData.approved_plan_id) {
+                    selectedPlan = feasible.concat(infeasible).find(function (p) {
+                        return p.plan_id === caseData.approved_plan_id;
+                    }) || {};
                 }
-
-                var feasible = planSet.feasible_plans;
-                var sChosenId = caseData.approved_plan_id || that.getOwnerComponent().getModel("app").getProperty("/selectedPlanId") || feasible[0].plan_id;
-                var selectedPlan = feasible[0];
-                for (var i = 0; i < feasible.length; i++) {
-                    if (feasible[i].plan_id === sChosenId) {
-                        selectedPlan = feasible[i];
-                        break;
-                    }
-                }
-
-                var bApproved = caseData.checkpoint2_decision === "APPROVE" || caseData.status === "RECOVERY_APPROVED" || caseData.status === "EXECUTION_IN_PROGRESS" || caseData.status === "RESOLVED";
 
                 oModel.setData({
                     decisionState: bApproved ? "APPROVED" : "PENDING",
                     case_id: sCaseId,
+                    feasible_plans: feasible,
+                    infeasible_plans: infeasible,
                     selectedPlan: selectedPlan,
                     plannerRationale: caseData.checkpoint2_rationale || "",
                     approvalTimestamp: caseData.checkpoint2_timestamp ? new Date(caseData.checkpoint2_timestamp).toLocaleString() : new Date().toLocaleString(),
@@ -101,36 +97,55 @@ sap.ui.define([
             });
         },
 
+        onSelectFeasiblePlan: function (oEvent) {
+            var oContext = oEvent.getSource().getBindingContext("dec");
+            if (!oContext) return;
+            var planObj = oContext.getObject();
+            this.getView().getModel("dec").setProperty("/selectedPlan", planObj);
+            MessageToast.show("Selected " + planObj.plan_id + " (" + (planObj.version || "v1") + ") for review.");
+        },
+
         onApprovePlan: function () {
             var oModel = this.getView().getModel("dec");
             var selectedPlan = oModel.getProperty("/selectedPlan");
-            var sRationale = oModel.getProperty("/plannerRationale") || "Manager approved optimal recovery strategy.";
+            if (!selectedPlan || !selectedPlan.plan_id) {
+                MessageBox.warning("Please select a feasible recovery plan first.");
+                return;
+            }
+
+            var sRationale = (oModel.getProperty("/plannerRationale") || "").trim();
+            if (!sRationale) {
+                MessageBox.warning("A mandatory comment / rationale is required before authorizing recovery plan execution.");
+                return;
+            }
+
             var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
             var sCaseId = this._sCurrentCaseId;
             var that = this;
 
             MessageBox.confirm(
-                "Authorize execution of Plan " + selectedPlan.plan_id + " (" + (selectedPlan.version || "v1") + ")?\n\nThis will lock the plan baseline and advance the case to Stage 7: Execution & Monitoring.",
+                "Approve " + selectedPlan.plan_id + " (" + (selectedPlan.version || "v1") + ") for execution?\n\nThis will lock the plan baseline and transition to Stage 7: Execution & Monitoring.",
                 {
                     title: "Authorize Plan Execution",
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                     emphasizedAction: MessageBox.Action.OK,
                     onClose: function (sAction) {
                         if (sAction === MessageBox.Action.OK) {
-                            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/checkpoint2", {
+                            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/decision/approve", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
                                     decision: "APPROVE",
                                     plan_id: selectedPlan.plan_id,
                                     version: selectedPlan.version || "v1",
+                                    comment: sRationale,
                                     rationale: sRationale
                                 })
                             })
                             .then(function (res) {
                                 if (!res.ok) {
                                     return res.json().then(function (d) {
-                                        throw new Error(d.message || "Approval failed");
+                                        throw new Error(d.message || "Approval failed (HTTP " + res.status + ")");
                                     });
                                 }
                                 return res.json();
@@ -139,7 +154,7 @@ sap.ui.define([
                                 oModel.setProperty("/decisionState", "APPROVED");
                                 oModel.setProperty("/approvalTimestamp", new Date().toLocaleString());
 
-                                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "RECOVERY_APPROVED");
+                                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "EXECUTION");
                                 that.getOwnerComponent().getModel("app").setProperty("/stageStep", 7);
                                 MessageToast.show("Plan " + selectedPlan.plan_id + " approved. Proceeding to Execution & Monitoring...");
 
@@ -158,7 +173,6 @@ sap.ui.define([
 
         onOpenRejectDialog: function () {
             var oView = this.getView();
-            var that = this;
             if (!this._pRejectDialog) {
                 this._pRejectDialog = Fragment.load({
                     id: oView.getId(),
@@ -186,22 +200,32 @@ sap.ui.define([
             var oModel = this.getView().getModel("dec");
             var that = this;
 
-            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/checkpoint2", {
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/decision/reject", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     decision: "REJECT",
+                    reason: sReason,
+                    comment: sReason,
                     rationale: sReason
                 })
             })
             .then(function (res) {
+                if (!res.ok) {
+                    return res.json().then(function (d) {
+                        throw new Error(d.message || "Rejection failed");
+                    });
+                }
                 return res.json();
             })
             .then(function () {
                 oModel.setProperty("/decisionState", "REJECTED");
                 oModel.setProperty("/rejectionReason", sReason);
                 that.onCloseRejectDialog();
-                MessageToast.show("Recovery proposals rejected. Return to Recovery Planning for new cycle.");
+                MessageToast.show("Recovery plan rejected. Planning cycle incremented. Returning to Recovery Planning...");
+                setTimeout(function () {
+                    that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
+                }, 800);
             })
             .catch(function (err) {
                 MessageBox.error("Rejection recording failed: " + err.message);
@@ -250,24 +274,27 @@ sap.ui.define([
             var sCaseId = this._sCurrentCaseId;
             var that = this;
 
-            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/recovery/modify", {
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/decision/modify", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    decision: "MODIFY",
                     plan_id: modData.plan_id,
                     modified_quantity: Number(modData.quantity),
                     modified_transport_name: modData.transport_mode,
-                    cost_ceiling: Number(modData.cost_budget),
-                    max_recovery_days: Number(modData.lead_time_cap)
+                    changes: {
+                        recovered_quantity: Number(modData.quantity),
+                        transport_name: modData.transport_mode
+                    }
                 })
             })
             .then(function (res) {
-                if (!res.ok) throw new Error("Plan modification failed");
+                if (!res.ok) throw new Error("Plan modification failed (HTTP " + res.status + ")");
                 return res.json();
             })
-            .then(function (planSet) {
+            .then(function () {
                 that.onCloseModifyDialog();
-                MessageToast.show("Plan modified. New version generated. Returning to Recovery Planning...");
+                MessageToast.show("New plan version created. Returning to Recovery Planning for re-evaluation...");
                 that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
             })
             .catch(function (err) {
@@ -289,6 +316,10 @@ sap.ui.define([
 
         onBackToRecoveryPlanning: function () {
             this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: this._sCurrentCaseId });
+        },
+
+        onWorkflowStagePress: function (oEvent) {
+            WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
         }
     });
 });

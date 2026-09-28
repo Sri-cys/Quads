@@ -34,3 +34,5 @@ backend/quads_checkpoints.db
 .DS_Store
 .vscode/
 .idea/
+backend/.env
+backend/.env

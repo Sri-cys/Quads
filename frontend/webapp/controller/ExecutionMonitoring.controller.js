@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
-], function (Controller, JSONModel, MessageToast, MessageBox) {
+    "sap/m/MessageBox",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (Controller, JSONModel, MessageToast, MessageBox, WorkflowNavHelper) {
     "use strict";
 
     return Controller.extend("com.quads.supplychain.controller.ExecutionMonitoring", {
@@ -411,6 +412,10 @@ sap.ui.define([
 
         onNavBack: function () {
             this.getOwnerComponent().getRouter().navTo("cases");
+        },
+
+        onWorkflowStagePress: function (oEvent) {
+            WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
         }
 
     });

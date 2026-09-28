@@ -3,14 +3,17 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/ui/core/Fragment"
-], function (Controller, JSONModel, MessageBox, MessageToast, Fragment) {
+    "sap/ui/core/Fragment",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (Controller, JSONModel, MessageBox, MessageToast, Fragment, WorkflowNavHelper) {
     "use strict";
 
     return Controller.extend("com.quads.supplychain.controller.RecoveryPlanning", {
         onInit: function () {
             var oModel = new JSONModel({
                 state: "RUNNING", // RUNNING, COMPLETED, FAILED
+                agent2_status: "RUNNING", // RUNNING, COMPLETED, FAILED
+                agent3_status: "PENDING", // PENDING, RUNNING, COMPLETED, FAILED
                 errorMessage: "",
                 case_id: "",
                 priority: "BALANCED",
@@ -18,10 +21,11 @@ sap.ui.define([
                 material_name: "",
                 target_quantity: 0,
                 days_of_cover: 0,
-                ai_briefing: "",
-                ai_status: "FALLBACK",
+                candidates: [],
                 feasible_plans: [],
                 infeasible_plans: [],
+                all_evaluated_plans: [],
+                total_plans_count: 0,
                 selectedPlanId: null,
                 selectedPlanVersion: "v1"
             });
@@ -53,6 +57,8 @@ sap.ui.define([
             var that = this;
 
             oModel.setProperty("/state", "RUNNING");
+            oModel.setProperty("/agent2_status", "RUNNING");
+            oModel.setProperty("/agent3_status", "PENDING");
             oModel.setProperty("/errorMessage", "");
 
             Promise.all([
@@ -72,7 +78,7 @@ sap.ui.define([
                 // Route guard: Priority must be saved before Recovery Planning
                 if (!caseData.checkpoint1_decision && caseData.status !== "CHECKPOINT_APPROVED" && caseData.status !== "RECOVERY_APPROVED" && caseData.status !== "RESOLVED") {
                     MessageBox.warning(
-                        "Human Checkpoint 1 priority has not been saved for " + sCaseId + ".\n\nPlease save recovery priority before proceeding to Stage 5 Recovery Planning.",
+                        "Human Checkpoint 1 priority has not been saved for " + sCaseId + ".\n\nPlease set recovery priority before proceeding to Recovery Planning.",
                         {
                             title: "Workflow Stage Locked",
                             onClose: function () {
@@ -85,50 +91,80 @@ sap.ui.define([
 
                 var sPriority = caseData.checkpoint1_decision || "BALANCED";
 
-                // Fetch or generate recovery plans
-                return fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/recovery/plan")
-                    .then(function (r) {
-                        if (r.ok) return r.json();
-                        return fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/recovery/plan", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ priority: sPriority })
-                        }).then(function (res) {
-                            if (!res.ok) throw new Error("Failed to generate recovery plans: " + res.status);
-                            return res.json();
-                        });
+                // Step 1: Check candidates from Agent 2
+                fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/candidates")
+                    .then(function (candRes) {
+                        if (candRes.ok) return candRes.json();
+                        return null;
+                    })
+                    .then(function (candidateSet) {
+                        if (candidateSet && candidateSet.candidates) {
+                            oModel.setProperty("/candidates", candidateSet.candidates);
+                            oModel.setProperty("/agent2_status", "COMPLETED");
+                            oModel.setProperty("/agent3_status", "RUNNING");
+                        }
+
+                        // Step 2: Fetch full evaluation from Agent 3
+                        return fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/recovery/plan")
+                            .then(function (r) {
+                                if (r.ok) return r.json();
+                                // Trigger generation if not present
+                                return fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/recovery/plan", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ priority: sPriority })
+                                }).then(function (res) {
+                                    if (!res.ok) throw new Error("Failed to evaluate recovery plans (HTTP " + res.status + ")");
+                                    return res.json();
+                                });
+                            });
                     })
                     .then(function (planSetData) {
                         var feasible = planSetData.feasible_plans || [];
                         var infeasible = planSetData.infeasible_plans || [];
+                        var allPlans = feasible.concat(infeasible);
 
-                        var sSelId = caseData.approved_plan_id;
-                        var sSelVer = caseData.approved_plan_version || "v1";
-
-                        if (!sSelId && feasible.length > 0) {
-                            sSelId = feasible[0].plan_id;
-                            sSelVer = feasible[0].version || "v1";
+                        // If candidates weren't fetched earlier, construct from plans
+                        var candList = oModel.getProperty("/candidates");
+                        if (!candList || candList.length === 0) {
+                            candList = allPlans.map(function (p) {
+                                return {
+                                    plan_id: p.plan_id,
+                                    version: p.version || "v1",
+                                    strategy: p.strategy,
+                                    source_name: p.source_name || "Alternate Sourcing Node",
+                                    destination_name: p.destination_name || "Munich Assembly Hub",
+                                    recovered_quantity: p.recovered_quantity,
+                                    transport_name: p.transport_name || "Standard Freight Carrier",
+                                    recovery_days: p.recovery_days,
+                                    expected_customer_impact: p.customer_delay_days > 0 ? (p.customer_delay_days + " days delay") : "On-Time / Zero Delay",
+                                    title: p.title
+                                };
+                            });
+                            oModel.setProperty("/candidates", candList);
                         }
 
-                        oModel.setData({
-                            state: "COMPLETED",
-                            errorMessage: "",
-                            case_id: sCaseId,
-                            priority: sPriority,
-                            material_id: caseData.material_id || impactData.material_id || "MAT-001",
-                            material_name: caseData.material_name || "Lithium Battery Pack",
-                            target_quantity: impactData.supply_gap_quantity || caseData.affected_quantity || 1000,
-                            days_of_cover: impactData.days_of_cover !== undefined ? impactData.days_of_cover : 2.0,
-                            ai_briefing: planSetData.ai_briefing || "Evaluating alternatives to mitigate disruption...",
-                            ai_status: planSetData.ai_status || "FALLBACK",
-                            feasible_plans: feasible,
-                            infeasible_plans: infeasible,
-                            selectedPlanId: sSelId,
-                            selectedPlanVersion: sSelVer
-                        });
+                        oModel.setProperty("/state", "COMPLETED");
+                        oModel.setProperty("/agent2_status", "COMPLETED");
+                        oModel.setProperty("/agent3_status", "COMPLETED");
+                        oModel.setProperty("/case_id", sCaseId);
+                        oModel.setProperty("/priority", sPriority);
+                        oModel.setProperty("/material_id", caseData.material_id || "MAT-001");
+                        oModel.setProperty("/material_name", caseData.material_name || "Lithium Battery Pack");
+                        oModel.setProperty("/target_quantity", impactData.supply_gap_quantity || caseData.affected_quantity || 1000);
+                        oModel.setProperty("/days_of_cover", impactData.days_of_cover !== undefined ? impactData.days_of_cover : 2.0);
+                        oModel.setProperty("/feasible_plans", feasible);
+                        oModel.setProperty("/infeasible_plans", infeasible);
+                        oModel.setProperty("/all_evaluated_plans", allPlans);
+                        oModel.setProperty("/total_plans_count", allPlans.length);
 
-                        that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "AGENT3_COMPLETED");
+                        that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "DECISION_PENDING");
                         that.getOwnerComponent().getModel("app").setProperty("/stageStep", 6);
+                    })
+                    .catch(function (err) {
+                        oModel.setProperty("/state", "FAILED");
+                        oModel.setProperty("/agent3_status", "FAILED");
+                        oModel.setProperty("/errorMessage", err.message);
                     });
             })
             .catch(function (err) {
@@ -138,55 +174,7 @@ sap.ui.define([
         },
 
         onRefreshPlans: function () {
-            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
-            var sCaseId = this._sCurrentCaseId;
-            var sPriority = this.getView().getModel("rec").getProperty("/priority") || "BALANCED";
-            var oModel = this.getView().getModel("rec");
-            var that = this;
-
-            oModel.setProperty("/state", "RUNNING");
-            oModel.setProperty("/errorMessage", "");
-
-            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/recovery/plan?force_regenerate=true", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ priority: sPriority })
-            })
-            .then(function (res) {
-                if (!res.ok) throw new Error("Failed to re-generate plans");
-                return res.json();
-            })
-            .then(function (planSetData) {
-                var feasible = planSetData.feasible_plans || [];
-                var infeasible = planSetData.infeasible_plans || [];
-
-                oModel.setProperty("/state", "COMPLETED");
-                oModel.setProperty("/feasible_plans", feasible);
-                oModel.setProperty("/infeasible_plans", infeasible);
-                oModel.setProperty("/ai_briefing", planSetData.ai_briefing);
-
-                if (feasible.length > 0) {
-                    oModel.setProperty("/selectedPlanId", feasible[0].plan_id);
-                    oModel.setProperty("/selectedPlanVersion", feasible[0].version || "v1");
-                }
-                MessageToast.show("Agent 3 re-generated " + feasible.length + " feasible recovery combinations.");
-            })
-            .catch(function (err) {
-                oModel.setProperty("/state", "FAILED");
-                oModel.setProperty("/errorMessage", err.message);
-            });
-        },
-
-        onSelectPlan: function (oEvent) {
-            var oContext = oEvent.getSource().getBindingContext("rec");
-            if (!oContext) return;
-
-            var planId = oContext.getProperty("plan_id");
-            var version = oContext.getProperty("version") || "v1";
-
-            this.getView().getModel("rec").setProperty("/selectedPlanId", planId);
-            this.getView().getModel("rec").setProperty("/selectedPlanVersion", version);
-            MessageToast.show("Plan " + planId + " (" + version + ") selected for final decision.");
+            this.loadRecoveryData(this._sCurrentCaseId);
         },
 
         onInspectPlan: function (oEvent) {
@@ -222,15 +210,15 @@ sap.ui.define([
         },
 
         onProceedToDecision: function () {
-            var sPlanId = this.getView().getModel("rec").getProperty("/selectedPlanId");
-            var sVersion = this.getView().getModel("rec").getProperty("/selectedPlanVersion") || "v1";
-            this.getOwnerComponent().getModel("app").setProperty("/selectedPlanId", sPlanId);
-            this.getOwnerComponent().getModel("app").setProperty("/selectedPlanVersion", sVersion);
             this.getOwnerComponent().getRouter().navTo("decision", { caseId: this._sCurrentCaseId });
         },
 
-        onBackToConstraints: function () {
-            this.getOwnerComponent().getRouter().navTo("constraints", { caseId: this._sCurrentCaseId });
+        onBackToPriority: function () {
+            this.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: this._sCurrentCaseId });
+        },
+
+        onWorkflowStagePress: function (oEvent) {
+            WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
         }
     });
 });

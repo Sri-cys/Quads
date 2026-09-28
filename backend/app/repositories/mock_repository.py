@@ -1,13 +1,15 @@
 import json
 import os
+import sqlite3
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 from datetime import datetime, timezone
 
 from app.repositories.base import BaseRepository
 from app.models.supplier import Supplier, Plant, Material
 from app.models.inventory import Inventory, Demand, SafetyStock, PurchaseOrder
 from app.models.case import Case
+from app.workflow.state_machine import normalize_state, CaseState
 from app.models.impact import ImpactAnalysis, AuditEvent
 from app.models.recovery import (
     RecoveryPlanSet,
@@ -29,7 +31,7 @@ from app.models.execution import (
 class MockRepository(BaseRepository):
     """
     MockRepository loads and manages local mock data for Phase 1.
-    All data is kept in-memory with optional persistence to data/mock/*.json.
+    All data is kept in-memory with optional persistence to data/mock/*.json or SQLite.
     """
 
     def __init__(self, data_dir: Optional[str] = None):
@@ -47,6 +49,7 @@ class MockRepository(BaseRepository):
         self._plants: dict[str, Plant] = {}
         self._inventory: dict[tuple[str, str], Inventory] = {}
         self._demand: dict[tuple[str, str], Demand] = {}
+        self._db_path = os.environ.get("DATABASE_PATH")
         self._safety_stock: dict[tuple[str, str], SafetyStock] = {}
         self._purchase_orders: list[PurchaseOrder] = []
 
@@ -121,6 +124,7 @@ class MockRepository(BaseRepository):
         # Pre-seeded cases
         cases_data = self._read_json("cases.json")
         for item in cases_data:
+            item["status"] = normalize_state(item.get("status")).value
             case = Case(**item)
             self._cases[case.case_id] = case
             # Track max counter
@@ -146,6 +150,37 @@ class MockRepository(BaseRepository):
         for item in self._read_json("transports.json"):
             tr = TransportOption(**item)
             self._transports.append(tr)
+
+        if self._db_path:
+            self._init_sqlite()
+
+    def _init_sqlite(self):
+        if not self._db_path:
+            return
+        try:
+            with sqlite3.connect(self._db_path) as conn:
+                conn.execute("CREATE TABLE IF NOT EXISTS cases (case_id TEXT PRIMARY KEY, data TEXT)")
+                conn.execute("CREATE TABLE IF NOT EXISTS impacts (case_id TEXT PRIMARY KEY, data TEXT)")
+                conn.execute("CREATE TABLE IF NOT EXISTS recovery_plans (case_id TEXT PRIMARY KEY, data TEXT)")
+                conn.execute("CREATE TABLE IF NOT EXISTS checkpoint2 (case_id TEXT PRIMARY KEY, data TEXT)")
+                conn.execute("CREATE TABLE IF NOT EXISTS audits (id INTEGER PRIMARY KEY AUTOINCREMENT, case_id TEXT, data TEXT)")
+                for row in conn.execute("SELECT data FROM cases"):
+                    c = Case.model_validate_json(row[0])
+                    self._cases[c.case_id] = c
+                for row in conn.execute("SELECT data FROM impacts"):
+                    imp = ImpactAnalysis.model_validate_json(row[0])
+                    self._impact_analyses[imp.case_id] = imp
+                for row in conn.execute("SELECT data FROM recovery_plans"):
+                    rec = RecoveryPlanSet.model_validate_json(row[0])
+                    self._recovery_plan_sets[rec.case_id] = rec
+                for row in conn.execute("SELECT data FROM checkpoint2"):
+                    cp2 = Checkpoint2Response.model_validate_json(row[0])
+                    self._checkpoint2_decisions[cp2.case_id] = cp2
+                for row in conn.execute("SELECT data FROM audits"):
+                    aud = AuditEvent.model_validate_json(row[0])
+                    self._audit_events.append(aud)
+        except Exception:
+            pass
 
     def get_supplier(self, supplier_id: str) -> Optional[Supplier]:
         return self._suppliers.get(supplier_id)
@@ -197,6 +232,12 @@ class MockRepository(BaseRepository):
         if not case.case_id:
             case.case_id = self._next_case_id()
         self._cases[case.case_id] = case
+        if self._db_path:
+            try:
+                with sqlite3.connect(self._db_path) as conn:
+                    conn.execute("INSERT OR REPLACE INTO cases (case_id, data) VALUES (?, ?)", (case.case_id, case.model_dump_json()))
+            except Exception:
+                pass
         return case
 
     def get_case(self, case_id: str) -> Optional[Case]:
@@ -209,6 +250,12 @@ class MockRepository(BaseRepository):
 
     def update_case(self, case: Case) -> Case:
         self._cases[case.case_id] = case
+        if self._db_path:
+            try:
+                with sqlite3.connect(self._db_path) as conn:
+                    conn.execute("INSERT OR REPLACE INTO cases (case_id, data) VALUES (?, ?)", (case.case_id, case.model_dump_json()))
+            except Exception:
+                pass
         return case
 
     def find_duplicate_case(
@@ -225,7 +272,7 @@ class MockRepository(BaseRepository):
                 and c.material_id == material_id
                 and c.plant_id == plant_id
                 and c.disruption_type == disruption_type
-                and c.status in {"CREATED", "TRIAGED"}
+                and c.status in {"CREATED", "TRIAGED", CaseState.CASE_CREATED.value, CaseState.CASE_OVERVIEW.value, CaseState.IMPACT_ANALYSIS_PENDING.value, CaseState.IMPACT_ANALYSIS_RUNNING.value}
             ):
                 try:
                     dt = datetime.fromisoformat(c.detected_at.replace("Z", "+00:00"))
@@ -243,6 +290,13 @@ class MockRepository(BaseRepository):
             case.severity = analysis.severity
             if case.status in {"CREATED", "TRIAGED"}:
                 case.status = "ANALYZED"
+            self.update_case(case)
+        if self._db_path:
+            try:
+                with sqlite3.connect(self._db_path) as conn:
+                    conn.execute("INSERT OR REPLACE INTO impacts (case_id, data) VALUES (?, ?)", (analysis.case_id, analysis.model_dump_json()))
+            except Exception:
+                pass
         return analysis
 
     def get_impact_analysis(self, case_id: str) -> Optional[ImpactAnalysis]:
@@ -255,10 +309,17 @@ class MockRepository(BaseRepository):
         case.checkpoint1_decision = priority
         case.checkpoint1_timestamp = datetime.now(timezone.utc).isoformat()
         case.status = "CHECKPOINT_APPROVED"
+        self.update_case(case)
         return case
 
     def save_audit_event(self, event: AuditEvent) -> AuditEvent:
         self._audit_events.append(event)
+        if self._db_path:
+            try:
+                with sqlite3.connect(self._db_path) as conn:
+                    conn.execute("INSERT INTO audits (case_id, data) VALUES (?, ?)", (event.case_id, event.model_dump_json()))
+            except Exception:
+                pass
         return event
 
     def get_audit_events(self, case_id: Optional[str] = None) -> list[AuditEvent]:
@@ -293,9 +354,12 @@ class MockRepository(BaseRepository):
 
     def save_recovery_plan_set(self, plan_set: RecoveryPlanSet) -> RecoveryPlanSet:
         self._recovery_plan_sets[plan_set.case_id] = plan_set
-        case = self._cases.get(plan_set.case_id)
-        if case and case.status not in {"RECOVERY_APPROVED", "EXECUTION_IN_PROGRESS", "MONITORING", "RESOLVED"}:
-            case.status = "AWAITING_CHECKPOINT_2"
+        if self._db_path:
+            try:
+                with sqlite3.connect(self._db_path) as conn:
+                    conn.execute("INSERT OR REPLACE INTO recovery_plans (case_id, data) VALUES (?, ?)", (plan_set.case_id, plan_set.model_dump_json()))
+            except Exception:
+                pass
         return plan_set
 
     def get_recovery_plan_set(self, case_id: str) -> Optional[RecoveryPlanSet]:
@@ -312,7 +376,7 @@ class MockRepository(BaseRepository):
         case.approved_plan_id = decision.plan_id
         case.approved_plan_version = decision.version
 
-        if case.status not in {"EXECUTION_IN_PROGRESS", "MONITORING", "RESOLVED"}:
+        if case.status not in {CaseState.EXECUTION.value, "EXECUTION_IN_PROGRESS", "MONITORING", "RESOLVED"}:
             if decision.decision == "APPROVE":
                 case.status = "RECOVERY_APPROVED"
             elif decision.decision == "MODIFY":
@@ -325,6 +389,14 @@ class MockRepository(BaseRepository):
         if plan_set:
             plan_set.checkpoint2_status = decision.decision
             plan_set.checkpoint2_decision = decision.model_dump()
+
+        if self._db_path:
+            try:
+                with sqlite3.connect(self._db_path) as conn:
+                    conn.execute("INSERT OR REPLACE INTO cases (case_id, data) VALUES (?, ?)", (case.case_id, case.model_dump_json()))
+                    conn.execute("INSERT OR REPLACE INTO checkpoint2 (case_id, data) VALUES (?, ?)", (case_id, decision.model_dump_json()))
+            except Exception:
+                pass
 
         return case
 
@@ -413,4 +485,39 @@ class MockRepository(BaseRepository):
         if case_id:
             return [o for o in self._historical_outcomes if o.case_id == case_id]
         return list(self._historical_outcomes)
+
+    def save_snapshot(self, snapshot: Any) -> Any:
+        if not hasattr(self, "_snapshots"):
+            self._snapshots = {}
+        if snapshot.case_id not in self._snapshots:
+            self._snapshots[snapshot.case_id] = []
+        for s in self._snapshots[snapshot.case_id]:
+            if getattr(s, "is_active", False):
+                s.is_active = False
+                s.is_superseded = True
+        self._snapshots[snapshot.case_id].append(snapshot)
+        return snapshot
+
+    def get_snapshots(self, case_id: str) -> list[Any]:
+        if not hasattr(self, "_snapshots"):
+            self._snapshots = {}
+        return list(self._snapshots.get(case_id, []))
+
+    def get_active_snapshot(self, case_id: str) -> Optional[Any]:
+        snaps = self.get_snapshots(case_id)
+        for s in reversed(snaps):
+            if getattr(s, "is_active", False):
+                return s
+        return snaps[-1] if snaps else None
+
+    def save_candidate_plan_set(self, plan_set: Any) -> Any:
+        if not hasattr(self, "_candidate_plan_sets"):
+            self._candidate_plan_sets = {}
+        self._candidate_plan_sets[plan_set.case_id] = plan_set
+        return plan_set
+
+    def get_candidate_plan_set(self, case_id: str) -> Optional[Any]:
+        if not hasattr(self, "_candidate_plan_sets"):
+            self._candidate_plan_sets = {}
+        return self._candidate_plan_sets.get(case_id)
 

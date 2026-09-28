@@ -191,6 +191,7 @@
                     <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginTop">
                         <Text text="To assess downstream inventory buffer breach, plant assembly hazards, and financial exposure, launch Agent 1." class="textDark bold" />
                         <Button
+                            id="btnStartImpactAnalysis"
                             text="START IMPACT ANALYSIS &#x2192;"
                             type="Emphasized"
                             icon="sap-icon://play"

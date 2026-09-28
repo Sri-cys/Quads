@@ -10,7 +10,8 @@ Adheres strictly to the architectural constraints:
 import os
 import time
 import logging
-from typing import Optional
+import concurrent.futures
+from typing import Optional, Any
 from app.models.impact import ImpactAnalysis
 from app.models.disruption import Disruption
 
@@ -89,26 +90,22 @@ Provide:
 3. Downstream Plant & Customer Risk: Impact on production lines and customer deliveries.
 """
 
-        # Attempt call with 1 retry and 10s timeout budget
-        max_attempts = 2
-        for attempt in range(1, max_attempts + 1):
-            try:
-                # Call Gemini model
-                response = self._client.models.generate_content(
+        # Attempt call with strict 4.0s timeout budget
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(
+                    self._client.models.generate_content,
                     model="gemini-flash-latest",
                     contents=prompt,
                 )
+                response = future.result(timeout=4.0)
                 if response and response.text:
                     return response.text.strip(), "AVAILABLE"
                 else:
                     return None, "FAILED"
-            except Exception as e:
-                logger.warning(f"Gemini call attempt {attempt} failed: {type(e).__name__}")
-                if attempt < max_attempts:
-                    time.sleep(1.0)  # Brief backoff before single retry
-                else:
-                    logger.error("Gemini explanation generation failed after retries; falling back gracefully.")
-                    return None, "FAILED"
+        except Exception as e:
+            logger.warning(f"Gemini call timed out or failed: {type(e).__name__}; falling back gracefully.")
+            return None, "FAILED"
 
         return None, "UNAVAILABLE"
 
@@ -156,23 +153,22 @@ STRICT GROUNDING RULES:
 4. Provide a crisp 2-paragraph executive recommendation for Human Checkpoint 2.
 """
 
-        max_attempts = 2
-        for attempt in range(1, max_attempts + 1):
-            try:
-                response = self._client.models.generate_content(
+        # Attempt call with strict 4.0s timeout budget
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(
+                    self._client.models.generate_content,
                     model="gemini-flash-latest",
                     contents=prompt,
                 )
+                response = future.result(timeout=4.0)
                 if response and response.text:
                     return response.text.strip(), "AVAILABLE"
                 else:
                     return None, "FAILED"
-            except Exception as e:
-                logger.warning(f"Gemini recovery briefing attempt {attempt} failed: {type(e).__name__}")
-                if attempt < max_attempts:
-                    time.sleep(1.0)
-                else:
-                    return None, "FAILED"
+        except Exception as e:
+            logger.warning(f"Gemini recovery briefing timed out or failed: {type(e).__name__}; falling back gracefully.")
+            return None, "FAILED"
 
         return None, "UNAVAILABLE"
 

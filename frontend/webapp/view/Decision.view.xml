@@ -19,8 +19,8 @@
                 <!-- Page Header: Title + Context Subtitle + Back Link -->
                 <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
                     <VBox>
-                        <Title text="FINAL DECISION" level="H1" class="sapCorporatePageTitle" />
-                        <Text text="Human governance authorization. The system recommends; the human supply chain manager decides." class="sapCorporatePageSubtitle" />
+                        <Title text="FINAL HUMAN DECISION" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Human governance authorization. AI agents generate and evaluate; human supply chain manager decides." class="sapCorporatePageSubtitle bold" />
                     </VBox>
                     <Link
                         text="&#x2190; Back to Recovery Planning"
@@ -28,12 +28,57 @@
                         class="sapBackLink" />
                 </HBox>
 
+                <!-- Zero Feasible Plans Warning (Section 24) -->
+                <VBox
+                    visible="{= ${dec>/feasible_plans}.length === 0 &amp;&amp; ${dec>/decisionState} === 'PENDING' }"
+                    class="sapChoiceCard sapUiSmallMarginBottom"
+                    style="border-left: 4px solid #BB0000; background: #FFF5F5; padding: 24px;">
+                    <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+                        <core:Icon src="sap-icon://error" color="#BB0000" size="24px" class="sapUiSmallMarginEnd" />
+                        <VBox>
+                            <Title text="NO FEASIBLE RECOVERY PLAN" level="H2" class="bold textCritical" />
+                            <Text text="All generated recovery plans breached hard enterprise operating constraints. Approval is blocked." class="textDark bold" />
+                        </VBox>
+                    </HBox>
+
+                    <Table items="{dec>/infeasible_plans}" class="sapUiSmallMarginBottom">
+                        <columns>
+                            <Column width="120px"><Text text="Plan ID" class="bold" /></Column>
+                            <Column><Text text="Strategy" class="bold" /></Column>
+                            <Column><Text text="Breach Reason" class="bold textCritical" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{dec>plan_id} ({dec>version})" class="bold" />
+                                    <Text text="{dec>strategy}" />
+                                    <Text text="{dec>infeasibility_reason}" class="bold textCritical" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+
+                    <HBox justifyContent="End">
+                        <Button
+                            text="REJECT &amp; REPLAN"
+                            type="Reject"
+                            icon="sap-icon://refresh"
+                            press=".onOpenRejectDialog"
+                            class="sapUiSmallMarginEnd" />
+                        <Button
+                            text="MODIFY CONSTRAINTS / PLAN"
+                            type="Default"
+                            icon="sap-icon://edit"
+                            press=".onOpenModifyDialog" />
+                    </HBox>
+                </VBox>
+
                 <!-- 1. Decision Governance Card -->
                 <VBox class="sapDecisionCard sapUiSmallMarginBottom">
                     <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionHeader">
                         <VBox>
                             <Title text="Governance Authorization Checkpoint" level="H2" class="sapSectionTitle" />
-                            <Text text="Review the candidate recovery plan before authorizing automated execution in S/4HANA &amp; TM." class="sapSectionSub" />
+                            <Text text="Review evaluated recovery candidates. Only FEASIBLE plans are eligible for human authorization." class="sapSectionSub" />
                         </VBox>
                         <HBox alignItems="Center">
                             <ObjectStatus
@@ -52,7 +97,7 @@
                             <core:Icon src="sap-icon://sys-enter-2" class="sapBannerIcon success" />
                             <VBox class="sapUiSmallMarginBegin" width="100%">
                                 <Title text="Plan {dec>/selectedPlan/plan_id} ({dec>/selectedPlan/version}) Approved" level="H3" class="sapBannerTitle" />
-                                <Text text="Plan baseline locked at {dec>/approvalTimestamp} by {dec>/approvalActor}. Ready for Stage 7: Autonomous Execution &amp; Monitoring." class="sapBannerText bold" />
+                                <Text text="Plan baseline locked at {dec>/approvalTimestamp} by {dec>/approvalActor}. Immutable execution snapshot created. Ready for Execution &amp; Monitoring." class="sapBannerText bold" />
                                 <HBox class="sapUiSmallMarginTop">
                                     <Button
                                         text="PROCEED TO EXECUTION &amp; MONITORING &#x2192;"
@@ -74,7 +119,7 @@
                             <core:Icon src="sap-icon://decline" class="sapBannerIcon" color="#BB0000" />
                             <VBox class="sapUiSmallMarginBegin" width="100%">
                                 <Title text="Recovery Plan Rejected" level="H3" class="sapBannerTitle textCritical" />
-                                <Text text="Rejection reason: '{dec>/rejectionReason}'. Recorded in governance audit trail." class="sapBannerText bold" />
+                                <Text text="Rejection reason: '{dec>/rejectionReason}'. Recorded in governance audit trail. Planning cycle incremented." class="sapBannerText bold" />
                                 <HBox class="sapUiSmallMarginTop">
                                     <Button
                                         text="Return to Recovery Planning"
@@ -86,29 +131,63 @@
                         </HBox>
                     </VBox>
 
-                    <!-- Selected Plan Summary Review Block -->
-                    <VBox class="sapUiSmallMarginTop">
-                        <Title text="Selected Recovery Candidate" level="H3" class="sapCardSectionTitle sapUiTinyMarginBottom" />
+                    <!-- Feasible Plan Selection Cards (Nothing preselected) -->
+                    <VBox visible="{= ${dec>/feasible_plans}.length > 0 &amp;&amp; ${dec>/decisionState} === 'PENDING' }" class="sapUiSmallMarginTop">
+                        <Title text="Select a Feasible Plan to Review &amp; Authorize" level="H3" class="sapCardSectionTitle sapUiTinyMarginBottom" />
+                        <Text text="Only validated, feasible options are selectable. Nothing is preselected." class="textMuted textSmall sapUiSmallMarginBottom" />
+
+                        <layout:Grid
+                            defaultSpan="XL4 L4 M6 S12"
+                            hSpacing="1"
+                            vSpacing="1"
+                            content="{dec>/feasible_plans}"
+                            class="sapUiSmallMarginBottom">
+
+                            <VBox class="sapChoiceCard">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                                    <ObjectStatus text="{dec>plan_id} ({dec>version})" state="Information" inverted="true" class="bold" />
+                                    <ObjectStatus text="{dec>score} pts" state="Success" class="bold" />
+                                </HBox>
+
+                                <Title text="{dec>strategy}" level="H4" class="bold textDark sapUiTinyMarginBottom" />
+                                <Text text="Source: {dec>source_name}" class="textSmall bold" />
+
+                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
+                                    <Text text="Cost: ${= ${dec>total_cost} ? ${dec>total_cost}.toLocaleString() : 'N/A' }" class="bold textSmall" />
+                                    <Text text="Lead Time: {dec>recovery_days} Days" class="bold textSmall textPrimary" />
+                                    <ObjectStatus text="{dec>operational_risk} RISK" state="{= ${dec>operational_risk} === 'LOW' ? 'Success' : 'Warning' }" class="bold textSmall" />
+                                </HBox>
+
+                                <Button
+                                    text="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Selected &#x2713;' : 'Select Plan' }"
+                                    type="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Emphasized' : 'Default' }"
+                                    icon="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'sap-icon://accept' : 'sap-icon://cursor-arrow' }"
+                                    press=".onSelectFeasiblePlan"
+                                    class="sapUiTinyMarginTop" />
+                            </VBox>
+                        </layout:Grid>
+                    </VBox>
+
+                    <!-- Selected Plan Review Block (Visible once a plan is chosen) -->
+                    <VBox visible="{= !!${dec>/selectedPlan/plan_id} }" class="sapUiSmallMarginTop">
+                        <Title text="Reviewing Selected Plan: {dec>/selectedPlan/plan_id} ({dec>/selectedPlan/version})" level="H3" class="sapCardSectionTitle sapUiTinyMarginBottom" />
                         
                         <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginTop sapUiSmallMarginBottom">
                             <VBox class="sapMetricBox">
                                 <Text text="Plan Identifier &amp; Version" class="sapContextItemLabel" />
                                 <Text text="{dec>/selectedPlan/plan_id} ({dec>/selectedPlan/version})" class="bold textLarge textPrimary" />
                             </VBox>
-
                             <VBox class="sapMetricBox">
                                 <Text text="Recovery Strategy" class="sapContextItemLabel" />
                                 <Text text="{dec>/selectedPlan/strategy}" class="bold textLarge textDark" />
                             </VBox>
-
                             <VBox class="sapMetricBox">
                                 <Text text="Fulfillment Quantity" class="sapContextItemLabel" />
                                 <Text text="{dec>/selectedPlan/recovered_quantity} Units" class="bold textLarge textDark" />
                             </VBox>
-
                             <VBox class="sapMetricBox">
                                 <Text text="Total Recovery Cost" class="sapContextItemLabel" />
-                                <Text text="${= ${dec>/selectedPlan/total_cost} ? ${dec>/selectedPlan/total_cost}.toLocaleString() : '0' }" class="bold textLarge textDark" />
+                                <Text text="${= ${dec>/selectedPlan/total_cost} ? ${dec>/selectedPlan/total_cost}.toLocaleString() : 'N/A' }" class="bold textLarge textDark" />
                             </VBox>
                         </layout:Grid>
 
@@ -117,17 +196,14 @@
                                 <Text text="Recovery Lead Time" class="sapContextItemLabel" />
                                 <Text text="{dec>/selectedPlan/recovery_days} Days" class="bold textMedium textDark" />
                             </VBox>
-
                             <VBox class="sapMetricBox">
                                 <Text text="Source Partner" class="sapContextItemLabel" />
                                 <Text text="{dec>/selectedPlan/source_name} ({dec>/selectedPlan/source_location})" class="bold textMedium textDark" />
                             </VBox>
-
                             <VBox class="sapMetricBox">
                                 <Text text="Transport Carrier" class="sapContextItemLabel" />
                                 <Text text="{dec>/selectedPlan/transport_name}" class="bold textMedium textDark" />
                             </VBox>
-
                             <VBox class="sapMetricBox">
                                 <Text text="Feasibility Status" class="sapContextItemLabel" />
                                 <ObjectStatus text="&#x2713; FEASIBLE &amp; VALIDATED" state="Success" class="bold textMedium" />
@@ -136,13 +212,13 @@
 
                         <!-- Decision Rationale Input (Enabled when PENDING) -->
                         <VBox visible="{= ${dec>/decisionState} === 'PENDING' }" class="sapUiSmallMarginTop">
-                            <Label text="Manager Authorization Rationale / Decision Notes (Optional)" class="bold textSmall" />
+                            <Label text="Manager Authorization Mandatory Comment / Operational Rationale" class="bold textSmall" required="true" />
                             <TextArea
                                 id="taDecisionRationale"
                                 value="{dec>/plannerRationale}"
                                 rows="2"
                                 width="100%"
-                                placeholder="Enter operational rationale (e.g. Authorizing premium air freight to avert assembly line stoppage at Munich plant within 48h)..."
+                                placeholder="Enter mandatory operational rationale (e.g. Approved by Supply Chain Lead after verifying supplier capacity and logistics transit timeline)..."
                                 class="sapUiSmallMarginBottom" />
 
                             <!-- 3 Explicit Governance Decision Buttons: NO option preselected -->
@@ -180,6 +256,34 @@
                             </HBox>
                         </VBox>
                     </VBox>
+
+                    <!-- Collapsed Infeasible Plans Section -->
+                    <Panel
+                        expandable="true"
+                        expanded="false"
+                        headerText="Infeasible Plans ({= ${dec>/infeasible_plans} ? ${dec>/infeasible_plans}.length : 0 } Options Filtered Out)"
+                        class="sapUiSmallMarginTop sapContextCard">
+
+                        <Table items="{dec>/infeasible_plans}" noDataText="No infeasible options.">
+                            <columns>
+                                <Column width="120px"><Text text="Plan ID" class="bold" /></Column>
+                                <Column><Text text="Recovery Strategy" class="bold" /></Column>
+                                <Column><Text text="Source" class="bold" /></Column>
+                                <Column><Text text="Reason for Infeasibility" class="bold textCritical" /></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{dec>plan_id} ({dec>version})" class="bold" />
+                                        <Text text="{dec>strategy}" />
+                                        <Text text="{dec>source_name}" />
+                                        <Text text="{dec>infeasibility_reason}" class="textCritical bold" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+
                 </VBox>
 
             </VBox>

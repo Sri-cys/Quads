@@ -28,17 +28,7 @@
                             press=".onNavBackToCaseOverview"
                             class="sapBackLink sapUiMediumMarginEnd" />
 
-                        <!-- Pending State Button -->
-                        <Button
-                            id="btnStartAnalysisTop"
-                            text="START IMPACT ANALYSIS &#x2192;"
-                            type="Emphasized"
-                            icon="sap-icon://play"
-                            press=".onStartImpactAnalysis"
-                            visible="{= ${impact>/analysisState} === 'PENDING' }"
-                            class="sapBtnPrimary sapUiTinyMarginEnd" />
-
-                        <!-- Running State Button -->
+                        <!-- Running State Indicator -->
                         <Button
                             text="ANALYSIS IN PROGRESS..."
                             type="Default"
@@ -52,21 +42,14 @@
                             text="RETRY ANALYSIS"
                             type="Reject"
                             icon="sap-icon://refresh"
-                            press=".onStartImpactAnalysis"
+                            press=".onRetryImpactAnalysis"
                             visible="{= ${impact>/analysisState} === 'FAILED' }"
                             class="sapUiTinyMarginEnd" />
 
                         <!-- Completed State Buttons -->
                         <Button
-                            text="Re-Analyze"
-                            type="Default"
-                            icon="sap-icon://refresh"
-                            press=".onReAnalyze"
-                            visible="{= ${impact>/analysisState} === 'COMPLETED' }"
-                            class="sapUiTinyMarginEnd" />
-                        <Button
                             id="btnProceedPriorityTop"
-                            text="PROCEED TO PRIORITY ANALYSIS &#x2192;"
+                            text="PROCEED TO RECOVERY PRIORITY &#x2192;"
                             type="Emphasized"
                             icon="sap-icon://navigation-right-arrow"
                             press=".onProceedPriority"
@@ -92,18 +75,34 @@
                     </HBox>
                 </VBox>
 
-                <!-- Running Indicator Banner (Visible while analyzing) -->
+                <!-- Running Indicator Banner (Real Backend Telemetry Progress) -->
                 <VBox
                     visible="{= ${impact>/analysisState} === 'RUNNING' }"
                     class="sapChoiceCard sapUiSmallMarginBottom"
-                    style="border-left: 4px solid #0A6ED1; background: #F0F7FF;">
-                    <HBox alignItems="Center">
-                        <BusyIndicator size="1.2rem" class="sapUiSmallMarginEnd" />
-                        <VBox>
-                            <Title text="Agent 1: Impact analysis in progress..." level="H3" class="bold textPrimary" />
-                            <Text text="Computing deterministic warehouse inventory depletion, plant assembly stoppage dates, and downstream financial exposure." class="textSmall textDark" />
-                        </VBox>
+                    style="border-left: 4px solid #0A6ED1; background: #F0F7FF; padding: 24px;">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
+                        <HBox alignItems="Center">
+                            <BusyIndicator size="1.3rem" class="sapUiSmallMarginEnd" />
+                            <VBox>
+                                <Title text="IMPACT ANALYSIS" level="H2" class="bold textDark" />
+                                <Text text="Agent 1 — Triage &amp; Impact Analysis" class="textMuted bold" />
+                            </VBox>
+                        </HBox>
+                        <ObjectStatus text="● RUNNING" state="Information" class="bold" inverted="true" />
                     </HBox>
+                    <VBox class="sapUiSmallMarginTop" items="{impact>/steps}">
+                        <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                            <core:Icon
+                                src="{= ${impact>status} === 'COMPLETED' ? 'sap-icon://accept' : (${impact>status} === 'RUNNING' ? 'sap-icon://record' : 'sap-icon://circle-task') }"
+                                color="{= ${impact>status} === 'COMPLETED' ? '#107E3E' : (${impact>status} === 'RUNNING' ? '#0A6ED1' : '#6A6D70') }"
+                                size="14px"
+                                class="sapUiTinyMarginEnd" />
+                            <Text
+                                text="{impact>label}"
+                                class="{= ${impact>status} === 'RUNNING' ? 'bold textPrimary' : (${impact>status} === 'COMPLETED' ? 'textDark' : 'textMuted') }" />
+                        </HBox>
+                    </VBox>
+                    <Text text="Processing cross-functional disruption telemetry from backend..." class="textMuted textSmall sapUiSmallMarginTop" />
                 </VBox>
 
                 <!-- Content Area: Rendered when analysis is COMPLETED -->
@@ -554,14 +553,8 @@
                             class="sapBtnSecondary" />
                         <HBox alignItems="Center">
                             <Button
-                                text="Re-Analyze"
-                                type="Default"
-                                icon="sap-icon://refresh"
-                                press=".onReAnalyze"
-                                class="sapUiTinyMarginEnd" />
-                            <Button
                                 id="btnProceedPriorityBottom"
-                                text="PROCEED TO PRIORITY ANALYSIS &#x2192;"
+                                text="PROCEED TO RECOVERY PRIORITY &#x2192;"
                                 icon="sap-icon://navigation-right-arrow"
                                 type="Emphasized"
                                 press=".onProceedPriority"
@@ -570,20 +563,20 @@
                     </HBox>
                 </VBox>
 
-                <!-- Initial Empty State if Pending -->
+                <!-- Pending State Info Banner (No second start button) -->
                 <VBox
                     visible="{= ${impact>/analysisState} === 'PENDING' }"
                     class="sapChoiceCard sapUiMediumMarginTop sapUiMediumMarginBottom"
                     alignItems="Center"
                     style="padding: 48px; text-align: center;">
                     <core:Icon src="sap-icon://line-chart-time-axis" size="48px" color="#0A6ED1" class="sapUiMediumMarginBottom" />
-                    <Title text="Impact Analysis Not Yet Performed" level="H2" class="bold textDark sapUiTinyMarginBottom" />
-                    <Text text="Click 'START IMPACT ANALYSIS' to run Agent 1. The deterministic engine will calculate inventory days of cover, stockout hazard, and cross-functional impact." class="textMuted textMedium sapUiMediumMarginBottom" />
+                    <Title text="Impact Analysis Pending Execution" level="H2" class="bold textDark sapUiTinyMarginBottom" />
+                    <Text text="Agent 1 triage has not been initiated for this disruption. Click START IMPACT ANALYSIS from the Case Overview page." class="textMuted textMedium sapUiMediumMarginBottom" />
                     <Button
-                        text="START IMPACT ANALYSIS &#x2192;"
+                        text="&#x2190; Return to Case Overview"
                         type="Emphasized"
-                        icon="sap-icon://play"
-                        press=".onStartImpactAnalysis"
+                        icon="sap-icon://nav-back"
+                        press=".onNavBackToCaseOverview"
                         class="sapBtnPrimary" />
                 </VBox>
 

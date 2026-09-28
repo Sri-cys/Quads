@@ -211,11 +211,64 @@
                         </VBox>
                     </layout:Grid>
 
-                    <!-- Decision Action Row: Selected Priority + Save / Proceed Buttons -->
+                    <!-- Operating Constraints (Read-Only) -->
+                    <VBox class="sapOverviewCard sapUiSmallMarginTop">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                            <VBox>
+                                <Title text="OPERATING CONSTRAINTS (GOVERNING BOUNDARIES)" level="H3" class="sapCardSectionTitle" />
+                                <Text text="Enterprise operational boundaries governing Agent 2 candidate plans and Agent 3 feasibility checks." class="sapSectionSubSmall" />
+                            </VBox>
+                            <core:Icon src="sap-icon://chain-link" class="sapMetricIcon info" />
+                        </HBox>
+                        <layout:Grid defaultSpan="XL3 L4 M6 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginTop">
+                            <VBox class="sapMetricRow">
+                                <Text text="Maximum Customer Delay" class="sapMetricLabel" />
+                                <Text text="5 Business Days" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Maximum Recovery Cost" class="sapMetricLabel" />
+                                <Text text="$35,000 USD" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Minimum Safety Stock" class="sapMetricLabel" />
+                                <Text text="250 Units (10 Days)" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Maximum Recovery Time" class="sapMetricLabel" />
+                                <Text text="6 Days" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Required Quantity" class="sapMetricLabel" />
+                                <Text text="{cp>/impact/supply_gap_display}" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Supplier Capacity" class="sapMetricLabel" />
+                                <Text text="1,500 Units / Cycle" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Plant Assembly Capacity" class="sapMetricLabel" />
+                                <Text text="Nominal Rate (100%)" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Transport Capacity" class="sapMetricLabel" />
+                                <Text text="Express Air / Freight Available" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Quality Requirements" class="sapMetricLabel" />
+                                <Text text="ISO-9001 / IATF-16949 Certified" class="sapMetricVal bold" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="Contract Restrictions" class="sapMetricLabel" />
+                                <Text text="Emergency Sourcing Clause Active" class="sapMetricVal bold" />
+                            </VBox>
+                        </layout:Grid>
+                    </VBox>
+
+                    <!-- Decision Action Row: Selected Priority + Single Confirm Action -->
                     <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionActionsRow sapUiSmallMarginTop">
                         <HBox alignItems="Center">
                             <Text text="Selected Priority:" class="sapUiTinyMarginEnd textMuted bold" />
-                            <Text text="{cp>/selectedPriority}" class="sapSelectedPriorityBadge" />
+                            <Text text="{= ${cp>/selectedPriority} ? ${cp>/selectedPriority} : 'None selected (Mandatory)' }" class="{= ${cp>/selectedPriority} ? 'sapSelectedPriorityBadge' : 'textMuted bold' }" />
                         </HBox>
                         <HBox alignItems="Center">
                             <Button
@@ -223,47 +276,15 @@
                                 type="Transparent"
                                 press=".onBackToImpact"
                                 class="sapUiSmallMarginEnd" />
-
-                            <!-- 1. Pending: SAVE PRIORITY -->
                             <Button
-                                id="btnSavePriority"
-                                text="SAVE PRIORITY"
-                                icon="sap-icon://save"
+                                id="btnConfirmPriorityAndGenerate"
+                                text="CONFIRM PRIORITY &amp; GENERATE PLANS &#x2192;"
+                                icon="sap-icon://play"
                                 type="Emphasized"
-                                visible="{= !${cp>/prioritySaved} }"
-                                press=".onSavePriority"
-                                class="sapBtnPrimary sapUiTinyMarginEnd" />
-
-                            <!-- 2. Saved: PROCEED TO CONSTRAINTS -->
-                            <Button
-                                id="btnProceedConstraints"
-                                text="PROCEED TO CONSTRAINTS &#x2192;"
-                                icon="sap-icon://navigation-right-arrow"
-                                type="Emphasized"
-                                visible="{= ${cp>/prioritySaved} === true }"
-                                press=".onProceedToConstraints"
+                                enabled="{= !!${cp>/selectedPriority} }"
+                                press=".onConfirmPriorityAndGenerate"
                                 class="sapBtnPrimary" />
                         </HBox>
-                    </HBox>
-                </VBox>
-
-                <!-- Priority Saved Governance Notice -->
-                <VBox
-                    visible="{= ${cp>/prioritySaved} === true }"
-                    class="sapPhase1Banner sapUiSmallMarginTop">
-                    <HBox alignItems="Center">
-                        <core:Icon src="sap-icon://sys-enter-2" class="sapBannerIcon success" />
-                        <VBox class="sapUiSmallMarginBegin" width="100%">
-                            <Title text="Priority Objective Saved: {cp>/selectedPriority}" level="H3" class="sapBannerTitle" />
-                            <Text text="Priority selection is persisted in the governance audit trail. Stage 4: Constraints Analysis (Agent 2) is now unlocked." class="sapBannerText" />
-                            <HBox class="sapUiSmallMarginTop" justifyContent="End">
-                                <Button
-                                    text="PROCEED TO CONSTRAINTS &#x2192;"
-                                    icon="sap-icon://navigation-right-arrow"
-                                    type="Emphasized"
-                                    press=".onProceedToConstraints" />
-                            </HBox>
-                        </VBox>
                     </HBox>
                 </VBox>
 

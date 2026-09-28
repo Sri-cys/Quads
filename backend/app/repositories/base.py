@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Any
 from app.models.supplier import Supplier, Plant, Material
 from app.models.inventory import Inventory, Demand, SafetyStock, PurchaseOrder
 from app.models.case import Case
@@ -220,7 +220,27 @@ class BaseRepository(ABC):
         pass
 
     @abstractmethod
-    def get_historical_outcomes(self, case_id: Optional[str] = None) -> list[Any]:
-        """Fetch historical case outcomes."""
+    def save_snapshot(self, snapshot: Any) -> Any:
+        """Store immutable approved execution snapshot (append-only)."""
+        pass
+
+    @abstractmethod
+    def get_snapshots(self, case_id: str) -> list[Any]:
+        """Fetch all immutable execution snapshots for a case."""
+        pass
+
+    @abstractmethod
+    def get_active_snapshot(self, case_id: str) -> Optional[Any]:
+        """Fetch current active execution snapshot."""
+        pass
+
+    @abstractmethod
+    def save_candidate_plan_set(self, plan_set: Any) -> Any:
+        """Save Agent 2 generated candidate plan set."""
+        pass
+
+    @abstractmethod
+    def get_candidate_plan_set(self, case_id: str) -> Optional[Any]:
+        """Fetch Agent 2 candidate plan set."""
         pass
 

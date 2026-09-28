@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (Controller, JSONModel, MessageBox, MessageToast, WorkflowNavHelper) {
     "use strict";
 
     var PRIORITY_CARDS = ["Time", "Cost", "Stock", "Risk", "Customer", "Balanced"];
@@ -14,7 +15,7 @@ sap.ui.define([
                 case_id: "",
                 status: "PENDING",
                 severity: "",
-                selectedPriority: "BALANCED",
+                selectedPriority: "",
                 prioritySaved: false,
                 impact: {
                     days_of_cover_display: "2.0 Days",
@@ -28,8 +29,10 @@ sap.ui.define([
             this.getView().addEventDelegate({
                 onAfterRendering: function () {
                     var that = this;
-                    var sPriority = this.getView().getModel("cp").getProperty("/selectedPriority") || "BALANCED";
-                    this._updateCardSelection(sPriority);
+                    var sPriority = this.getView().getModel("cp").getProperty("/selectedPriority") || "";
+                    if (sPriority) {
+                        this._updateCardSelection(sPriority);
+                    }
 
                     // Attach click handlers to cards
                     PRIORITY_CARDS.forEach(function (name) {
@@ -123,7 +126,7 @@ sap.ui.define([
 
                 var sev = (impactData && impactData.severity) || caseData.severity || "CRITICAL";
                 var bAlreadySaved = !!caseData.checkpoint1_decision;
-                var sChosen = caseData.checkpoint1_decision || "BALANCED";
+                var sChosen = caseData.checkpoint1_decision || "";
 
                 oModel.setData({
                     case_id: sCaseId,
@@ -139,7 +142,9 @@ sap.ui.define([
                     }
                 });
 
-                that.setSelectedPriority(sChosen);
+                if (sChosen) {
+                    that.setSelectedPriority(sChosen);
+                }
             })
             .catch(function (err) {
                 MessageBox.error("Failed to load Checkpoint 1: " + err.message);
@@ -172,28 +177,24 @@ sap.ui.define([
         onSelectCustomer: function () { this.setSelectedPriority("CUSTOMER"); },
         onSelectBalanced: function () { this.setSelectedPriority("BALANCED"); },
 
-        onSavePriority: function () {
-            var sPriority = this.getView().getModel("cp").getProperty("/selectedPriority") || "BALANCED";
+        onConfirmPriorityAndGenerate: function () {
+            var sPriority = this.getView().getModel("cp").getProperty("/selectedPriority");
+            if (!sPriority) {
+                MessageBox.warning("Please select a recovery priority objective.");
+                return;
+            }
             var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
             var sCaseId = this._sCurrentCaseId;
-            var oPage = this.byId("checkpoint1Page");
-            var oModel = this.getView().getModel("cp");
             var that = this;
+            var oBtn = this.byId("btnConfirmPriorityAndGenerate");
+            if (oBtn) oBtn.setEnabled(false);
 
-            oPage.setBusy(true);
-
-            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/checkpoint1", {
-                method: "POST",
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/priority", {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ priority: sPriority })
             })
             .then(function (res) {
-                if (res.status === 409) {
-                    // Already saved previously, treated as confirmed
-                    return res.json().then(function () {
-                        return { status: "CHECKPOINT_APPROVED", priority: sPriority };
-                    });
-                }
                 if (!res.ok) {
                     return res.json().then(function (data) {
                         throw new Error(data.message || "Failed to persist priority");
@@ -201,31 +202,23 @@ sap.ui.define([
                 }
                 return res.json();
             })
-            .then(function () {
-                oModel.setProperty("/prioritySaved", true);
-                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "CHECKPOINT_APPROVED");
-                that.getOwnerComponent().getModel("app").setProperty("/stageStep", 4);
-                MessageToast.show("Priority '" + sPriority + "' saved successfully. Stage 4: Constraints is unlocked.");
+            .then(function (caseData) {
+                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
+                MessageToast.show("Priority '" + sPriority + "' confirmed. Launching Agent 2...");
+                that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
             })
             .catch(function (err) {
-                MessageBox.error("Priority persistence failed: " + err.message);
-            })
-            .finally(function () {
-                oPage.setBusy(false);
+                if (oBtn) oBtn.setEnabled(true);
+                MessageBox.error("Could not confirm priority: " + err.message);
             });
-        },
-
-        onProceedToConstraints: function () {
-            var bSaved = this.getView().getModel("cp").getProperty("/prioritySaved");
-            if (!bSaved) {
-                MessageBox.warning("Please click 'SAVE PRIORITY' before proceeding to Constraints.");
-                return;
-            }
-            this.getOwnerComponent().getRouter().navTo("constraints", { caseId: this._sCurrentCaseId });
         },
 
         onBackToImpact: function () {
             this.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: this._sCurrentCaseId });
+        },
+
+        onWorkflowStagePress: function (oEvent) {
+            WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
         }
     });
 });

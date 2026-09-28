@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (Controller, JSONModel, MessageBox, MessageToast, WorkflowNavHelper) {
     "use strict";
 
     var SUPPLIER_NAMES = {
@@ -27,6 +28,15 @@ sap.ui.define([
                 analysisState: "PENDING", // PENDING, RUNNING, COMPLETED, FAILED
                 errorMessage: "",
                 case: {},
+                steps: [
+                    { id: "inventory", label: "Inventory analysis", status: "PENDING" },
+                    { id: "supplier", label: "Supplier analysis", status: "PENDING" },
+                    { id: "logistics", label: "Logistics analysis", status: "PENDING" },
+                    { id: "production", label: "Production analysis", status: "PENDING" },
+                    { id: "customer", label: "Customer analysis", status: "PENDING" },
+                    { id: "financial", label: "Financial exposure", status: "PENDING" },
+                    { id: "overall", label: "End-to-end propagation", status: "PENDING" }
+                ],
                 deterministic: {},
                 inventory: {},
                 supplier: {},
@@ -45,6 +55,10 @@ sap.ui.define([
         },
 
         _onPatternMatched: function (oEvent) {
+            if (this._pollTimer) {
+                clearInterval(this._pollTimer);
+                this._pollTimer = null;
+            }
             var sCaseId = oEvent.getParameter("arguments").caseId;
             if (!sCaseId) {
                 sCaseId = this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
@@ -56,90 +70,131 @@ sap.ui.define([
 
         loadImpactData: function (sCaseId) {
             var oPage = this.byId("impactPage");
-            if (oPage) oPage.setBusy(true);
-
             var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
             var oModel = this.getView().getModel("impact");
             var that = this;
 
-            // Step 1: Load case metadata
-            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId)
+            // Fetch current status first
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/status")
                 .then(function (r) {
-                    if (!r.ok) throw new Error("Case record not found");
+                    if (!r.ok) throw new Error("Case status not found (HTTP " + r.status + ")");
                     return r.json();
                 })
-                .then(function (caseData) {
-                    oModel.setProperty("/case", caseData);
+                .then(function (statusData) {
+                    var sStatus = statusData.status || "IMPACT_ANALYSIS_PENDING";
+                    that.getOwnerComponent().getModel("app").setProperty("/caseStatus", sStatus);
 
-                    // Step 2: Check if impact analysis exists
-                    return fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact")
-                        .then(function (res) {
-                            if (res.status === 404) {
-                                // Not analyzed yet: strictly PENDING state
-                                oModel.setProperty("/analysisState", "PENDING");
-                                return null;
-                            }
-                            if (!res.ok) throw new Error("Failed to load impact analysis: " + res.status);
-                            return res.json();
-                        })
-                        .then(function (impactData) {
-                            if (impactData) {
-                                that._populateImpactData(caseData, impactData);
-                                oModel.setProperty("/analysisState", "COMPLETED");
-                            }
-                        });
+                    if (sStatus === "IMPACT_ANALYSIS_RUNNING") {
+                        oModel.setProperty("/analysisState", "RUNNING");
+                        that._updateStepsFromProgress(statusData.steps_progress);
+                        that._startProgressPolling(sCaseId);
+                    } else if (sStatus === "IMPACT_ANALYSIS_COMPLETED" || sStatus === "ANALYZED" || sStatus === "PRIORITY_PENDING" || sStatus === "PRIORITY_SAVED" || sStatus === "AGENT2_RUNNING" || sStatus === "AGENT2_COMPLETED" || sStatus === "AGENT3_RUNNING" || sStatus === "DECISION_PENDING" || sStatus === "EXECUTION" || sStatus === "RESOLVED") {
+                        // Load full impact data
+                        that._fetchCompletedImpact(sCaseId);
+                    } else if (sStatus === "IMPACT_ANALYSIS_FAILED") {
+                        oModel.setProperty("/analysisState", "FAILED");
+                        oModel.setProperty("/errorMessage", statusData.last_error || "Impact analysis failed.");
+                    } else {
+                        oModel.setProperty("/analysisState", "PENDING");
+                    }
                 })
                 .catch(function (err) {
                     oModel.setProperty("/analysisState", "FAILED");
                     oModel.setProperty("/errorMessage", err.message);
-                })
-                .finally(function () {
-                    if (oPage) oPage.setBusy(false);
                 });
         },
 
-        onStartImpactAnalysis: function () {
+        _updateStepsFromProgress: function (stepsProgress) {
+            stepsProgress = stepsProgress || {};
+            var aSteps = [
+                { id: "inventory", label: "Inventory analysis", status: stepsProgress.inventory || "PENDING" },
+                { id: "supplier", label: "Supplier analysis", status: stepsProgress.supplier || "PENDING" },
+                { id: "logistics", label: "Logistics analysis", status: stepsProgress.logistics || "PENDING" },
+                { id: "production", label: "Production analysis", status: stepsProgress.production || "PENDING" },
+                { id: "customer", label: "Customer analysis", status: stepsProgress.customer || "PENDING" },
+                { id: "financial", label: "Financial exposure", status: stepsProgress.financial || "PENDING" },
+                { id: "overall", label: "End-to-end propagation", status: stepsProgress.overall || "PENDING" }
+            ];
+            this.getView().getModel("impact").setProperty("/steps", aSteps);
+        },
+
+        _startProgressPolling: function (sCaseId) {
+            var that = this;
+            if (this._pollTimer) clearInterval(this._pollTimer);
+            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
+            var oModel = this.getView().getModel("impact");
+
+            this._pollTimer = setInterval(function () {
+                fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/status")
+                    .then(function (r) { return r.json(); })
+                    .then(function (statusData) {
+                        var sStatus = statusData.status;
+                        that._updateStepsFromProgress(statusData.steps_progress);
+
+                        if (sStatus === "IMPACT_ANALYSIS_COMPLETED" || sStatus === "ANALYZED" || sStatus === "PRIORITY_PENDING") {
+                            clearInterval(that._pollTimer);
+                            that._pollTimer = null;
+                            that._fetchCompletedImpact(sCaseId);
+                        } else if (sStatus === "IMPACT_ANALYSIS_FAILED") {
+                            clearInterval(that._pollTimer);
+                            that._pollTimer = null;
+                            oModel.setProperty("/analysisState", "FAILED");
+                            oModel.setProperty("/errorMessage", statusData.last_error || "Analysis execution failed.");
+                        }
+                    })
+                    .catch(function (e) {
+                        console.warn("Polling error:", e);
+                    });
+            }, 400);
+        },
+
+        _fetchCompletedImpact: function (sCaseId) {
+            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
+            var oModel = this.getView().getModel("impact");
+            var that = this;
+
+            Promise.all([
+                fetch(sBackendUrl + "/api/v1/cases/" + sCaseId).then(function (r) { return r.json(); }),
+                fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact").then(function (r) {
+                    if (!r.ok) throw new Error("Impact results not available yet (HTTP " + r.status + ")");
+                    return r.json();
+                })
+            ])
+            .then(function (results) {
+                var caseData = results[0];
+                var impactData = results[1];
+                oModel.setProperty("/case", caseData);
+                that._populateImpactData(caseData, impactData);
+                oModel.setProperty("/analysisState", "COMPLETED");
+                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
+            })
+            .catch(function (err) {
+                oModel.setProperty("/analysisState", "FAILED");
+                oModel.setProperty("/errorMessage", err.message);
+            });
+        },
+
+        onRetryImpactAnalysis: function () {
             var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
             var sCaseId = this._sCurrentCaseId;
-            var oPage = this.byId("impactPage");
             var oModel = this.getView().getModel("impact");
             var that = this;
 
             oModel.setProperty("/analysisState", "RUNNING");
             oModel.setProperty("/errorMessage", "");
-            if (oPage) oPage.setBusy(true);
 
-            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/analyze", { method: "POST" })
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/retry", { method: "POST" })
                 .then(function (res) {
-                    if (!res.ok) {
-                        return res.json().then(function (d) {
-                            throw new Error(d.message || "Analysis execution failed (HTTP " + res.status + ")");
-                        });
-                    }
+                    if (!res.ok) throw new Error("Retry failed (HTTP " + res.status + ")");
                     return res.json();
                 })
-                .then(function (impactData) {
-                    var currentCase = oModel.getProperty("/case") || {};
-                    currentCase.status = "ANALYZED";
-                    that._populateImpactData(currentCase, impactData);
-                    oModel.setProperty("/analysisState", "COMPLETED");
-
-                    that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "ANALYZED");
-                    that.getOwnerComponent().getModel("app").setProperty("/stageStep", 3);
-                    MessageToast.show("Agent 1: Impact analysis completed successfully.");
+                .then(function () {
+                    that._startProgressPolling(sCaseId);
                 })
                 .catch(function (err) {
                     oModel.setProperty("/analysisState", "FAILED");
                     oModel.setProperty("/errorMessage", err.message);
-                    MessageBox.error("Impact analysis failed: " + err.message);
-                })
-                .finally(function () {
-                    if (oPage) oPage.setBusy(false);
                 });
-        },
-
-        onReAnalyze: function () {
-            this.onStartImpactAnalysis();
         },
 
         _populateImpactData: function (caseData, impactData) {
@@ -277,14 +332,29 @@ sap.ui.define([
         onProceedPriority: function () {
             var sState = this.getView().getModel("impact").getProperty("/analysisState");
             if (sState !== "COMPLETED") {
-                MessageBox.warning("Please complete Impact Analysis before proceeding to Priority Analysis.");
+                MessageBox.warning("Please complete Impact Analysis before proceeding to Recovery Priority.");
                 return;
             }
-            this.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: this._sCurrentCaseId });
+            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
+            var sCaseId = this._sCurrentCaseId;
+            var that = this;
+
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/proceed", { method: "POST" })
+                .then(function () {
+                    that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "PRIORITY_PENDING");
+                    that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
+                })
+                .catch(function () {
+                    that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
+                });
         },
 
         onNavBackToCaseOverview: function () {
             this.getOwnerComponent().getRouter().navTo("caseOverview", { caseId: this._sCurrentCaseId });
+        },
+
+        onWorkflowStagePress: function (oEvent) {
+            WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
         }
     });
 });

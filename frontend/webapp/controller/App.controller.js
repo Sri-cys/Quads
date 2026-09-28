@@ -13,13 +13,11 @@ sap.ui.define([
         "checkpoint1": 3,
         "checkpoint1Kebab": 3,
         "checkpoint1Alt": 3,
-        "constraints": 4,
-        "constraintsAlt": 4,
+        "recoveryPlans": 4,
+        "recoveryPlansAlt": 4,
         "recoveryPlanning": 5,
         "recoveryPlanningKebab": 5,
         "recoveryPlanningAlt": 5,
-        "recoveryPlans": 5,
-        "recoveryPlansAlt": 5,
         "decision": 6,
         "decisionAlt": 6,
         "checkpoint2": 6,
@@ -36,9 +34,9 @@ sap.ui.define([
     var STEP_TO_STAGE_NAME = {
         1: "1. CASE OVERVIEW",
         2: "2. IMPACT ANALYSIS",
-        3: "3. PRIORITY",
-        4: "4. CONSTRAINTS (AGENT 2)",
-        5: "5. RECOVERY PLANNING (AGENT 3)",
+        3: "3. RECOVERY PRIORITY",
+        4: "4. RECOVERY PLANS",
+        5: "5. EVALUATION",
         6: "6. FINAL DECISION",
         7: "7. EXECUTION & MONITORING",
         8: "8. OUTCOME"
@@ -84,7 +82,7 @@ sap.ui.define([
                 })
                 .then(function (caseData) {
                     if (!caseData) return;
-                    var sStatus = caseData.status || "NEW";
+                    var sStatus = caseData.status || "CASE_CREATED";
                     oAppModel.setProperty("/caseStatus", sStatus);
 
                     var sStatusText = "Case Created";
@@ -93,33 +91,54 @@ sap.ui.define([
                     if (sStatus === "RESOLVED") {
                         sStatusText = "Resolved";
                         nMaxStep = 8;
-                    } else if (sStatus === "PLAN_APPROVED" || sStatus === "RECOVERY_APPROVED" || sStatus === "EXECUTION" || sStatus === "EXECUTION_IN_PROGRESS" || sStatus === "MONITORING" || sStatus === "ON_TRACK" || sStatus === "AT_RISK" || sStatus === "ACTION_REQUIRED" || sStatus === "REPLANNING" || sStatus === "DELIVERED") {
+                    } else if (["PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "ON_TRACK", "AT_RISK", "ACTION_REQUIRED", "REPLANNING", "DELIVERED"].indexOf(sStatus) !== -1) {
                         sStatusText = "In Execution";
                         nMaxStep = 7;
-                    } else if (sStatus === "AGENT3_COMPLETED" || sStatus === "AWAITING_CHECKPOINT_2" || sStatus === "DECISION_PENDING" || sStatus === "PLAN_MODIFIED" || sStatus === "PLAN_REJECTED") {
+                    } else if (["DECISION_PENDING", "AWAITING_CHECKPOINT_2", "PLAN_MODIFIED", "PLAN_REJECTED"].indexOf(sStatus) !== -1) {
                         sStatusText = "Decision Pending";
                         nMaxStep = 6;
-                    } else if (sStatus === "AGENT2_COMPLETED" || sStatus === "RECOVERY_PLANNING" || sStatus === "AGENT3_RUNNING" || sStatus === "AGENT3_FAILED") {
-                        sStatusText = "Recovery Planning";
+                    } else if (["AGENT3_RUNNING", "AGENT3_COMPLETED", "AGENT3_FAILED"].indexOf(sStatus) !== -1) {
+                        sStatusText = "Evaluating Plans";
                         nMaxStep = 5;
-                    } else if (sStatus === "PRIORITY_SAVED" || sStatus === "CHECKPOINT_APPROVED" || sStatus === "AGENT2_RUNNING" || sStatus === "AGENT2_FAILED") {
-                        sStatusText = "Priority Saved";
+                    } else if (["AGENT2_RUNNING", "AGENT2_COMPLETED", "AGENT2_FAILED", "RECOVERY_PLANNING"].indexOf(sStatus) !== -1) {
+                        sStatusText = "Generating Plans";
                         nMaxStep = 4;
-                    } else if (sStatus === "ANALYZED" || sStatus === "IMPACT_ANALYSIS_COMPLETED" || sStatus === "PRIORITY_PENDING") {
-                        sStatusText = "Analysis Complete";
+                    } else if (["PRIORITY_SAVED", "CHECKPOINT_APPROVED", "PRIORITY_PENDING"].indexOf(sStatus) !== -1) {
+                        sStatusText = "Priority Saved";
                         nMaxStep = 3;
-                    } else if (sStatus === "IMPACT_ANALYSIS_RUNNING" || sStatus === "IMPACT_ANALYSIS_FAILED" || sStatus === "IMPACT_ANALYSIS_PENDING" || sStatus === "TRIAGED") {
-                        sStatusText = "Impact Analysis";
+                    } else if (["IMPACT_ANALYSIS_COMPLETED", "ANALYZED"].indexOf(sStatus) !== -1) {
+                        sStatusText = "Impact Completed";
+                        nMaxStep = 3;
+                    } else if (["IMPACT_ANALYSIS_RUNNING", "IMPACT_ANALYSIS_FAILED", "IMPACT_ANALYSIS_PENDING", "TRIAGED"].indexOf(sStatus) !== -1) {
+                        sStatusText = "Impact Running";
                         nMaxStep = 2;
                     } else {
                         sStatusText = "Case Created";
                         nMaxStep = 1;
                     }
 
+                    // Route Guard verification (Section 31)
+                    if ((sRouteName === "outcome" || sRouteName === "outcomeAlt") && sStatus !== "RESOLVED") {
+                        MessageToast.show("Outcome is locked until the case is RESOLVED.");
+                        that.getOwnerComponent().getRouter().navTo("executionMonitoring", { caseId: sCaseId });
+                        return;
+                    }
+
+                    if ((sRouteName === "decision" || sRouteName === "decisionAlt" || sRouteName === "checkpoint2" || sRouteName === "checkpoint2Kebab" || sRouteName === "checkpoint2Alt") && nMaxStep < 6) {
+                        MessageToast.show("Decision is locked until Agent 3 evaluation completes.");
+                        that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
+                        return;
+                    }
+
+                    if ((sRouteName === "executionMonitoring" || sRouteName === "executionMonitoringAlt" || sRouteName === "monitoring" || sRouteName === "monitoringAlt") && nMaxStep < 7) {
+                        MessageToast.show("Execution & Monitoring is locked until a recovery plan is approved.");
+                        that.getOwnerComponent().getRouter().navTo("decision", { caseId: sCaseId });
+                        return;
+                    }
+
                     var sSev = (caseData.severity || "CRITICAL").toUpperCase();
                     var sTitle = caseData.description || "Disruption Recovery";
 
-                    // The active page determines the displayed stage: avoids any stage/view desync
                     var nCurrentStep = ROUTE_TO_STEP[sRouteName] || nMaxStep;
                     var sStageName = STEP_TO_STAGE_NAME[nCurrentStep] || "1. CASE OVERVIEW";
 
@@ -214,20 +233,20 @@ sap.ui.define([
         },
 
         onTopNavRecovery: function () {
-            var sStatus = (this.getOwnerComponent().getModel("app").getProperty("/caseStatus") || "CREATED").toUpperCase();
-            var aAllowed = ["PRIORITY_SAVED", "CHECKPOINT_APPROVED", "AGENT2_RUNNING", "AGENT2_COMPLETED", "RECOVERY_PLANNING", "AGENT3_RUNNING", "AGENT3_COMPLETED", "AWAITING_CHECKPOINT_2", "DECISION_PENDING", "PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "RESOLVED"];
+            var sCaseId = this._getCaseId();
+            var nStep = this.getOwnerComponent().getModel("app").getProperty("/stageStep") || 1;
 
-            if (aAllowed.indexOf(sStatus) !== -1) {
-                if (sStatus === "PRIORITY_SAVED" || sStatus === "CHECKPOINT_APPROVED") {
-                    this.getOwnerComponent().getRouter().navTo("constraints", { caseId: this._getCaseId() });
-                } else {
-                    this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: this._getCaseId() });
-                }
+            if (nStep >= 6) {
+                this.getOwnerComponent().getRouter().navTo("decision", { caseId: sCaseId });
+            } else if (nStep >= 4) {
+                this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
+            } else if (nStep >= 3) {
+                this.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
             } else {
                 this._showLockedStageDialog(
                     "Recovery Planning is locked.",
-                    "Recovery Planning is locked until Impact Analysis and Priority Analysis are completed.",
-                    sStatus === "ANALYZED" ? "checkpoint1" : "impactAnalysis"
+                    "Recovery Planning is locked until Impact Analysis is completed.",
+                    "impactAnalysis"
                 );
             }
         },

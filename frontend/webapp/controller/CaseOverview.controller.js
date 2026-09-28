@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (Controller, JSONModel, MessageBox, MessageToast, WorkflowNavHelper) {
     "use strict";
 
     var SUPPLIER_NAMES = {
@@ -113,12 +114,41 @@ sap.ui.define([
 
         onStartImpactAnalysis: function () {
             var sCaseId = this._sCurrentCaseId || "CASE-0001";
-            this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
-            this.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
+            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
+            var oBtn = this.byId("btnStartImpactAnalysis");
+            var that = this;
+
+            if (oBtn) oBtn.setEnabled(false);
+
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/start", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    return res.json().then(function (err) {
+                        throw new Error(err.message || ("HTTP " + res.status));
+                    });
+                }
+                return res.json();
+            })
+            .then(function (caseData) {
+                that.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
+                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
+                that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
+            })
+            .catch(function (err) {
+                if (oBtn) oBtn.setEnabled(true);
+                MessageBox.error("Could not start Impact Analysis: " + err.message);
+            });
         },
 
         onBackToCases: function () {
             this.getOwnerComponent().getRouter().navTo("cases");
+        },
+
+        onWorkflowStagePress: function (oEvent) {
+            WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
         }
     });
 });

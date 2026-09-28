@@ -22,30 +22,20 @@ def submit_checkpoint_1(
     req: CheckpointRequest,
     case_service=Depends(get_case_service),
     repo=Depends(get_repository),
+    allow_idempotent: bool = False,
 ):
     """
-    Submit Human Checkpoint 1 Priority Decision (TIME, COST, RISK, BALANCED).
-    Persists decision, records audit event, and halts workflow at Phase 1 boundary.
-    Agent 2 (Recovery Planning) is NOT executed.
+    Submit Human Checkpoint 1 Priority Decision (TIME, COST, STOCK, RISK, CUSTOMER, BALANCED).
+    Saves priority and immediately triggers Agent 2 (Recovery Planning) in background.
     """
-    case = case_service.get_case_or_from_checkpoint(case_id)
+    case = case_service.get_case(case_id)
     if not case:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={"error": "CASE_NOT_FOUND", "message": f"Case with ID '{case_id}' was not found"},
         )
 
-    # 409 if checkpoint already submitted
-    if case.status == "CHECKPOINT_APPROVED":
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail={
-                "error": "CHECKPOINT_ALREADY_APPROVED",
-                "message": f"Checkpoint 1 has already been approved for case '{case_id}' with decision '{case.checkpoint1_decision}'",
-            },
-        )
-
-    # 409 if analysis has not run yet
+    # Analysis check
     analysis = repo.get_impact_analysis(case_id)
     if not analysis:
         raise HTTPException(
@@ -53,6 +43,16 @@ def submit_checkpoint_1(
             detail={
                 "error": "ANALYSIS_REQUIRED",
                 "message": f"Impact analysis must be executed before submitting Checkpoint 1 for case '{case_id}'",
+            },
+        )
+
+    # Duplicate checkpoint submission check
+    if not allow_idempotent and case.checkpoint1_decision:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={
+                "error": "CHECKPOINT_ALREADY_APPROVED",
+                "message": f"Checkpoint 1 has already been approved for case '{case_id}' with priority {case.checkpoint1_decision}",
             },
         )
 
@@ -64,6 +64,7 @@ def submit_checkpoint_1(
             priority=req.priority,
             message="Checkpoint 1 approved.",
             phase2_status="Recovery Planning is ready for Phase 2.",
+            planning_cycle=updated_case.planning_cycle,
         )
     except KeyError:
         raise HTTPException(
@@ -79,5 +80,19 @@ def submit_checkpoint_1(
         logger.error(f"Error submitting checkpoint 1: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail={"error": "CHECKPOINT_FAILED", "message": "Failed to process Checkpoint 1 approval"},
+            detail={"error": "CHECKPOINT_FAILED", "message": "Failed to process Checkpoint 1 priority"},
         )
+
+
+@router.put(
+    "/cases/{case_id}/priority",
+    response_model=CheckpointResponse,
+)
+def save_priority_alias(
+    case_id: str,
+    req: CheckpointRequest,
+    case_service=Depends(get_case_service),
+    repo=Depends(get_repository),
+):
+    """Alias for PUT /cases/{case_id}/priority per specification Section 15."""
+    return submit_checkpoint_1(case_id=case_id, req=req, case_service=case_service, repo=repo, allow_idempotent=True)

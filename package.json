@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cd frontend && npm start",
     "start:frontend": "cd frontend && ui5 serve --port 8080",
-    "start:backend": "cd backend && .venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
+    "start:backend": "cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
     "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
   },
   "private": true

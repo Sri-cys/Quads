@@ -47,7 +47,7 @@
                 </HBox>
 
                 <!-- ═══ SUCCESS / RESOLVED STATE ═══ -->
-                <VBox visible="{= ${out>/state} === 'SUCCESS' || ${out>/state} === 'PENDING' }">
+                <VBox visible="{= ${out>/state} === 'SUCCESS' }">
 
                     <!-- Level 1: Hero Banner -->
                     <VBox class="sapOutcomeHero success sapUiSmallMarginBottom">

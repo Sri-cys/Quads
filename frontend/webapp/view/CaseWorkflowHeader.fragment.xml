@@ -38,74 +38,122 @@
         <HBox alignItems="Center" class="sapCaseStageIndicatorRow">
             <!-- 1. CASE -->
             <ObjectStatus
-                text="{= ${app>/activeStep} > 1 ? '✓ CASE' : (${app>/activeStep} === 1 ? '● CASE' : '🔒 CASE') }"
-                icon="{= ${app>/activeStep} > 1 ? 'sap-icon://accept' : (${app>/activeStep} === 1 ? 'sap-icon://record' : 'sap-icon://locked') }"
-                state="{= ${app>/activeStep} === 1 ? 'Information' : (${app>/activeStep} > 1 ? 'Success' : 'None') }"
+                text="{= ${app>/stageStep} > 1 ? '✓ CASE' : (${app>/activeStep} === 1 ? '● CASE' : 'CASE') }"
+                icon="{= ${app>/stageStep} > 1 ? 'sap-icon://accept' : (${app>/activeStep} === 1 ? 'sap-icon://record' : 'sap-icon://circle-task') }"
+                state="{= ${app>/activeStep} === 1 ? 'Information' : (${app>/stageStep} > 1 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 1 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="1" />
+                </customData>
+            </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
-            <!-- 2. IMPACT ANALYSIS -->
+            <!-- 2. IMPACT -->
             <ObjectStatus
-                text="{= ${app>/activeStep} > 2 ? '✓ IMPACT ANALYSIS' : (${app>/activeStep} === 2 ? '● IMPACT ANALYSIS' : '🔒 IMPACT ANALYSIS') }"
-                icon="{= ${app>/activeStep} > 2 ? 'sap-icon://accept' : (${app>/activeStep} === 2 ? 'sap-icon://record' : 'sap-icon://locked') }"
-                state="{= ${app>/activeStep} === 2 ? 'Information' : (${app>/activeStep} > 2 ? 'Success' : 'None') }"
+                text="{= ${app>/stageStep} > 2 ? '✓ IMPACT' : (${app>/activeStep} === 2 ? '● IMPACT' : (${app>/stageStep} >= 2 ? 'IMPACT' : '🔒 IMPACT')) }"
+                icon="{= ${app>/stageStep} > 2 ? 'sap-icon://accept' : (${app>/activeStep} === 2 ? 'sap-icon://record' : (${app>/stageStep} >= 2 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
+                state="{= ${app>/activeStep} === 2 ? 'Information' : (${app>/stageStep} > 2 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 2 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="2" />
+                </customData>
+            </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
             <!-- 3. PRIORITY -->
             <ObjectStatus
-                text="{= ${app>/activeStep} > 3 ? '✓ PRIORITY' : (${app>/activeStep} === 3 ? '● PRIORITY' : '🔒 PRIORITY') }"
-                icon="{= ${app>/activeStep} > 3 ? 'sap-icon://accept' : (${app>/activeStep} === 3 ? 'sap-icon://record' : 'sap-icon://locked') }"
-                state="{= ${app>/activeStep} === 3 ? 'Information' : (${app>/activeStep} > 3 ? 'Success' : 'None') }"
+                text="{= ${app>/stageStep} > 3 ? '✓ PRIORITY' : (${app>/activeStep} === 3 ? '● PRIORITY' : (${app>/stageStep} >= 3 ? 'PRIORITY' : '🔒 PRIORITY')) }"
+                icon="{= ${app>/stageStep} > 3 ? 'sap-icon://accept' : (${app>/activeStep} === 3 ? 'sap-icon://record' : (${app>/stageStep} >= 3 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
+                state="{= ${app>/activeStep} === 3 ? 'Information' : (${app>/stageStep} > 3 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 3 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="3" />
+                </customData>
+            </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
-            <!-- 4. CONSTRAINTS (AGENT 2) -->
+            <!-- 4. RECOVERY PLANS -->
             <ObjectStatus
-                text="{= ${app>/activeStep} > 4 ? '✓ CONSTRAINTS' : (${app>/activeStep} === 4 ? '● CONSTRAINTS' : '🔒 CONSTRAINTS') }"
-                icon="{= ${app>/activeStep} > 4 ? 'sap-icon://accept' : (${app>/activeStep} === 4 ? 'sap-icon://record' : 'sap-icon://locked') }"
-                state="{= ${app>/activeStep} === 4 ? 'Information' : (${app>/activeStep} > 4 ? 'Success' : 'None') }"
+                text="{= ${app>/stageStep} > 4 ? '✓ RECOVERY PLANS' : (${app>/activeStep} === 4 ? '● RECOVERY PLANS' : (${app>/stageStep} >= 4 ? 'RECOVERY PLANS' : '🔒 RECOVERY PLANS')) }"
+                icon="{= ${app>/stageStep} > 4 ? 'sap-icon://accept' : (${app>/activeStep} === 4 ? 'sap-icon://record' : (${app>/stageStep} >= 4 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
+                state="{= ${app>/activeStep} === 4 ? 'Information' : (${app>/stageStep} > 4 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 4 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="4" />
+                </customData>
+            </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
-            <!-- 5. RECOVERY PLANNING (AGENT 3) -->
+            <!-- 5. EVALUATION -->
             <ObjectStatus
-                text="{= ${app>/activeStep} > 5 ? '✓ RECOVERY PLANNING' : (${app>/activeStep} === 5 ? '● RECOVERY PLANNING' : '🔒 RECOVERY PLANNING') }"
-                icon="{= ${app>/activeStep} > 5 ? 'sap-icon://accept' : (${app>/activeStep} === 5 ? 'sap-icon://record' : 'sap-icon://locked') }"
-                state="{= ${app>/activeStep} === 5 ? 'Information' : (${app>/activeStep} > 5 ? 'Success' : 'None') }"
+                text="{= ${app>/stageStep} > 5 ? '✓ EVALUATION' : (${app>/activeStep} === 5 ? '● EVALUATION' : (${app>/stageStep} >= 5 ? 'EVALUATION' : '🔒 EVALUATION')) }"
+                icon="{= ${app>/stageStep} > 5 ? 'sap-icon://accept' : (${app>/activeStep} === 5 ? 'sap-icon://record' : (${app>/stageStep} >= 5 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
+                state="{= ${app>/activeStep} === 5 ? 'Information' : (${app>/stageStep} > 5 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 5 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="5" />
+                </customData>
+            </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
             <!-- 6. DECISION -->
             <ObjectStatus
-                text="{= ${app>/activeStep} > 6 ? '✓ DECISION' : (${app>/activeStep} === 6 ? '● DECISION' : '🔒 DECISION') }"
-                icon="{= ${app>/activeStep} > 6 ? 'sap-icon://accept' : (${app>/activeStep} === 6 ? 'sap-icon://record' : 'sap-icon://locked') }"
-                state="{= ${app>/activeStep} === 6 ? 'Information' : (${app>/activeStep} > 6 ? 'Success' : 'None') }"
+                text="{= ${app>/stageStep} > 6 ? '✓ DECISION' : (${app>/activeStep} === 6 ? '● DECISION' : (${app>/stageStep} >= 6 ? 'DECISION' : '🔒 DECISION')) }"
+                icon="{= ${app>/stageStep} > 6 ? 'sap-icon://accept' : (${app>/activeStep} === 6 ? 'sap-icon://record' : (${app>/stageStep} >= 6 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
+                state="{= ${app>/activeStep} === 6 ? 'Information' : (${app>/stageStep} > 6 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 6 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="6" />
+                </customData>
+            </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
             <!-- 7. EXECUTION & MONITORING -->
             <ObjectStatus
-                text="{= ${app>/activeStep} > 7 ? '✓ EXECUTION &amp; MONITORING' : (${app>/activeStep} === 7 ? '● EXECUTION &amp; MONITORING' : '🔒 EXECUTION &amp; MONITORING') }"
-                icon="{= ${app>/activeStep} > 7 ? 'sap-icon://accept' : (${app>/activeStep} === 7 ? 'sap-icon://record' : 'sap-icon://locked') }"
-                state="{= ${app>/activeStep} === 7 ? 'Information' : (${app>/activeStep} > 7 ? 'Success' : 'None') }"
+                text="{= ${app>/stageStep} > 7 ? '✓ EXECUTION &amp; MONITORING' : (${app>/activeStep} === 7 ? '● EXECUTION &amp; MONITORING' : (${app>/stageStep} >= 7 ? 'EXECUTION &amp; MONITORING' : '🔒 EXECUTION &amp; MONITORING')) }"
+                icon="{= ${app>/stageStep} > 7 ? 'sap-icon://accept' : (${app>/activeStep} === 7 ? 'sap-icon://record' : (${app>/stageStep} >= 7 ? 'sap-icon://circle-task' : 'sap-icon://locked')) }"
+                state="{= ${app>/activeStep} === 7 ? 'Information' : (${app>/stageStep} > 7 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 7 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="7" />
+                </customData>
+            </ObjectStatus>
             <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
 
             <!-- 8. OUTCOME -->
             <ObjectStatus
-                text="{= ${app>/activeStep} === 8 ? '● OUTCOME' : '🔒 OUTCOME' }"
-                icon="{= ${app>/activeStep} === 8 ? 'sap-icon://flag' : 'sap-icon://locked' }"
-                state="{= ${app>/activeStep} === 8 ? 'Success' : 'None' }"
+                text="{= ${app>/stageStep} >= 8 ? (${app>/activeStep} === 8 ? '● OUTCOME' : '✓ OUTCOME') : '🔒 OUTCOME' }"
+                icon="{= ${app>/stageStep} >= 8 ? (${app>/activeStep} === 8 ? 'sap-icon://flag' : 'sap-icon://accept') : 'sap-icon://locked' }"
+                state="{= ${app>/activeStep} === 8 ? 'Information' : (${app>/stageStep} >= 8 ? 'Success' : 'None') }"
                 inverted="{= ${app>/activeStep} === 8 }"
-                class="sapStageBadge" />
+                active="true"
+                press=".onWorkflowStagePress"
+                class="sapStageBadge">
+                <customData>
+                    <core:CustomData key="step" value="8" />
+                </customData>
+            </ObjectStatus>
         </HBox>
     </VBox>
 </core:FragmentDefinition>

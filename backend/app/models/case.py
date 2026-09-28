@@ -1,8 +1,9 @@
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, Any
 from pydantic import BaseModel, Field, field_validator, computed_field
 from app.config.severity_rules import VALID_CHECKPOINT_PRIORITIES
 from app.models.impact import ImpactAnalysis
+from app.workflow.state_machine import CaseState, normalize_state
 
 
 class Case(BaseModel):
@@ -15,7 +16,7 @@ class Case(BaseModel):
     expected_delay_days: int = 5
     affected_quantity: Optional[float] = None
     detected_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    status: str = Field(default="CREATED", description="CREATED, TRIAGED, ANALYZED, CHECKPOINT_APPROVED, RECOVERY_PLANNING, AWAITING_CHECKPOINT_2, RECOVERY_APPROVED, EXECUTION_IN_PROGRESS, MONITORING, RESOLVED")
+    status: str = Field(default="CASE_OVERVIEW")
     severity: Optional[str] = None
     checkpoint1_decision: Optional[str] = None
     checkpoint1_timestamp: Optional[str] = None
@@ -26,48 +27,105 @@ class Case(BaseModel):
     execution_action_id: Optional[str] = None
     execution_status: Optional[str] = None
     resolved_at: Optional[str] = None
+    
+    # Redesign v2 fields
+    planning_cycle: int = Field(default=1, description="Planning cycle incremented on rejection or replan")
+    active_plan_version: str = Field(default="v1", description="Active plan version being considered or executed")
+    legacy: bool = Field(default=False, description="True if case was created under older workflow")
+    last_error: Optional[str] = Field(default=None, description="Detailed error message if agent or step failed")
+    active_step: Optional[str] = Field(default=None, description="Active fine-grained step within the current stage")
+    steps_progress: dict[str, Any] = Field(default_factory=dict, description="Fine-grained step completion statuses")
+    run_id: Optional[str] = Field(default=None, description="Unique run identifier for concurrency/idempotency")
+
+    @computed_field
+    @property
+    def normalized_status(self) -> str:
+        return normalize_state(self.status).value
 
     @computed_field
     @property
     def current_stage(self) -> str:
-        s = (self.status or "CREATED").upper()
-        if s in {"NEW", "CREATED", "CASE_CREATED", "CASE_OVERVIEW"}:
+        s = normalize_state(self.status)
+        if s in {CaseState.CASE_CREATED, CaseState.CASE_OVERVIEW}:
             return "CASE"
-        elif s in {"TRIAGED", "IMPACT_ANALYSIS_PENDING", "IMPACT_ANALYSIS_RUNNING", "IMPACT_ANALYSIS_FAILED"}:
-            return "IMPACT_ANALYSIS"
-        elif s in {"ANALYZED", "IMPACT_ANALYSIS_COMPLETED", "PRIORITY_PENDING", "AWAITING_CHECKPOINT_1"}:
+        elif s in {
+            CaseState.IMPACT_ANALYSIS_PENDING,
+            CaseState.IMPACT_ANALYSIS_RUNNING,
+            CaseState.IMPACT_ANALYSIS_FAILED,
+            CaseState.IMPACT_ANALYSIS_COMPLETED,
+        }:
+            return "IMPACT"
+        elif s == CaseState.PRIORITY_PENDING:
             return "PRIORITY"
-        elif s in {"PRIORITY_SAVED", "CHECKPOINT_APPROVED", "AGENT2_RUNNING", "AGENT2_COMPLETED", "AGENT2_FAILED"}:
-            return "CONSTRAINTS"
-        elif s in {"RECOVERY_PLANNING", "AGENT3_RUNNING", "AGENT3_COMPLETED", "AGENT3_FAILED"}:
-            return "RECOVERY_PLANNING"
-        elif s in {"AWAITING_CHECKPOINT_2", "DECISION_PENDING", "PLAN_MODIFIED", "PLAN_REJECTED"}:
+        elif s in {
+            CaseState.PRIORITY_SAVED,
+            CaseState.AGENT2_RUNNING,
+            CaseState.AGENT2_COMPLETED,
+            CaseState.AGENT2_FAILED,
+        }:
+            return "RECOVERY PLANS"
+        elif s in {
+            CaseState.AGENT3_RUNNING,
+            CaseState.AGENT3_COMPLETED,
+            CaseState.AGENT3_FAILED,
+        }:
+            return "EVALUATION"
+        elif s in {
+            CaseState.DECISION_PENDING,
+            CaseState.PLAN_MODIFIED,
+            CaseState.PLAN_REJECTED,
+        }:
             return "DECISION"
-        elif s in {"PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "ON_TRACK", "AT_RISK", "ACTION_REQUIRED", "REPLANNING", "DELIVERED"}:
+        elif s in {
+            CaseState.PLAN_APPROVED,
+            CaseState.EXECUTION,
+            CaseState.AT_RISK,
+            CaseState.REPLANNING,
+        }:
             return "EXECUTION & MONITORING"
-        elif s == "RESOLVED":
+        elif s == CaseState.RESOLVED:
             return "OUTCOME"
         return "CASE"
 
     @computed_field
     @property
     def stage_route(self) -> str:
-        s = (self.status or "CREATED").upper()
-        if s in {"NEW", "CREATED", "CASE_CREATED", "CASE_OVERVIEW"}:
+        s = normalize_state(self.status)
+        if s in {CaseState.CASE_CREATED, CaseState.CASE_OVERVIEW}:
             return "caseOverview"
-        elif s in {"TRIAGED", "IMPACT_ANALYSIS_PENDING", "IMPACT_ANALYSIS_RUNNING", "IMPACT_ANALYSIS_FAILED"}:
+        elif s in {
+            CaseState.IMPACT_ANALYSIS_PENDING,
+            CaseState.IMPACT_ANALYSIS_RUNNING,
+            CaseState.IMPACT_ANALYSIS_FAILED,
+            CaseState.IMPACT_ANALYSIS_COMPLETED,
+        }:
             return "impactAnalysis"
-        elif s in {"ANALYZED", "IMPACT_ANALYSIS_COMPLETED", "PRIORITY_PENDING", "AWAITING_CHECKPOINT_1"}:
+        elif s == CaseState.PRIORITY_PENDING:
             return "checkpoint1"
-        elif s in {"PRIORITY_SAVED", "CHECKPOINT_APPROVED", "AGENT2_RUNNING", "AGENT2_COMPLETED", "AGENT2_FAILED"}:
-            return "constraints"
-        elif s in {"RECOVERY_PLANNING", "AGENT3_RUNNING", "AGENT3_COMPLETED", "AGENT3_FAILED"}:
+        elif s in {
+            CaseState.PRIORITY_SAVED,
+            CaseState.AGENT2_RUNNING,
+            CaseState.AGENT2_COMPLETED,
+            CaseState.AGENT2_FAILED,
+            CaseState.AGENT3_RUNNING,
+            CaseState.AGENT3_COMPLETED,
+            CaseState.AGENT3_FAILED,
+        }:
             return "recoveryPlanning"
-        elif s in {"AWAITING_CHECKPOINT_2", "DECISION_PENDING", "PLAN_MODIFIED", "PLAN_REJECTED"}:
+        elif s in {
+            CaseState.DECISION_PENDING,
+            CaseState.PLAN_MODIFIED,
+            CaseState.PLAN_REJECTED,
+        }:
             return "decision"
-        elif s in {"PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "ON_TRACK", "AT_RISK", "ACTION_REQUIRED", "REPLANNING", "DELIVERED"}:
+        elif s in {
+            CaseState.PLAN_APPROVED,
+            CaseState.EXECUTION,
+            CaseState.AT_RISK,
+            CaseState.REPLANNING,
+        }:
             return "executionMonitoring"
-        elif s == "RESOLVED":
+        elif s == CaseState.RESOLVED:
             return "outcome"
         return "caseOverview"
 
@@ -90,7 +148,7 @@ class CaseListResponse(BaseModel):
 
 
 class CheckpointRequest(BaseModel):
-    priority: str = Field(..., description="Recovery priority: TIME, COST, RISK, or BALANCED")
+    priority: str = Field(..., description="Recovery priority: TIME, COST, STOCK, RISK, CUSTOMER, or BALANCED")
 
     @field_validator("priority")
     @classmethod
@@ -107,3 +165,4 @@ class CheckpointResponse(BaseModel):
     priority: str
     message: str
     phase2_status: str
+    planning_cycle: int = 1

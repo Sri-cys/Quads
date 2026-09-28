@@ -62,10 +62,11 @@ class ExecutionService:
             raise KeyError(f"Case '{case_id}' was not found.")
 
         # Safety Check 1: Approval validation
-        if case.status not in {"RECOVERY_APPROVED", "AWAITING_CHECKPOINT_2"}:
-            if case.status == "RESOLVED":
+        normalized = getattr(case, "normalized_status", case.status)
+        if normalized not in {"RECOVERY_APPROVED", "AWAITING_CHECKPOINT_2", "PLAN_APPROVED", "EXECUTION"}:
+            if normalized == "RESOLVED":
                 raise ValueError(f"Case '{case_id}' is already closed and resolved.")
-            if case.status in {"EXECUTION_IN_PROGRESS", "MONITORING"}:
+            if normalized in {"EXECUTION_IN_PROGRESS", "MONITORING", "EXECUTION"}:
                 # If already executing, return existing progress
                 return self.get_execution_progress(case_id)
             raise ValueError(f"Cannot execute case '{case_id}': Recovery plan has not been approved at Checkpoint 2. Current status: '{case.status}'.")
