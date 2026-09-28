@@ -12,77 +12,6 @@
         <content>
             <VBox class="sapCorporatePageBody">
 
-                <!-- 1. Deep Navy Blue Hero Section -->
-                <VBox class="sapHeroCard">
-                    <layout:Grid defaultSpan="XL7 L7 M12 S12" hSpacing="1" vSpacing="1" class="sapHeroInnerGrid">
-                        <!-- Left: Titles, Supporting Text & Actions -->
-                        <VBox class="sapHeroLeftCol">
-                            <HBox alignItems="Center" class="sapHeroEyebrowRow">
-                                <core:Icon src="sap-icon://shield" class="sapHeroEyebrowIcon" />
-                                <Text text="AI-POWERED SUPPLY CHAIN RESILIENCE" class="sapHeroEyebrow" />
-                            </HBox>
-
-                            <Title
-                                text="Supply Chain Recovery Control Tower"
-                                level="H1"
-                                class="sapHeroHeadline" />
-
-                            <Text
-                                text="Detect. Understand. Coordinate."
-                                class="sapHeroEmphasis" />
-
-                            <Text
-                                text="Quads provides an autonomous multi-agent workflow for detecting supplier disruptions, computing deterministic impact, and coordinating human recovery decisions with operational precision and AI insights."
-                                class="sapHeroSubtitle" />
-
-                            <HBox alignItems="Center" class="sapHeroActionsRow">
-                                <Button
-                                    text="View Disruption Cases &#x2192;"
-                                    type="Emphasized"
-                                    press=".onNavCases"
-                                    class="sapHeroBtnPrimary" />
-                                <Button
-                                    text="Refresh Telemetry"
-                                    type="Transparent"
-                                    press=".onRefresh"
-                                    class="sapHeroBtnSecondary" />
-                            </HBox>
-                        </VBox>
-
-                        <!-- Right: Capability Summary -->
-                        <VBox class="sapHeroRightCol">
-                            <layoutData>
-                                <layout:GridData span="XL5 L5 M12 S12" />
-                            </layoutData>
-                            
-                            <VBox class="sapHeroRightVisualContainer">
-                                <HBox alignItems="Center" class="sapHeroCapabilityItem">
-                                    <core:Icon src="sap-icon://chain-link" class="sapHeroCapIcon" />
-                                    <VBox>
-                                        <Text text="Real-time Network Visibility" class="sapHeroCapTitle" />
-                                        <Text text="Centralized telemetry across suppliers, materials, and plants" class="sapHeroCapDesc" />
-                                    </VBox>
-                                </HBox>
-
-                                <HBox alignItems="Center" class="sapHeroCapabilityItem">
-                                    <core:Icon src="sap-icon://activate" class="sapHeroCapIcon" />
-                                    <VBox>
-                                        <Text text="3-Agent Autonomous Workflow" class="sapHeroCapTitle" />
-                                        <Text text="Impact analysis, constraint evaluation, and feasible strategy ranking" class="sapHeroCapDesc" />
-                                    </VBox>
-                                </HBox>
-
-                                <HBox alignItems="Center" class="sapHeroCapabilityItem">
-                                    <core:Icon src="sap-icon://user-edit" class="sapHeroCapIcon" />
-                                    <VBox>
-                                        <Text text="Human-in-the-Loop Governance" class="sapHeroCapTitle" />
-                                        <Text text="Mandatory manager approval checkpoints for priority and recovery" class="sapHeroCapDesc" />
-                                    </VBox>
-                                </HBox>
-                            </VBox>
-                        </VBox>
-                    </layout:Grid>
-                </VBox>
 
                 <!-- 2. System Workflow Overview (Informational Only) -->
                 <VBox class="sapCard sapUiSmallMarginBottom">
@@ -144,7 +73,10 @@
                     class="sapKpiGrid sapUiSmallMarginBottom">
                     
                     <!-- Metric 1: Total Active Disruptions -->
-                    <VBox class="sapKpiCard infoBorder" press=".onNavCases">
+                    <VBox class="sapKpiCard infoBorder" press=".onNavCasesToCategory">
+                        <customData>
+                            <core:CustomData key="category" value="ALL_ACTIVE" />
+                        </customData>
                         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapKpiTop">
                             <Text text="ACTIVE DISRUPTIONS" class="sapKpiTitle" />
                             <core:Icon src="sap-icon://alert" class="sapKpiIcon info" />
@@ -152,11 +84,17 @@
                         <HBox alignItems="Baseline" justifyContent="SpaceBetween" class="sapKpiMid">
                             <Text text="{dashboard>/stats/active}" class="sapKpiNumber textInfo" />
                         </HBox>
-                        <Text text="Open supply incidents" class="sapKpiSub" />
+                        <Text text="Open supply incidents" class="sapKpiSub sapUiTinyMarginBottom" />
+                        <Link text="VIEW CASES &#x2192;" press=".onNavCasesToCategory" class="bold textInfo">
+                            <customData><core:CustomData key="category" value="ALL_ACTIVE" /></customData>
+                        </Link>
                     </VBox>
 
                     <!-- Metric 2: Active Recoveries -->
-                    <VBox class="sapKpiCard infoBorder" press=".onNavCases">
+                    <VBox class="sapKpiCard infoBorder" press=".onNavCasesToCategory">
+                        <customData>
+                            <core:CustomData key="category" value="ACTIVE_RECOVERIES" />
+                        </customData>
                         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapKpiTop">
                             <Text text="ACTIVE RECOVERIES" class="sapKpiTitle" />
                             <core:Icon src="sap-icon://action" class="sapKpiIcon info" />
@@ -164,11 +102,17 @@
                         <HBox alignItems="Baseline" justifyContent="SpaceBetween" class="sapKpiMid">
                             <Text text="{dashboard>/stats/activeRecoveries}" class="sapKpiNumber textInfo" />
                         </HBox>
-                        <Text text="In planning &amp; execution" class="sapKpiSub" />
+                        <Text text="In planning &amp; execution" class="sapKpiSub sapUiTinyMarginBottom" />
+                        <Link text="VIEW CASES &#x2192;" press=".onNavCasesToCategory" class="bold textInfo">
+                            <customData><core:CustomData key="category" value="ACTIVE_RECOVERIES" /></customData>
+                        </Link>
                     </VBox>
 
                     <!-- Metric 3: At Risk -->
-                    <VBox class="sapKpiCard warningBorder" press=".onNavCases">
+                    <VBox class="sapKpiCard warningBorder" press=".onNavCasesToCategory">
+                        <customData>
+                            <core:CustomData key="category" value="AT_RISK" />
+                        </customData>
                         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapKpiTop">
                             <Text text="AT RISK" class="sapKpiTitle" />
                             <core:Icon src="sap-icon://warning2" class="sapKpiIcon warning" />
@@ -176,11 +120,17 @@
                         <HBox alignItems="Baseline" justifyContent="SpaceBetween" class="sapKpiMid">
                             <Text text="{dashboard>/stats/atRisk}" class="sapKpiNumber textWarning" />
                         </HBox>
-                        <Text text="Buffer breach warning" class="sapKpiSub" />
+                        <Text text="Buffer breach warning" class="sapKpiSub sapUiTinyMarginBottom" />
+                        <Link text="VIEW CASES &#x2192;" press=".onNavCasesToCategory" class="bold textWarning">
+                            <customData><core:CustomData key="category" value="AT_RISK" /></customData>
+                        </Link>
                     </VBox>
 
                     <!-- Metric 4: Action Required -->
-                    <VBox class="sapKpiCard criticalBorder" press=".onNavCases">
+                    <VBox class="sapKpiCard criticalBorder" press=".onNavCasesToCategory">
+                        <customData>
+                            <core:CustomData key="category" value="ACTION_REQUIRED" />
+                        </customData>
                         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapKpiTop">
                             <Text text="ACTION REQUIRED" class="sapKpiTitle" />
                             <core:Icon src="sap-icon://error" class="sapKpiIcon critical" />
@@ -188,11 +138,17 @@
                         <HBox alignItems="Baseline" justifyContent="SpaceBetween" class="sapKpiMid">
                             <Text text="{dashboard>/stats/actionRequired}" class="sapKpiNumber textCritical" />
                         </HBox>
-                        <Text text="Manager decision needed" class="sapKpiSub" />
+                        <Text text="Manager decision needed" class="sapKpiSub sapUiTinyMarginBottom" />
+                        <Link text="VIEW CASES &#x2192;" press=".onNavCasesToCategory" class="bold textCritical">
+                            <customData><core:CustomData key="category" value="ACTION_REQUIRED" /></customData>
+                        </Link>
                     </VBox>
 
                     <!-- Metric 5: Cases in Execution -->
-                    <VBox class="sapKpiCard infoBorder" press=".onNavCases">
+                    <VBox class="sapKpiCard infoBorder" press=".onNavCasesToCategory">
+                        <customData>
+                            <core:CustomData key="category" value="IN_EXECUTION" />
+                        </customData>
                         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapKpiTop">
                             <Text text="IN EXECUTION" class="sapKpiTitle" />
                             <core:Icon src="sap-icon://shipping-status" class="sapKpiIcon info" />
@@ -200,11 +156,17 @@
                         <HBox alignItems="Baseline" justifyContent="SpaceBetween" class="sapKpiMid">
                             <Text text="{dashboard>/stats/inExecution}" class="sapKpiNumber textInfo" />
                         </HBox>
-                        <Text text="Approved plans active" class="sapKpiSub" />
+                        <Text text="Approved plans active" class="sapKpiSub sapUiTinyMarginBottom" />
+                        <Link text="VIEW CASES &#x2192;" press=".onNavCasesToCategory" class="bold textInfo">
+                            <customData><core:CustomData key="category" value="IN_EXECUTION" /></customData>
+                        </Link>
                     </VBox>
 
                     <!-- Metric 6: Cases Resolved -->
-                    <VBox class="sapKpiCard successBorder" press=".onNavCases">
+                    <VBox class="sapKpiCard successBorder" press=".onNavCasesToCategory">
+                        <customData>
+                            <core:CustomData key="category" value="RESOLVED" />
+                        </customData>
                         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapKpiTop">
                             <Text text="CASES RESOLVED" class="sapKpiTitle" />
                             <core:Icon src="sap-icon://accept" class="sapKpiIcon success" />
@@ -212,82 +174,13 @@
                         <HBox alignItems="Baseline" justifyContent="SpaceBetween" class="sapKpiMid">
                             <Text text="{dashboard>/stats/resolved}" class="sapKpiNumber textSuccess" />
                         </HBox>
-                        <Text text="Successfully archived" class="sapKpiSub" />
+                        <Text text="Successfully archived" class="sapKpiSub sapUiTinyMarginBottom" />
+                        <Link text="VIEW CASES &#x2192;" press=".onNavCasesToCategory" class="bold textSuccess">
+                            <customData><core:CustomData key="category" value="RESOLVED" /></customData>
+                        </Link>
                     </VBox>
                 </layout:Grid>
 
-                <!-- 4. Priority Alert Area (Compact Operational Status Strips) -->
-                <layout:Grid
-                    defaultSpan="XL3 L3 M6 S12"
-                    hSpacing="1"
-                    vSpacing="1"
-                    class="sapUiSmallMarginBottom">
-                    
-                    <!-- Alert 1: Action Required -->
-                    <VBox class="sapCard">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                            <HBox alignItems="Center">
-                                <core:Icon src="sap-icon://message-error" class="sapUiTinyMarginEnd textCritical" size="16px" />
-                                <Title text="ACTION REQUIRED" level="H4" class="bold textCritical" />
-                            </HBox>
-                            <ObjectStatus text="{dashboard>/stats/actionRequired}" state="Error" class="bold" />
-                        </HBox>
-                        <Text text="{= ${dashboard>/stats/actionRequired} === 0 ? 'No immediate manager interventions needed.' : ${dashboard>/stats/actionRequired} + ' disruption case(s) require decision or replan.' }" class="textSmall textDark sapUiSmallMarginBottom" />
-                        <Button
-                            text="VIEW CASES →"
-                            type="Emphasized"
-                            press=".onNavCases"
-                            class="sapBtnPrimary" />
-                    </VBox>
-
-                    <!-- Alert 2: At Risk -->
-                    <VBox class="sapCard">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                            <HBox alignItems="Center">
-                                <core:Icon src="sap-icon://message-warning" class="sapUiTinyMarginEnd textWarning" size="16px" />
-                                <Title text="AT RISK" level="H4" class="bold textWarning" />
-                            </HBox>
-                            <ObjectStatus text="{dashboard>/stats/atRisk}" state="Warning" class="bold" />
-                        </HBox>
-                        <Text text="{= ${dashboard>/stats/atRisk} === 0 ? 'All supply buffers within safe thresholds.' : ${dashboard>/stats/atRisk} + ' shipment(s) under safety stock hazard.' }" class="textSmall textDark sapUiSmallMarginBottom" />
-                        <Button
-                            text="VIEW CASES →"
-                            type="Default"
-                            press=".onNavCases" />
-                    </VBox>
-
-                    <!-- Alert 3: On Track -->
-                    <VBox class="sapCard">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                            <HBox alignItems="Center">
-                                <core:Icon src="sap-icon://sys-enter-2" class="sapUiTinyMarginEnd textSuccess" size="16px" />
-                                <Title text="ON TRACK" level="H4" class="bold textSuccess" />
-                            </HBox>
-                            <ObjectStatus text="{dashboard>/stats/onTrack}" state="Success" class="bold" />
-                        </HBox>
-                        <Text text="{dashboard>/stats/onTrack} disruption cases progressing within tolerance." class="textSmall textDark sapUiSmallMarginBottom" />
-                        <Button
-                            text="VIEW CASES →"
-                            type="Default"
-                            press=".onNavCases" />
-                    </VBox>
-
-                    <!-- Alert 4: Resolved -->
-                    <VBox class="sapCard">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                            <HBox alignItems="Center">
-                                <core:Icon src="sap-icon://accept" class="sapUiTinyMarginEnd textSuccess" size="16px" />
-                                <Title text="RESOLVED" level="H4" class="bold textDark" />
-                            </HBox>
-                            <ObjectStatus text="{dashboard>/stats/resolved}" state="None" class="bold" />
-                        </HBox>
-                        <Text text="{dashboard>/stats/resolved} cases closed with archived post-mortem precedent." class="textSmall textDark sapUiSmallMarginBottom" />
-                        <Button
-                            text="VIEW CASES →"
-                            type="Default"
-                            press=".onNavCases" />
-                    </VBox>
-                </layout:Grid>
 
                 <!-- 5. Recovery Overview & Multi-Agent Network Intelligence (3 Columns) -->
                 <layout:Grid

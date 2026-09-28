@@ -84,7 +84,7 @@
         },
         {
           "name": "cases",
-          "pattern": "cases",
+          "pattern": "cases:?query:",
           "target": "cases"
         },
         {

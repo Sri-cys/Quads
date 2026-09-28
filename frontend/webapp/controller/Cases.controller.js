@@ -44,15 +44,38 @@ sap.ui.define([
                 items: [],
                 rawItems: [],
                 total: 0,
-                totalFiltered: 0
+                totalFiltered: 0,
+                counts: {
+                    all: 0,
+                    actionRequired: 0,
+                    atRisk: 0,
+                    onTrack: 0,
+                    resolved: 0
+                }
             });
             this.getView().setModel(oModel, "casesModel");
 
             this.getOwnerComponent().getRouter().getRoute("cases").attachPatternMatched(this._onPatternMatched, this);
         },
 
-        _onPatternMatched: function () {
+        _onPatternMatched: function (oEvent) {
+            var oArgs = oEvent.getParameter("arguments");
+            var oQuery = oArgs["?query"];
+            var sCategory = (oQuery && oQuery.category) ? oQuery.category : "ALL";
+            
+            var aValidTabs = ["ALL", "ACTION_REQUIRED", "AT_RISK", "ON_TRACK", "RESOLVED", "ALL_ACTIVE", "ACTIVE_RECOVERIES", "IN_EXECUTION"];
+            if (aValidTabs.indexOf(sCategory) === -1) {
+                sCategory = "ALL";
+            }
+            
+            this.getView().getModel("casesModel").setProperty("/selectedCategory", sCategory);
             this.loadCases();
+        },
+
+        onCategoryTabPress: function (oEvent) {
+            var sCategory = oEvent.getSource().data("category");
+            this.getView().getModel("casesModel").setProperty("/selectedCategory", sCategory);
+            this._applyFilters();
         },
 
         onRefresh: function () {
@@ -180,8 +203,50 @@ sap.ui.define([
                         }
                     });
 
+                    // CATEGORY CLASSIFICATION (Exactly matching Dashboard logic)
+                    var nActionRequired = 0;
+                    var nAtRisk = 0;
+                    var nResolved = 0;
+                    var nActive = 0;
+                    var nTotal = items.length;
+
+                    items.forEach(function (c) {
+                        var sStatus = (c.status || "CREATED").toUpperCase();
+                        var sSev = (c.severity || "LOW").toUpperCase();
+                        var sExec = (c.execution_status || "").toUpperCase();
+
+                        c._isResolved = (sStatus === "RESOLVED");
+                        c._isActive = !c._isResolved;
+                        c._isAtRisk = (sSev === "CRITICAL" || sSev === "HIGH" || sExec === "AT_RISK");
+                        c._isActionRequired = (sStatus === "ANALYZED" || sStatus === "AWAITING_CHECKPOINT_2" || sExec === "ACTION_REQUIRED" || sExec === "FAILED");
+                        
+                        var aRecoveryStatuses = ["CHECKPOINT_APPROVED", "RECOVERY_PLANNING", "AWAITING_CHECKPOINT_2", "RECOVERY_APPROVED", "EXECUTION_IN_PROGRESS", "MONITORING"];
+                        c._isActiveRecovery = (aRecoveryStatuses.indexOf(sStatus) !== -1);
+                        c._isInExecution = (sStatus === "EXECUTION_IN_PROGRESS" || sStatus === "MONITORING");
+                        
+                        if (c._isResolved) nResolved++;
+                        else nActive++;
+
+                        if (c._isAtRisk) nAtRisk++;
+                        if (c._isActionRequired) nActionRequired++;
+                    });
+                    
+                    var nOnTrack = Math.max(0, nActive - nAtRisk);
+                    
+                    items.forEach(function (c) {
+                        c._isOnTrack = (!c._isResolved && !c._isAtRisk);
+                    });
+
+                    oModel.setProperty("/counts", {
+                        all: nTotal,
+                        actionRequired: nActionRequired,
+                        atRisk: nAtRisk,
+                        onTrack: nOnTrack,
+                        resolved: nResolved
+                    });
+
                     oModel.setProperty("/rawItems", items);
-                    oModel.setProperty("/total", data.total || items.length);
+                    oModel.setProperty("/total", nTotal);
                     that._applyFilters();
                 })
                 .catch(function (err) {
@@ -233,6 +298,8 @@ sap.ui.define([
             var oSup = this.byId("supplierFilter");
             var sSupplier = oSup ? oSup.getSelectedKey() : "ALL";
 
+            var sCategory = oModel.getProperty("/selectedCategory") || "ALL";
+
             var filtered = rawItems.filter(function (item) {
                 var matchesQuery = true;
                 if (sQuery) {
@@ -261,11 +328,46 @@ sap.ui.define([
                     matchesSupplier = item.supplier_id === sSupplier;
                 }
 
-                return matchesQuery && matchesSeverity && matchesStatus && matchesSupplier;
+                var matchesCategory = true;
+                if (sCategory === "ACTION_REQUIRED") matchesCategory = item._isActionRequired;
+                else if (sCategory === "AT_RISK") matchesCategory = item._isAtRisk;
+                else if (sCategory === "ON_TRACK") matchesCategory = item._isOnTrack;
+                else if (sCategory === "RESOLVED") matchesCategory = item._isResolved;
+                else if (sCategory === "ALL_ACTIVE") matchesCategory = item._isActive;
+                else if (sCategory === "ACTIVE_RECOVERIES") matchesCategory = item._isActiveRecovery;
+                else if (sCategory === "IN_EXECUTION") matchesCategory = item._isInExecution;
+
+                return matchesQuery && matchesSeverity && matchesStatus && matchesSupplier && matchesCategory;
+            });
+
+            // Sorting logic: CRITICAL -> HIGH -> MEDIUM -> LOW
+            // Then secondary: Days of Cover ascending
+            var severityRank = { "CRITICAL": 1, "HIGH": 2, "MEDIUM": 3, "LOW": 4 };
+            filtered.sort(function(a, b) {
+                var rankA = severityRank[(a.severity || "LOW").toUpperCase()] || 5;
+                var rankB = severityRank[(b.severity || "LOW").toUpperCase()] || 5;
+                if (rankA !== rankB) {
+                    return rankA - rankB; // Ascending rank (1 is first)
+                }
+                // Secondary sort by Days of Cover (ascending, lower is worse)
+                var docA = (a.days_of_cover !== null && a.days_of_cover !== undefined) ? a.days_of_cover : 999;
+                var docB = (b.days_of_cover !== null && b.days_of_cover !== undefined) ? b.days_of_cover : 999;
+                return docA - docB;
             });
 
             oModel.setProperty("/items", filtered);
             oModel.setProperty("/totalFiltered", filtered.length);
+
+            var sTitle = "ALL CASES";
+            if (sCategory === "ACTION_REQUIRED") sTitle = "ACTION REQUIRED";
+            else if (sCategory === "AT_RISK") sTitle = "AT RISK";
+            else if (sCategory === "ON_TRACK") sTitle = "ON TRACK";
+            else if (sCategory === "RESOLVED") sTitle = "RESOLVED";
+            else if (sCategory === "ALL_ACTIVE") sTitle = "ACTIVE DISRUPTIONS";
+            else if (sCategory === "ACTIVE_RECOVERIES") sTitle = "ACTIVE RECOVERIES";
+            else if (sCategory === "IN_EXECUTION") sTitle = "IN EXECUTION";
+            
+            oModel.setProperty("/tableTitle", sTitle);
         },
 
         onTableSettings: function () {

@@ -34,6 +34,40 @@
                     </HBox>
                 </HBox>
 
+                <!-- Category Navigation / Filter -->
+                <HBox class="sapCategoryTabsRow" renderType="Bare">
+                    <Button 
+                        text="ALL CASES  {casesModel>/counts/all}" 
+                        press=".onCategoryTabPress" 
+                        class="sapCategoryBtn {= ${casesModel>/selectedCategory} === 'ALL' ? 'sapCategoryBtnActive sapCategoryBtnAll' : 'sapCategoryBtnAll' }">
+                        <customData><core:CustomData key="category" value="ALL" /></customData>
+                    </Button>
+                    <Button 
+                        text="ACTION REQUIRED  {casesModel>/counts/actionRequired}" 
+                        press=".onCategoryTabPress" 
+                        class="sapCategoryBtn {= ${casesModel>/selectedCategory} === 'ACTION_REQUIRED' ? 'sapCategoryBtnActive sapCategoryBtnActionRequired' : 'sapCategoryBtnActionRequired' }">
+                        <customData><core:CustomData key="category" value="ACTION_REQUIRED" /></customData>
+                    </Button>
+                    <Button 
+                        text="AT RISK  {casesModel>/counts/atRisk}" 
+                        press=".onCategoryTabPress" 
+                        class="sapCategoryBtn {= ${casesModel>/selectedCategory} === 'AT_RISK' ? 'sapCategoryBtnActive sapCategoryBtnAtRisk' : 'sapCategoryBtnAtRisk' }">
+                        <customData><core:CustomData key="category" value="AT_RISK" /></customData>
+                    </Button>
+                    <Button 
+                        text="ON TRACK  {casesModel>/counts/onTrack}" 
+                        press=".onCategoryTabPress" 
+                        class="sapCategoryBtn {= ${casesModel>/selectedCategory} === 'ON_TRACK' ? 'sapCategoryBtnActive sapCategoryBtnOnTrack' : 'sapCategoryBtnOnTrack' }">
+                        <customData><core:CustomData key="category" value="ON_TRACK" /></customData>
+                    </Button>
+                    <Button 
+                        text="RESOLVED  {casesModel>/counts/resolved}" 
+                        press=".onCategoryTabPress" 
+                        class="sapCategoryBtn {= ${casesModel>/selectedCategory} === 'RESOLVED' ? 'sapCategoryBtnActive sapCategoryBtnResolved' : 'sapCategoryBtnResolved' }">
+                        <customData><core:CustomData key="category" value="RESOLVED" /></customData>
+                    </Button>
+                </HBox>
+
                 <!-- Modern Filter Toolbar Card -->
                 <VBox class="sapFilterCard">
                     <layout:Grid
@@ -125,7 +159,7 @@
                     <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapTableCardHeader">
                         <HBox alignItems="Center">
                             <Title
-                                text="Disruption Cases"
+                                text="{casesModel>/tableTitle}"
                                 level="H2"
                                 class="sapSectionTitle" />
                             <Text
@@ -171,7 +205,7 @@
                             <Column width="6rem">
                                 <Text text="Plant" class="sapColHeader" />
                             </Column>
-                            <Column width="7rem">
+                            <Column width="7rem" hAlign="Center">
                                 <Text text="Severity" class="sapColHeader" />
                             </Column>
                             <Column width="9rem">

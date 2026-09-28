@@ -146,6 +146,25 @@ sap.ui.define([
 
         onNavCases: function () {
             this.getOwnerComponent().getRouter().navTo("cases");
+        },
+
+        onNavCasesToCategory: function (oEvent) {
+            var oSource = oEvent.getSource();
+            var sCategory = oSource.data("category");
+            
+            if (!sCategory && oSource.getParent && oSource.getParent().data) {
+                sCategory = oSource.getParent().data("category");
+            }
+
+            if (sCategory) {
+                this.getOwnerComponent().getRouter().navTo("cases", {
+                    query: {
+                        category: sCategory
+                    }
+                });
+            } else {
+                this.onNavCases();
+            }
         }
     });
 });

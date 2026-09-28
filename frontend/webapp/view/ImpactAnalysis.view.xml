@@ -65,7 +65,8 @@
                             press=".onProceedPriority"
                             visible="{= ${impact>/analysisState} === 'COMPLETED' }"
                             class="sapBtnPrimary" />
-=======
+                    </HBox>
+                </HBox>
                 <!-- HEADER CARD -->
                 <HBox class="quadsWhiteCard quadsHeaderCard sapUiSmallMarginBottom" alignItems="Center" justifyContent="SpaceBetween">
                     <!-- Left Side -->
@@ -129,7 +130,7 @@
                                 <Text text="Completed" class="quadsStatusText" wrapping="false" />
                             </HBox>
                         </VBox>
->>>>>>> 23a7683 (Saran altered)
+
                     </HBox>
                 </HBox>
 
@@ -273,7 +274,7 @@
                     </HBox>
                 </VBox>
 
-<<<<<<< HEAD
+
                 <!-- Running Indicator Banner (Real Backend Telemetry Progress) -->
                 <VBox
                     visible="{= ${impact>/analysisState} === 'RUNNING' }"
