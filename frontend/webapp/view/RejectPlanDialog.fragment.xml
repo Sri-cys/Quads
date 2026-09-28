@@ -1,0 +1,60 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Dialog
+        id="rejectPlanDialog"
+        title="Reject Recovery Proposals"
+        type="Message"
+        state="Warning"
+        contentWidth="520px"
+        resizable="false">
+
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Text text="Rejecting the current proposals initiates a new recovery planning cycle. Select a mandatory rejection reason to inform subsequent agent discovery and optimization." class="textDark bold sapUiSmallMarginBottom" />
+
+                <Label text="Rejection Reason Category" required="true" class="bold sapUiTinyMarginTop" />
+                <Select
+                    id="selRejectCategory"
+                    selectedKey="{rec>/rejectCategory}"
+                    width="100%"
+                    class="sapUiSmallMarginBottom">
+                    <core:Item key="TOO_EXPENSIVE" text="Too expensive — Exceeds allowable recovery budget" />
+                    <core:Item key="TOO_SLOW" text="Too slow — Lead time exceeds assembly safety buffer" />
+                    <core:Item key="TOO_RISKY" text="Too risky — Operational or transport corridor risk too high" />
+                    <core:Item key="SUPPLIER_CONCERN" text="Supplier concern — Secondary supplier allocation/quality limits" />
+                    <core:Item key="CUSTOMER_CONCERN" text="Customer concern — Delivery SLA and order commitment hazard" />
+                    <core:Item key="PLANT_CONCERN" text="Plant concern — Destination plant handling/dock bottleneck" />
+                    <core:Item key="LOGISTICS_CONCERN" text="Logistics concern — Carrier schedule or equipment constraint" />
+                    <core:Item key="CONTRACT_CONCERN" text="Contract concern — Terms or surcharge dispute" />
+                    <core:Item key="OTHER" text="Other — Custom planner constraint" />
+                </Select>
+
+                <Label text="Detailed Planner Explanation / Rationale" class="bold" />
+                <TextArea
+                    id="taRejectNotes"
+                    value="{rec>/rejectNotes}"
+                    rows="3"
+                    width="100%"
+                    placeholder="Explain why current proposals are unsatisfactory to guide revised agent analysis..." />
+            </VBox>
+        </content>
+
+        <beginButton>
+            <Button
+                text="Confirm Rejection &amp; Replan"
+                type="Reject"
+                icon="sap-icon://decline"
+                press=".onConfirmReject" />
+        </beginButton>
+
+        <endButton>
+            <Button
+                text="Cancel"
+                press=".onCloseRejectDialog" />
+        </endButton>
+
+    </Dialog>
+</core:FragmentDefinition>

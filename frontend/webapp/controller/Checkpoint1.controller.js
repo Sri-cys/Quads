@@ -6,21 +6,48 @@ sap.ui.define([
 ], function (Controller, JSONModel, MessageBox, MessageToast) {
     "use strict";
 
+    var PRIORITY_CARDS = ["Time", "Cost", "Stock", "Risk", "Customer", "Balanced"];
+
     return Controller.extend("com.quads.supplychain.controller.Checkpoint1", {
         onInit: function () {
             var oModel = new JSONModel({
                 case_id: "",
                 status: "PENDING",
                 severity: "",
-                decision: null,
-                decisionTimestamp: null,
                 selectedPriority: "BALANCED",
-                impact: {}
+                prioritySaved: false,
+                impact: {
+                    days_of_cover_display: "2.0 Days",
+                    stockout_date_display: "2026-09-29",
+                    supply_gap_display: "0 Units",
+                    severity: "CRITICAL"
+                }
             });
             this.getView().setModel(oModel, "cp");
 
+            this.getView().addEventDelegate({
+                onAfterRendering: function () {
+                    var that = this;
+                    var sPriority = this.getView().getModel("cp").getProperty("/selectedPriority") || "BALANCED";
+                    this._updateCardSelection(sPriority);
+
+                    // Attach click handlers to cards
+                    PRIORITY_CARDS.forEach(function (name) {
+                        var oCard = that.byId("card" + name);
+                        if (oCard) {
+                            var domRef = oCard.getDomRef();
+                            if (domRef) {
+                                domRef.onclick = function () {
+                                    that.setSelectedPriority(name.toUpperCase());
+                                };
+                            }
+                        }
+                    });
+                }
+            }, this);
+
             var oRouter = this.getOwnerComponent().getRouter();
-            ["checkpoint1", "checkpoint1Alt"].forEach(function (r) {
+            ["checkpoint1", "checkpoint1Kebab", "checkpoint1Alt"].forEach(function (r) {
                 var oR = oRouter.getRoute(r);
                 if (oR) oR.attachPatternMatched(this._onPatternMatched, this);
             }, this);
@@ -32,6 +59,7 @@ sap.ui.define([
                 sCaseId = this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
             }
             this._sCurrentCaseId = sCaseId;
+            this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
             this.loadCheckpointData(sCaseId);
         },
 
@@ -49,109 +77,103 @@ sap.ui.define([
                     return r.json();
                 }),
                 fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact").then(function (r) {
-                    if (r.status === 404) {
-                        return fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/analyze", { method: "POST" })
-                            .then(function (res) { return res.json(); });
-                    }
+                    if (r.status === 404) return null;
                     if (!r.ok) throw new Error("Impact analysis not found");
                     return r.json();
                 })
             ])
             .then(function (results) {
                 var caseData = results[0] || {};
-                var impactData = results[1] || {};
+                var impactData = results[1];
 
-                var doc = impactData.days_of_cover !== undefined ? impactData.days_of_cover : 5.0;
-                var stockout = impactData.stockout_date ? (new Date(impactData.stockout_date).toLocaleDateString()) : "2026-09-29";
-                var gap = impactData.supply_gap_quantity !== undefined ? impactData.supply_gap_quantity : 0;
-                var sev = impactData.severity || caseData.severity || "CRITICAL";
+                // Route guard: Impact Analysis must be completed first
+                if (!impactData && caseData.status !== "ANALYZED" && caseData.status !== "CHECKPOINT_APPROVED" && caseData.status !== "RECOVERY_APPROVED" && caseData.status !== "RESOLVED") {
+                    MessageBox.warning(
+                        "Impact Analysis has not been performed yet for " + sCaseId + ".\n\nPlease complete Stage 2 before setting recovery priority.",
+                        {
+                            title: "Workflow Stage Locked",
+                            onClose: function () {
+                                that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
+                            }
+                        }
+                    );
+                    return;
+                }
+
+                var docStr = "Data unavailable";
+                if (impactData && impactData.days_of_cover !== null && impactData.days_of_cover !== undefined) {
+                    docStr = impactData.days_of_cover + " Days";
+                } else if (impactData && (impactData.demand_status === "ZERO_DEMAND" || impactData.daily_demand === 0)) {
+                    docStr = "N/A (Daily consumption data unavailable)";
+                }
+
+                var stockoutStr = "Data unavailable";
+                if (impactData && impactData.stockout_date) {
+                    try {
+                        stockoutStr = new Date(impactData.stockout_date).toLocaleDateString();
+                    } catch (e) {
+                        stockoutStr = impactData.stockout_date;
+                    }
+                }
+
+                var gapStr = "0 Units";
+                if (impactData && impactData.supply_gap_quantity !== null && impactData.supply_gap_quantity !== undefined) {
+                    gapStr = impactData.supply_gap_quantity.toLocaleString() + " Units";
+                }
+
+                var sev = (impactData && impactData.severity) || caseData.severity || "CRITICAL";
+                var bAlreadySaved = !!caseData.checkpoint1_decision;
+                var sChosen = caseData.checkpoint1_decision || "BALANCED";
 
                 oModel.setData({
                     case_id: sCaseId,
                     status: caseData.status,
                     severity: sev,
-                    decision: caseData.checkpoint1_decision,
-                    decisionTimestamp: caseData.checkpoint1_timestamp,
-                    selectedPriority: caseData.checkpoint1_decision || "BALANCED",
+                    selectedPriority: sChosen,
+                    prioritySaved: bAlreadySaved,
                     impact: {
-                        days_of_cover: doc,
-                        stockout_date: stockout,
-                        supply_gap_quantity: gap,
+                        days_of_cover_display: docStr,
+                        stockout_date_display: stockoutStr,
+                        supply_gap_display: gapStr,
                         severity: sev
                     }
                 });
+
+                that.setSelectedPriority(sChosen);
             })
             .catch(function (err) {
-                MessageBox.error("Failed to load Checkpoint 1 details: " + err.message);
+                MessageBox.error("Failed to load Checkpoint 1: " + err.message);
             })
             .finally(function () {
                 if (oPage) oPage.setBusy(false);
             });
         },
 
-        onSelectOption: function (oEvent) {
-            var oCard = oEvent.getSource();
-            var aCustom = oCard.getCustomData();
-            var sPriority = "BALANCED";
-            for (var i = 0; i < aCustom.length; i++) {
-                if (aCustom[i].getKey() === "priority") {
-                    sPriority = aCustom[i].getValue();
-                    break;
-                }
-            }
+        setSelectedPriority: function (sPriority) {
             this.getView().getModel("cp").setProperty("/selectedPriority", sPriority);
+            this._updateCardSelection(sPriority);
         },
 
-        onSelectTime: function () {
-            this.getView().getModel("cp").setProperty("/selectedPriority", "TIME");
-        },
-
-        onSelectCost: function () {
-            this.getView().getModel("cp").setProperty("/selectedPriority", "COST");
-        },
-
-        onSelectRisk: function () {
-            this.getView().getModel("cp").setProperty("/selectedPriority", "RISK");
-        },
-
-        onSelectBalanced: function () {
-            this.getView().getModel("cp").setProperty("/selectedPriority", "BALANCED");
-        },
-
-        onBackToCases: function () {
-            this.getOwnerComponent().getRouter().navTo("cases");
-        },
-
-        onBackToImpact: function () {
-            var sCaseId = this._sCurrentCaseId || "CASE-0001";
-            this.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
-        },
-
-        onRadioSelect: function (oEvent) {
-            var sPriority = oEvent.getSource().getText();
-            this.getView().getModel("cp").setProperty("/selectedPriority", sPriority);
-        },
-
-        onApproveDecision: function () {
-            var sPriority = this.getView().getModel("cp").getProperty("/selectedPriority") || "BALANCED";
+        _updateCardSelection: function (sPriority) {
             var that = this;
-
-            MessageBox.confirm(
-                "Approve Human Checkpoint 1 with recovery objective '" + sPriority + "'?\n\nThis records the governance decision and completes Phase 1 analysis.",
-                {
-                    title: "Confirm Recovery Objective",
-                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-                    emphasizedAction: MessageBox.Action.OK,
-                    onClose: function (sAction) {
-                        if (sAction === MessageBox.Action.OK) {
-                            that._submitPriority(sPriority);
-                        }
-                    }
+            PRIORITY_CARDS.forEach(function (name) {
+                var oCard = that.byId("card" + name);
+                if (oCard) {
+                    var bSelected = (name.toUpperCase() === sPriority);
+                    oCard.toggleStyleClass("sapChoiceSelected", bSelected);
                 }
-            );
+            });
         },
 
-        _submitPriority: function (sPriority) {
+        onSelectTime:     function () { this.setSelectedPriority("TIME"); },
+        onSelectCost:     function () { this.setSelectedPriority("COST"); },
+        onSelectStock:    function () { this.setSelectedPriority("STOCK"); },
+        onSelectRisk:     function () { this.setSelectedPriority("RISK"); },
+        onSelectCustomer: function () { this.setSelectedPriority("CUSTOMER"); },
+        onSelectBalanced: function () { this.setSelectedPriority("BALANCED"); },
+
+        onSavePriority: function () {
+            var sPriority = this.getView().getModel("cp").getProperty("/selectedPriority") || "BALANCED";
             var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
             var sCaseId = this._sCurrentCaseId;
             var oPage = this.byId("checkpoint1Page");
@@ -166,50 +188,44 @@ sap.ui.define([
                 body: JSON.stringify({ priority: sPriority })
             })
             .then(function (res) {
-                return res.json().then(function (data) {
-                    if (!res.ok) {
-                        throw new Error(data.message || "Failed to submit checkpoint decision");
-                    }
-                    return data;
-                });
+                if (res.status === 409) {
+                    // Already saved previously, treated as confirmed
+                    return res.json().then(function () {
+                        return { status: "CHECKPOINT_APPROVED", priority: sPriority };
+                    });
+                }
+                if (!res.ok) {
+                    return res.json().then(function (data) {
+                        throw new Error(data.message || "Failed to persist priority");
+                    });
+                }
+                return res.json();
             })
-            .then(function (resp) {
-                oModel.setProperty("/status", "CHECKPOINT_APPROVED");
-                oModel.setProperty("/decision", sPriority);
-                oModel.setProperty("/decisionTimestamp", new Date().toISOString());
-
-                MessageToast.show("Checkpoint 1 approved (" + sPriority + "). Proceeding to Recovery Planning...");
-                
-                // Immediately transition to Recovery Planning stage
-                that.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
-                that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
+            .then(function () {
+                oModel.setProperty("/prioritySaved", true);
+                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "CHECKPOINT_APPROVED");
+                that.getOwnerComponent().getModel("app").setProperty("/stageStep", 4);
+                MessageToast.show("Priority '" + sPriority + "' saved successfully. Stage 4: Constraints is unlocked.");
             })
             .catch(function (err) {
-                MessageBox.error(err.message);
+                MessageBox.error("Priority persistence failed: " + err.message);
             })
             .finally(function () {
                 oPage.setBusy(false);
             });
         },
 
-        onProceedToPhase2: function () {
-            var sCaseId = this._sCurrentCaseId || "CASE-0001";
-            this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
-            this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
-        },
-
-        onNavBack: function () {
-            this.getOwnerComponent().getRouter().navTo("cases");
-        },
-
-        formatDate: function (sIso) {
-            if (!sIso) return "N/A";
-            try {
-                var d = new Date(sIso);
-                return d.toLocaleString();
-            } catch (e) {
-                return sIso;
+        onProceedToConstraints: function () {
+            var bSaved = this.getView().getModel("cp").getProperty("/prioritySaved");
+            if (!bSaved) {
+                MessageBox.warning("Please click 'SAVE PRIORITY' before proceeding to Constraints.");
+                return;
             }
+            this.getOwnerComponent().getRouter().navTo("constraints", { caseId: this._sCurrentCaseId });
+        },
+
+        onBackToImpact: function () {
+            this.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: this._sCurrentCaseId });
         }
     });
 });

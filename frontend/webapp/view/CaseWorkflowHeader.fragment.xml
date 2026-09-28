@@ -1,0 +1,111 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <VBox class="sapCaseWorkflowHeaderContainer sapUiSmallMarginBottom">
+        <!-- Top Row: Case ID, Description, Severity, Status, Stage, Last Updated -->
+        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapCaseHeaderTopRow">
+            <HBox alignItems="Center" class="sapCaseHeaderInfoGroup">
+                <Text text="{app>/selectedCaseId}" class="sapCaseHeaderId" />
+                <Text text="·" class="sapCaseHeaderDot" />
+                <Title text="{app>/caseTitle}" level="H2" class="sapCaseHeaderTitle" />
+            </HBox>
+            <HBox alignItems="Center" class="sapCaseHeaderMetaGroup">
+                <Text text="Severity:" class="sapCaseMetaLabel sapUiTinyMarginEnd" />
+                <ObjectStatus
+                    text="{app>/caseSeverity}"
+                    state="{= ${app>/caseSeverity} === 'CRITICAL' ? 'Error' : (${app>/caseSeverity} === 'HIGH' ? 'Warning' : 'Success') }"
+                    class="bold sapUiSmallMarginEnd" />
+
+                <Text text="Status:" class="sapCaseMetaLabel sapUiTinyMarginEnd" />
+                <ObjectStatus
+                    text="{app>/caseStatusText}"
+                    state="Information"
+                    class="bold sapUiSmallMarginEnd" />
+
+                <Text text="Stage:" class="sapCaseMetaLabel sapUiTinyMarginEnd" />
+                <ObjectStatus
+                    text="{app>/currentStageName}"
+                    state="None"
+                    class="bold sapUiSmallMarginEnd" />
+
+                <Text text="{app>/lastUpdated}" class="textMuted textSmall" />
+            </HBox>
+        </HBox>
+
+        <!-- Bottom Row: Strict 8-Stage Process Indicator -->
+        <HBox alignItems="Center" class="sapCaseStageIndicatorRow">
+            <!-- 1. CASE -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} > 1 ? '✓ CASE' : (${app>/activeStep} === 1 ? '● CASE' : '🔒 CASE') }"
+                icon="{= ${app>/activeStep} > 1 ? 'sap-icon://accept' : (${app>/activeStep} === 1 ? 'sap-icon://record' : 'sap-icon://locked') }"
+                state="{= ${app>/activeStep} === 1 ? 'Information' : (${app>/activeStep} > 1 ? 'Success' : 'None') }"
+                inverted="{= ${app>/activeStep} === 1 }"
+                class="sapStageBadge" />
+            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+
+            <!-- 2. IMPACT ANALYSIS -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} > 2 ? '✓ IMPACT ANALYSIS' : (${app>/activeStep} === 2 ? '● IMPACT ANALYSIS' : '🔒 IMPACT ANALYSIS') }"
+                icon="{= ${app>/activeStep} > 2 ? 'sap-icon://accept' : (${app>/activeStep} === 2 ? 'sap-icon://record' : 'sap-icon://locked') }"
+                state="{= ${app>/activeStep} === 2 ? 'Information' : (${app>/activeStep} > 2 ? 'Success' : 'None') }"
+                inverted="{= ${app>/activeStep} === 2 }"
+                class="sapStageBadge" />
+            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+
+            <!-- 3. PRIORITY -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} > 3 ? '✓ PRIORITY' : (${app>/activeStep} === 3 ? '● PRIORITY' : '🔒 PRIORITY') }"
+                icon="{= ${app>/activeStep} > 3 ? 'sap-icon://accept' : (${app>/activeStep} === 3 ? 'sap-icon://record' : 'sap-icon://locked') }"
+                state="{= ${app>/activeStep} === 3 ? 'Information' : (${app>/activeStep} > 3 ? 'Success' : 'None') }"
+                inverted="{= ${app>/activeStep} === 3 }"
+                class="sapStageBadge" />
+            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+
+            <!-- 4. CONSTRAINTS (AGENT 2) -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} > 4 ? '✓ CONSTRAINTS' : (${app>/activeStep} === 4 ? '● CONSTRAINTS' : '🔒 CONSTRAINTS') }"
+                icon="{= ${app>/activeStep} > 4 ? 'sap-icon://accept' : (${app>/activeStep} === 4 ? 'sap-icon://record' : 'sap-icon://locked') }"
+                state="{= ${app>/activeStep} === 4 ? 'Information' : (${app>/activeStep} > 4 ? 'Success' : 'None') }"
+                inverted="{= ${app>/activeStep} === 4 }"
+                class="sapStageBadge" />
+            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+
+            <!-- 5. RECOVERY PLANNING (AGENT 3) -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} > 5 ? '✓ RECOVERY PLANNING' : (${app>/activeStep} === 5 ? '● RECOVERY PLANNING' : '🔒 RECOVERY PLANNING') }"
+                icon="{= ${app>/activeStep} > 5 ? 'sap-icon://accept' : (${app>/activeStep} === 5 ? 'sap-icon://record' : 'sap-icon://locked') }"
+                state="{= ${app>/activeStep} === 5 ? 'Information' : (${app>/activeStep} > 5 ? 'Success' : 'None') }"
+                inverted="{= ${app>/activeStep} === 5 }"
+                class="sapStageBadge" />
+            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+
+            <!-- 6. DECISION -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} > 6 ? '✓ DECISION' : (${app>/activeStep} === 6 ? '● DECISION' : '🔒 DECISION') }"
+                icon="{= ${app>/activeStep} > 6 ? 'sap-icon://accept' : (${app>/activeStep} === 6 ? 'sap-icon://record' : 'sap-icon://locked') }"
+                state="{= ${app>/activeStep} === 6 ? 'Information' : (${app>/activeStep} > 6 ? 'Success' : 'None') }"
+                inverted="{= ${app>/activeStep} === 6 }"
+                class="sapStageBadge" />
+            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+
+            <!-- 7. EXECUTION & MONITORING -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} > 7 ? '✓ EXECUTION &amp; MONITORING' : (${app>/activeStep} === 7 ? '● EXECUTION &amp; MONITORING' : '🔒 EXECUTION &amp; MONITORING') }"
+                icon="{= ${app>/activeStep} > 7 ? 'sap-icon://accept' : (${app>/activeStep} === 7 ? 'sap-icon://record' : 'sap-icon://locked') }"
+                state="{= ${app>/activeStep} === 7 ? 'Information' : (${app>/activeStep} > 7 ? 'Success' : 'None') }"
+                inverted="{= ${app>/activeStep} === 7 }"
+                class="sapStageBadge" />
+            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+
+            <!-- 8. OUTCOME -->
+            <ObjectStatus
+                text="{= ${app>/activeStep} === 8 ? '● OUTCOME' : '🔒 OUTCOME' }"
+                icon="{= ${app>/activeStep} === 8 ? 'sap-icon://flag' : 'sap-icon://locked' }"
+                state="{= ${app>/activeStep} === 8 ? 'Success' : 'None' }"
+                inverted="{= ${app>/activeStep} === 8 }"
+                class="sapStageBadge" />
+        </HBox>
+    </VBox>
+</core:FragmentDefinition>

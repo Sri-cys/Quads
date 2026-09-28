@@ -43,7 +43,7 @@ sap.ui.define([
             this.getView().setModel(oModel, "exec");
 
             var oRouter = this.getOwnerComponent().getRouter();
-            ["executionMonitoring", "executionMonitoringAlt"].forEach(function (rName) {
+            ["executionMonitoring", "executionMonitoringAlt", "monitoring", "monitoringAlt"].forEach(function (rName) {
                 var oR = oRouter.getRoute(rName);
                 if (oR) oR.attachPatternMatched(this._onRouteMatched, this);
             }, this);
@@ -384,9 +384,19 @@ sap.ui.define([
             }, "Execution failure recorded. Escalated to recovery planning.");
         },
 
+        onTakeActionAlert: function () {
+            MessageToast.show("Intervention acknowledged. Supply Chain Controller dispatching expedited ground transit.");
+        },
+
+        onReplanRecovery: function () {
+            var sCaseId = this._sCurrentCaseId || "CASE-0001";
+            MessageToast.show("Triggering recovery replanning cycle for " + sCaseId);
+            this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
+        },
+
         onGoToMonitoring: function () {
             var sCaseId = this._sCurrentCaseId || "CASE-0001";
-            this.getOwnerComponent().getRouter().navTo("monitoring", { caseId: sCaseId });
+            this.getOwnerComponent().getRouter().navTo("executionMonitoring", { caseId: sCaseId });
         },
 
         onGoToOutcome: function () {

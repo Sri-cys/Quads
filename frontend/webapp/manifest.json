@@ -78,6 +78,11 @@
           "target": "dashboard"
         },
         {
+          "name": "dashboardAlias",
+          "pattern": "dashboard",
+          "target": "dashboard"
+        },
+        {
           "name": "cases",
           "pattern": "cases",
           "target": "cases"
@@ -88,8 +93,28 @@
           "target": "newDisruption"
         },
         {
+          "name": "caseOverview",
+          "pattern": "case/:caseId:",
+          "target": "caseOverview"
+        },
+        {
+          "name": "caseOverviewAlias",
+          "pattern": "cases/:caseId:",
+          "target": "caseOverview"
+        },
+        {
+          "name": "caseOverviewKebab",
+          "pattern": "case-overview/:caseId:",
+          "target": "caseOverview"
+        },
+        {
           "name": "impactAnalysis",
           "pattern": "impact/:caseId:",
+          "target": "impactAnalysis"
+        },
+        {
+          "name": "impactAnalysisKebab",
+          "pattern": "impact-analysis/:caseId:",
           "target": "impactAnalysis"
         },
         {
@@ -103,13 +128,33 @@
           "target": "checkpoint1"
         },
         {
+          "name": "checkpoint1Kebab",
+          "pattern": "checkpoint-1/:caseId:",
+          "target": "checkpoint1"
+        },
+        {
           "name": "checkpoint1Alt",
           "pattern": "cases/:caseId:/checkpoint1",
           "target": "checkpoint1"
         },
         {
+          "name": "constraints",
+          "pattern": "constraints/:caseId:",
+          "target": "constraints"
+        },
+        {
+          "name": "constraintsAlt",
+          "pattern": "cases/:caseId:/constraints",
+          "target": "constraints"
+        },
+        {
           "name": "recoveryPlanning",
           "pattern": "recovery/:caseId:",
+          "target": "recoveryPlanning"
+        },
+        {
+          "name": "recoveryPlanningKebab",
+          "pattern": "recovery-planning/:caseId:",
           "target": "recoveryPlanning"
         },
         {
@@ -128,18 +173,38 @@
           "target": "recoveryPlanning"
         },
         {
+          "name": "decision",
+          "pattern": "decision/:caseId:",
+          "target": "decision"
+        },
+        {
+          "name": "decisionAlt",
+          "pattern": "cases/:caseId:/decision",
+          "target": "decision"
+        },
+        {
           "name": "checkpoint2",
           "pattern": "checkpoint2/:caseId:",
-          "target": "recoveryPlanning"
+          "target": "decision"
+        },
+        {
+          "name": "checkpoint2Kebab",
+          "pattern": "checkpoint-2/:caseId:",
+          "target": "decision"
         },
         {
           "name": "checkpoint2Alt",
           "pattern": "cases/:caseId:/checkpoint2",
-          "target": "recoveryPlanning"
+          "target": "decision"
         },
         {
           "name": "executionMonitoring",
           "pattern": "execution/:caseId:",
+          "target": "executionMonitoring"
+        },
+        {
+          "name": "executionMonitoringKebab",
+          "pattern": "execution-monitoring/:caseId:",
           "target": "executionMonitoring"
         },
         {
@@ -150,12 +215,12 @@
         {
           "name": "monitoring",
           "pattern": "monitoring/:caseId:",
-          "target": "monitoring"
+          "target": "executionMonitoring"
         },
         {
           "name": "monitoringAlt",
           "pattern": "cases/:caseId:/monitoring",
-          "target": "monitoring"
+          "target": "executionMonitoring"
         },
         {
           "name": "outcome",
@@ -179,6 +244,11 @@
           "viewName": "Cases",
           "viewLevel": 2
         },
+        "caseOverview": {
+          "viewType": "XML",
+          "viewName": "CaseOverview",
+          "viewLevel": 2
+        },
         "newDisruption": {
           "viewType": "XML",
           "viewName": "NewDisruption",
@@ -194,25 +264,35 @@
           "viewName": "Checkpoint1",
           "viewLevel": 4
         },
+        "constraints": {
+          "viewType": "XML",
+          "viewName": "Constraints",
+          "viewLevel": 5
+        },
         "recoveryPlanning": {
           "viewType": "XML",
           "viewName": "RecoveryPlanning",
-          "viewLevel": 5
+          "viewLevel": 6
+        },
+        "decision": {
+          "viewType": "XML",
+          "viewName": "Decision",
+          "viewLevel": 7
         },
         "executionMonitoring": {
           "viewType": "XML",
           "viewName": "ExecutionMonitoring",
-          "viewLevel": 6
+          "viewLevel": 8
         },
         "monitoring": {
           "viewType": "XML",
           "viewName": "Monitoring",
-          "viewLevel": 6
+          "viewLevel": 8
         },
         "outcome": {
           "viewType": "XML",
           "viewName": "Outcome",
-          "viewLevel": 7
+          "viewLevel": 9
         }
       }
     }

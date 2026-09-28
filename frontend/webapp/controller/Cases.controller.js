@@ -256,6 +256,10 @@ sap.ui.define([
             this.getOwnerComponent().getRouter().navTo("newDisruption");
         },
 
+        onNewDisruptionPress: function () {
+            this.getOwnerComponent().getRouter().navTo("newDisruption");
+        },
+
         onSelectCase: function (oEvent) {
             var oSource = oEvent.getSource();
             var oContext = oSource.getBindingContext("casesModel");
@@ -265,21 +269,8 @@ sap.ui.define([
             if (!oContext) return;
 
             var sCaseId = oContext.getProperty("case_id");
-            var sStatus = oContext.getProperty("status");
-
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
-
-            if (sStatus === "RESOLVED") {
-                this.getOwnerComponent().getRouter().navTo("outcome", { caseId: sCaseId });
-            } else if (sStatus === "EXECUTION_IN_PROGRESS" || sStatus === "MONITORING") {
-                this.getOwnerComponent().getRouter().navTo("monitoring", { caseId: sCaseId });
-            } else if (sStatus === "RECOVERY_APPROVED" || sStatus === "AWAITING_CHECKPOINT_2" || sStatus === "CHECKPOINT_APPROVED") {
-                this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
-            } else if (sStatus === "ANALYZED") {
-                this.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
-            } else {
-                this.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
-            }
+            this.getOwnerComponent().getRouter().navTo("caseOverview", { caseId: sCaseId });
         }
     });
 });

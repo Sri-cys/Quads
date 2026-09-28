@@ -18,11 +18,12 @@ sap.ui.define([
 
             var oModel = new JSONModel({
                 backendUrl: sBackendUrl,
-                selectedCaseId: null,
+                selectedCaseId: "CASE-0001",
                 currentRoute: "",
-                stageStep: 1,
-                caseStatus: "NEW",
-                caseStatusText: "New Disruption",
+                stageStep: 5,
+                activeStep: 5,
+                caseStatus: "EXECUTION_IN_PROGRESS",
+                caseStatusText: "Execution In Progress",
                 caseStatusState: "Information",
                 currentStageName: "Impact Analysis",
                 nextStageName: "Checkpoint 1",

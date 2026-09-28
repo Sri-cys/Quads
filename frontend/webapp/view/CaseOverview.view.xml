@@ -1,0 +1,205 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.CaseOverview"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+    <Page
+        id="caseOverviewPage"
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+        <content>
+            <VBox class="sapCorporatePageBody">
+
+                <!-- 8-Stage Non-Navigational Workflow Header -->
+                <core:Fragment fragmentName="com.quads.supplychain.view.CaseWorkflowHeader" type="XML" />
+
+                <!-- Page Header: Title + Context Subtitle + Back Link -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
+                    <VBox>
+                        <Title text="CASE OVERVIEW" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Disruption telemetry registration and operational triage summary." class="sapCorporatePageSubtitle" />
+                    </VBox>
+                    <HBox alignItems="Center">
+                        <Link
+                            text="&#x2190; Back to Cases"
+                            press=".onBackToCases"
+                            class="sapBackLink sapUiMediumMarginEnd" />
+                        <Button
+                            id="btnStartImpact"
+                            text="START IMPACT ANALYSIS &#x2192;"
+                            type="Emphasized"
+                            icon="sap-icon://play"
+                            press=".onStartImpactAnalysis"
+                            class="sapBtnPrimary" />
+                    </HBox>
+                </HBox>
+
+                <!-- Case Overview Master Card -->
+                <VBox class="sapContextCard sapUiSmallMarginBottom">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
+                        <HBox alignItems="Center">
+                            <core:Icon src="sap-icon://alert" class="sapContextIcon" color="#0A6ED1" />
+                            <Title text="{case>/case_id} — {case>/disruption_name}" level="H2" class="sapContextTitle sapUiTinyMarginBegin" />
+                        </HBox>
+                        <HBox alignItems="Center">
+                            <ObjectStatus
+                                text="{case>/severity}"
+                                state="{= ${case>/severity} === 'CRITICAL' ? 'Error' : (${case>/severity} === 'HIGH' ? 'Warning' : 'Success') }"
+                                inverted="true"
+                                class="bold sapUiTinyMarginEnd" />
+                            <ObjectStatus
+                                text="{case>/status_display}"
+                                state="Information"
+                                class="bold" />
+                        </HBox>
+                    </HBox>
+
+                    <!-- Case Description -->
+                    <Text text="{case>/description}" class="sapUiSmallMarginTop textDark bold textMedium" />
+
+                    <!-- Primary Attributes Grid (6 Columns) -->
+                    <layout:Grid
+                        defaultSpan="XL2 L2 M4 S6"
+                        hSpacing="1"
+                        vSpacing="1"
+                        class="sapUiSmallMarginTop">
+
+                        <VBox class="sapContextItem">
+                            <Text text="Disruption Type" class="sapContextItemLabel" />
+                            <Text text="{case>/disruption_type_display}" class="sapContextItemVal bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Supplier" class="sapContextItemLabel" />
+                            <Text text="{case>/supplier_name} ({case>/supplier_id})" class="sapContextItemVal bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Material" class="sapContextItemLabel" />
+                            <Text text="{case>/material_name} ({case>/material_id})" class="sapContextItemVal bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Destination Plant" class="sapContextItemLabel" />
+                            <Text text="{case>/plant_name} ({case>/plant_id})" class="sapContextItemVal bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Affected Quantity" class="sapContextItemLabel" />
+                            <Text text="{case>/affected_quantity_display}" class="sapContextItemVal textWarning bold" />
+                        </VBox>
+
+                        <VBox class="sapContextItem">
+                            <Text text="Current Workflow Stage" class="sapContextItemLabel" />
+                            <ObjectStatus text="{case>/current_stage_display}" state="Information" class="bold" />
+                        </VBox>
+                    </layout:Grid>
+                </VBox>
+
+                <!-- Logistics & Delivery Logistics Breakdown (2-Column Grid) -->
+                <layout:Grid
+                    defaultSpan="XL6 L6 M12 S12"
+                    hSpacing="1"
+                    vSpacing="1"
+                    class="sapOverviewGrid">
+
+                    <!-- Logistics & Route Details -->
+                    <VBox class="sapOverviewCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                            <Title text="LOGISTICS &amp; TRANSPORT TELEMETRY" level="H3" class="sapCardSectionTitle" />
+                            <core:Icon src="sap-icon://shipping-status" class="sapMetricIcon info" />
+                        </HBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Origin" class="sapMetricLabel" />
+                                <Text text="{case>/origin}" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Destination" class="sapMetricLabel" />
+                                <Text text="{case>/destination}" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Carrier" class="sapMetricLabel" />
+                                <Text text="{case>/carrier}" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Transport Mode" class="sapMetricLabel" />
+                                <Text text="{case>/transport_mode}" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Schedule & Disruption Timeline -->
+                    <VBox class="sapOverviewCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                            <Title text="SCHEDULE &amp; DELAY METRICS" level="H3" class="sapCardSectionTitle" />
+                            <core:Icon src="sap-icon://calendar" class="sapMetricIcon warning" />
+                        </HBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Expected Delivery Date" class="sapMetricLabel" />
+                                <Text text="{case>/expected_delivery_date}" class="sapMetricVal bold" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Current ETA (Delayed)" class="sapMetricLabel" />
+                                <Text text="{case>/current_eta}" class="sapMetricVal bold textCritical" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Delay Duration" class="sapMetricLabel" />
+                                <Text text="{case>/expected_delay_days} Days" class="sapMetricVal bold textCritical" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox class="sapMetricRow">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                <Text text="Disruption Reason" class="sapMetricLabel" />
+                                <Text text="{case>/reason}" class="sapMetricVal bold textWarning" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                </layout:Grid>
+
+                <!-- Workflow Progression Guidance Card -->
+                <VBox class="sapVisualChainCard sapUiSmallMarginTop">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapChainHeaderBar">
+                        <VBox>
+                            <Title text="WORKFLOW PROGRESSION" level="H3" class="sapSectionTitleSmall" />
+                            <Text text="This is Stage 1 of the strict 8-stage disruption resolution workflow." class="sapSectionSubSmall" />
+                        </VBox>
+                        <Text text="Strict Sequential Flow" class="sapTagNeutral" />
+                    </HBox>
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginTop">
+                        <Text text="To assess downstream inventory buffer breach, plant assembly hazards, and financial exposure, launch Agent 1." class="textDark bold" />
+                        <Button
+                            text="START IMPACT ANALYSIS &#x2192;"
+                            type="Emphasized"
+                            icon="sap-icon://play"
+                            press=".onStartImpactAnalysis"
+                            class="sapBtnPrimary" />
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

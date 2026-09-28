@@ -591,6 +591,21 @@ class ExecutionService:
         case = self.repository.get_case(case_id)
         exec_status = action.status
 
+        # Determine monitoring_status and action_required
+        monitoring_status = "ON_TRACK"
+        action_required = False
+        if is_fail:
+            monitoring_status = "FAILED"
+            action_required = True
+        elif is_succ:
+            monitoring_status = "RESOLVED"
+        elif deviation.delay_days > 2 or deviation.is_critical:
+            monitoring_status = "ACTION_REQUIRED"
+            action_required = True
+        elif deviation.delay_days > 0 or exec_status == "DELAYED":
+            monitoring_status = "AT_RISK"
+            action_required = False
+
         return ExecutionProgress(
             case_id=case_id,
             execution_status=exec_status,
@@ -608,4 +623,13 @@ class ExecutionService:
             ai_status=ai_status,
             can_replan=is_fail or (case and case.status == "RECOVERY_PLANNING"),
             can_resolve=is_succ or (case and case.status == "RESOLVED"),
+            monitoring_status=monitoring_status,
+            action_required=action_required,
+            supplier_status="CONFIRMED" if exec_status != "ACCEPTED" else "PENDING_CONFIRMATION",
+            shipment_status=exec_status,
+            inventory_status="CRITICAL BUFFER" if deviation.delay_days > 0 else "PROTECTED",
+            production_status="AT RISK" if deviation.delay_days > 1 else "NORMAL",
+            customer_impact="1 ORDER AT RISK" if deviation.delay_days > 1 else "0 DELAYED ORDERS",
+            risk_status="HIGH" if action_required else ("MEDIUM" if monitoring_status == "AT_RISK" else "LOW"),
+            last_updated=last_event.timestamp if last_event else baseline.approved_at,
         )

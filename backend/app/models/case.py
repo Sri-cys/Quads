@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, computed_field
 from app.config.severity_rules import VALID_CHECKPOINT_PRIORITIES
 from app.models.impact import ImpactAnalysis
 
@@ -26,6 +26,50 @@ class Case(BaseModel):
     execution_action_id: Optional[str] = None
     execution_status: Optional[str] = None
     resolved_at: Optional[str] = None
+
+    @computed_field
+    @property
+    def current_stage(self) -> str:
+        s = (self.status or "CREATED").upper()
+        if s in {"NEW", "CREATED", "CASE_CREATED", "CASE_OVERVIEW"}:
+            return "CASE"
+        elif s in {"TRIAGED", "IMPACT_ANALYSIS_PENDING", "IMPACT_ANALYSIS_RUNNING", "IMPACT_ANALYSIS_FAILED"}:
+            return "IMPACT_ANALYSIS"
+        elif s in {"ANALYZED", "IMPACT_ANALYSIS_COMPLETED", "PRIORITY_PENDING", "AWAITING_CHECKPOINT_1"}:
+            return "PRIORITY"
+        elif s in {"PRIORITY_SAVED", "CHECKPOINT_APPROVED", "AGENT2_RUNNING", "AGENT2_COMPLETED", "AGENT2_FAILED"}:
+            return "CONSTRAINTS"
+        elif s in {"RECOVERY_PLANNING", "AGENT3_RUNNING", "AGENT3_COMPLETED", "AGENT3_FAILED"}:
+            return "RECOVERY_PLANNING"
+        elif s in {"AWAITING_CHECKPOINT_2", "DECISION_PENDING", "PLAN_MODIFIED", "PLAN_REJECTED"}:
+            return "DECISION"
+        elif s in {"PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "ON_TRACK", "AT_RISK", "ACTION_REQUIRED", "REPLANNING", "DELIVERED"}:
+            return "EXECUTION & MONITORING"
+        elif s == "RESOLVED":
+            return "OUTCOME"
+        return "CASE"
+
+    @computed_field
+    @property
+    def stage_route(self) -> str:
+        s = (self.status or "CREATED").upper()
+        if s in {"NEW", "CREATED", "CASE_CREATED", "CASE_OVERVIEW"}:
+            return "caseOverview"
+        elif s in {"TRIAGED", "IMPACT_ANALYSIS_PENDING", "IMPACT_ANALYSIS_RUNNING", "IMPACT_ANALYSIS_FAILED"}:
+            return "impactAnalysis"
+        elif s in {"ANALYZED", "IMPACT_ANALYSIS_COMPLETED", "PRIORITY_PENDING", "AWAITING_CHECKPOINT_1"}:
+            return "checkpoint1"
+        elif s in {"PRIORITY_SAVED", "CHECKPOINT_APPROVED", "AGENT2_RUNNING", "AGENT2_COMPLETED", "AGENT2_FAILED"}:
+            return "constraints"
+        elif s in {"RECOVERY_PLANNING", "AGENT3_RUNNING", "AGENT3_COMPLETED", "AGENT3_FAILED"}:
+            return "recoveryPlanning"
+        elif s in {"AWAITING_CHECKPOINT_2", "DECISION_PENDING", "PLAN_MODIFIED", "PLAN_REJECTED"}:
+            return "decision"
+        elif s in {"PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "ON_TRACK", "AT_RISK", "ACTION_REQUIRED", "REPLANNING", "DELIVERED"}:
+            return "executionMonitoring"
+        elif s == "RESOLVED":
+            return "outcome"
+        return "caseOverview"
 
 
 class CaseCreateRequest(BaseModel):

@@ -1,0 +1,188 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.Decision"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+    <Page
+        id="decisionPage"
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+        <content>
+            <VBox class="sapCorporatePageBody">
+
+                <!-- 8-Stage Non-Navigational Workflow Header -->
+                <core:Fragment fragmentName="com.quads.supplychain.view.CaseWorkflowHeader" type="XML" />
+
+                <!-- Page Header: Title + Context Subtitle + Back Link -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
+                    <VBox>
+                        <Title text="FINAL DECISION" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Human governance authorization. The system recommends; the human supply chain manager decides." class="sapCorporatePageSubtitle" />
+                    </VBox>
+                    <Link
+                        text="&#x2190; Back to Recovery Planning"
+                        press=".onBackToRecoveryPlanning"
+                        class="sapBackLink" />
+                </HBox>
+
+                <!-- 1. Decision Governance Card -->
+                <VBox class="sapDecisionCard sapUiSmallMarginBottom">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionHeader">
+                        <VBox>
+                            <Title text="Governance Authorization Checkpoint" level="H2" class="sapSectionTitle" />
+                            <Text text="Review the candidate recovery plan before authorizing automated execution in S/4HANA &amp; TM." class="sapSectionSub" />
+                        </VBox>
+                        <HBox alignItems="Center">
+                            <ObjectStatus
+                                text="{= ${dec>/decisionState} === 'APPROVED' ? 'Approved (Locked)' : (${dec>/decisionState} === 'REJECTED' ? 'Rejected' : 'Decision Pending') }"
+                                state="{= ${dec>/decisionState} === 'APPROVED' ? 'Success' : (${dec>/decisionState} === 'REJECTED' ? 'Error' : 'Warning') }"
+                                inverted="true"
+                                class="bold" />
+                        </HBox>
+                    </HBox>
+
+                    <!-- Approved Success Banner -->
+                    <VBox
+                        visible="{= ${dec>/decisionState} === 'APPROVED' }"
+                        class="sapPhase1Banner sapUiSmallMarginTop sapUiSmallMarginBottom">
+                        <HBox alignItems="Center">
+                            <core:Icon src="sap-icon://sys-enter-2" class="sapBannerIcon success" />
+                            <VBox class="sapUiSmallMarginBegin" width="100%">
+                                <Title text="Plan {dec>/selectedPlan/plan_id} ({dec>/selectedPlan/version}) Approved" level="H3" class="sapBannerTitle" />
+                                <Text text="Plan baseline locked at {dec>/approvalTimestamp} by {dec>/approvalActor}. Ready for Stage 7: Autonomous Execution &amp; Monitoring." class="sapBannerText bold" />
+                                <HBox class="sapUiSmallMarginTop">
+                                    <Button
+                                        text="PROCEED TO EXECUTION &amp; MONITORING &#x2192;"
+                                        type="Emphasized"
+                                        icon="sap-icon://shipping-status"
+                                        press=".onProceedToExecution"
+                                        class="sapBtnPrimary" />
+                                </HBox>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Rejected Warning Banner -->
+                    <VBox
+                        visible="{= ${dec>/decisionState} === 'REJECTED' }"
+                        class="sapPhase1Banner sapUiSmallMarginTop sapUiSmallMarginBottom"
+                        style="border-left: 4px solid #BB0000; background: #FFF5F5;">
+                        <HBox alignItems="Center">
+                            <core:Icon src="sap-icon://decline" class="sapBannerIcon" color="#BB0000" />
+                            <VBox class="sapUiSmallMarginBegin" width="100%">
+                                <Title text="Recovery Plan Rejected" level="H3" class="sapBannerTitle textCritical" />
+                                <Text text="Rejection reason: '{dec>/rejectionReason}'. Recorded in governance audit trail." class="sapBannerText bold" />
+                                <HBox class="sapUiSmallMarginTop">
+                                    <Button
+                                        text="Return to Recovery Planning"
+                                        type="Default"
+                                        icon="sap-icon://refresh"
+                                        press=".onBackToRecoveryPlanning" />
+                                </HBox>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Selected Plan Summary Review Block -->
+                    <VBox class="sapUiSmallMarginTop">
+                        <Title text="Selected Recovery Candidate" level="H3" class="sapCardSectionTitle sapUiTinyMarginBottom" />
+                        
+                        <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginTop sapUiSmallMarginBottom">
+                            <VBox class="sapMetricBox">
+                                <Text text="Plan Identifier &amp; Version" class="sapContextItemLabel" />
+                                <Text text="{dec>/selectedPlan/plan_id} ({dec>/selectedPlan/version})" class="bold textLarge textPrimary" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Recovery Strategy" class="sapContextItemLabel" />
+                                <Text text="{dec>/selectedPlan/strategy}" class="bold textLarge textDark" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Fulfillment Quantity" class="sapContextItemLabel" />
+                                <Text text="{dec>/selectedPlan/recovered_quantity} Units" class="bold textLarge textDark" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Total Recovery Cost" class="sapContextItemLabel" />
+                                <Text text="${= ${dec>/selectedPlan/total_cost} ? ${dec>/selectedPlan/total_cost}.toLocaleString() : '0' }" class="bold textLarge textDark" />
+                            </VBox>
+                        </layout:Grid>
+
+                        <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginBottom">
+                            <VBox class="sapMetricBox">
+                                <Text text="Recovery Lead Time" class="sapContextItemLabel" />
+                                <Text text="{dec>/selectedPlan/recovery_days} Days" class="bold textMedium textDark" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Source Partner" class="sapContextItemLabel" />
+                                <Text text="{dec>/selectedPlan/source_name} ({dec>/selectedPlan/source_location})" class="bold textMedium textDark" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Transport Carrier" class="sapContextItemLabel" />
+                                <Text text="{dec>/selectedPlan/transport_name}" class="bold textMedium textDark" />
+                            </VBox>
+
+                            <VBox class="sapMetricBox">
+                                <Text text="Feasibility Status" class="sapContextItemLabel" />
+                                <ObjectStatus text="&#x2713; FEASIBLE &amp; VALIDATED" state="Success" class="bold textMedium" />
+                            </VBox>
+                        </layout:Grid>
+
+                        <!-- Decision Rationale Input (Enabled when PENDING) -->
+                        <VBox visible="{= ${dec>/decisionState} === 'PENDING' }" class="sapUiSmallMarginTop">
+                            <Label text="Manager Authorization Rationale / Decision Notes (Optional)" class="bold textSmall" />
+                            <TextArea
+                                id="taDecisionRationale"
+                                value="{dec>/plannerRationale}"
+                                rows="2"
+                                width="100%"
+                                placeholder="Enter operational rationale (e.g. Authorizing premium air freight to avert assembly line stoppage at Munich plant within 48h)..."
+                                class="sapUiSmallMarginBottom" />
+
+                            <!-- 3 Explicit Governance Decision Buttons: NO option preselected -->
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapDecisionActionsRow sapUiSmallMarginTop">
+                                <Button
+                                    text="Back to Recovery Planning"
+                                    type="Transparent"
+                                    icon="sap-icon://nav-back"
+                                    press=".onBackToRecoveryPlanning"
+                                    class="sapBtnSecondary" />
+
+                                <HBox alignItems="Center">
+                                    <Button
+                                        id="btnRejectPlan"
+                                        text="REJECT"
+                                        type="Reject"
+                                        icon="sap-icon://decline"
+                                        press=".onOpenRejectDialog"
+                                        class="sapUiSmallMarginEnd" />
+                                    <Button
+                                        id="btnModifyPlan"
+                                        text="MODIFY"
+                                        type="Default"
+                                        icon="sap-icon://edit"
+                                        press=".onOpenModifyDialog"
+                                        class="sapUiSmallMarginEnd" />
+                                    <Button
+                                        id="btnApprovePlan"
+                                        text="APPROVE"
+                                        type="Emphasized"
+                                        icon="sap-icon://accept"
+                                        press=".onApprovePlan"
+                                        class="sapBtnPrimary" />
+                                </HBox>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                </VBox>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

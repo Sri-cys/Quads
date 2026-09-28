@@ -1,0 +1,329 @@
+<mvc:View
+    controllerName="com.quads.supplychain.controller.Constraints"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    displayBlock="true">
+    <Page
+        id="constraintsPage"
+        showHeader="false"
+        enableScrolling="true"
+        class="sapCorporatePage">
+        <content>
+            <VBox class="sapCorporatePageBody">
+
+                <!-- 8-Stage Non-Navigational Workflow Header -->
+                <core:Fragment fragmentName="com.quads.supplychain.view.CaseWorkflowHeader" type="XML" />
+
+                <!-- Page Header: Title + Context Subtitle + Conditional Action Buttons -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
+                    <VBox>
+                        <Title text="CONSTRAINTS — AGENT 2" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Cost analysis, risk evaluation, contract clause validation, and hard/soft constraint boundary analysis." class="sapCorporatePageSubtitle" />
+                    </VBox>
+                    <HBox alignItems="Center">
+                        <Link
+                            text="&#x2190; Back to Priority"
+                            press=".onBackToPriority"
+                            class="sapBackLink sapUiMediumMarginEnd" />
+
+                        <!-- Running State Button -->
+                        <Button
+                            text="ANALYZING CONSTRAINTS..."
+                            type="Default"
+                            icon="sap-icon://synchronize"
+                            enabled="false"
+                            visible="{= ${con>/state} === 'RUNNING' }"
+                            class="sapUiTinyMarginEnd" />
+
+                        <!-- Failed State Button -->
+                        <Button
+                            text="RETRY"
+                            type="Reject"
+                            icon="sap-icon://refresh"
+                            press=".onRunConstraints"
+                            visible="{= ${con>/state} === 'FAILED' }"
+                            class="sapUiTinyMarginEnd" />
+
+                        <!-- Completed State Button -->
+                        <Button
+                            id="btnProceedRecoveryPlanningTop"
+                            text="PROCEED TO RECOVERY PLANNING &#x2192;"
+                            type="Emphasized"
+                            icon="sap-icon://navigation-right-arrow"
+                            press=".onProceedToRecoveryPlanning"
+                            visible="{= ${con>/state} === 'COMPLETED' }"
+                            class="sapBtnPrimary" />
+                    </HBox>
+                </HBox>
+
+                <!-- Failure Banner (Visible on Error) -->
+                <VBox
+                    visible="{= ${con>/state} === 'FAILED' }"
+                    class="sapChoiceCard sapUiSmallMarginBottom"
+                    style="border-left: 4px solid #BB0000; background: #FFF5F5;">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween">
+                        <HBox alignItems="Center">
+                            <core:Icon src="sap-icon://error" color="#BB0000" size="20px" class="sapUiSmallMarginEnd" />
+                            <VBox>
+                                <Title text="Constraint analysis failed" level="H3" class="bold textCritical" />
+                                <Text text="{con>/errorMessage}" class="textSmall textDark" />
+                            </VBox>
+                        </HBox>
+                        <Button text="Retry" type="Reject" press=".onRunConstraints" />
+                    </HBox>
+                </VBox>
+
+                <!-- Running Indicator Banner -->
+                <VBox
+                    visible="{= ${con>/state} === 'RUNNING' }"
+                    class="sapChoiceCard sapUiSmallMarginBottom"
+                    style="border-left: 4px solid #0A6ED1; background: #F0F7FF;">
+                    <HBox alignItems="Center">
+                        <BusyIndicator size="1.2rem" class="sapUiSmallMarginEnd" />
+                        <VBox>
+                            <Title text="Agent 2: Analyzing constraints..." level="H3" class="bold textPrimary" />
+                            <Text text="Evaluating procurement and freight surcharges, validating emergency sourcing clauses, and testing hard boundary capacity limits." class="textSmall textDark" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Content Area: Rendered when COMPLETED -->
+                <VBox visible="{= ${con>/state} === 'COMPLETED' }">
+
+                    <!-- Disruption & Priority Context Bar -->
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapCompactContextBar sapUiSmallMarginBottom">
+                        <HBox alignItems="Center" wrap="Wrap" class="sapCompactContextList">
+                            <VBox class="sapContextChip">
+                                <Text text="CASE" class="sapContextChipLabel" />
+                                <Text text="{con>/case_id}" class="sapContextChipVal" />
+                            </VBox>
+                            <VBox class="sapContextChip">
+                                <Text text="PRIORITY OBJECTIVE" class="sapContextChipLabel" />
+                                <Text text="{con>/priority}" class="sapContextChipVal textPrimary bold" />
+                            </VBox>
+                            <VBox class="sapContextChip">
+                                <Text text="AGENT 2 SCOPE" class="sapContextChipLabel" />
+                                <Text text="Constraint &amp; Feasibility Boundaries" class="sapContextChipVal" />
+                            </VBox>
+                            <VBox class="sapContextChip">
+                                <Text text="FINAL PLANS GENERATED?" class="sapContextChipLabel" />
+                                <Text text="NO (Agent 3 Responsibility)" class="sapContextChipVal textWarning bold" />
+                            </VBox>
+                        </HBox>
+                        <ObjectStatus text="Boundary Constraints Verified" state="Success" class="bold" />
+                    </HBox>
+
+                    <!-- 4 Analytical Pillars (Cost, Risk, Contract, Constraints) -->
+                    <layout:Grid
+                        defaultSpan="XL3 L3 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1"
+                        class="sapUiSmallMarginTop sapUiSmallMarginBottom">
+
+                        <!-- 1. COST ANALYSIS -->
+                        <VBox class="sapOverviewCard">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                                <Title text="COST ANALYSIS" level="H3" class="sapCardSectionTitle" />
+                                <core:Icon src="sap-icon://money-bills" class="sapMetricIcon info" />
+                            </HBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Procurement Cost" class="sapMetricLabel" />
+                                    <Text text="{con>/cost/procurement}" class="sapMetricVal bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Transport &amp; Freight" class="sapMetricLabel" />
+                                    <Text text="{con>/cost/freight}" class="sapMetricVal bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Premium Freight Option" class="sapMetricLabel" />
+                                    <Text text="{con>/cost/premiumFreight}" class="sapMetricVal textWarning bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Customer Penalty Exposure" class="sapMetricLabel" />
+                                    <Text text="{con>/cost/penalties}" class="sapMetricVal textCritical bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Total Projected Exposure" class="sapMetricLabel bold" />
+                                    <Text text="{con>/cost/totalExposure}" class="sapMetricVal bold textPrimary" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+
+                        <!-- 2. RISK ANALYSIS -->
+                        <VBox class="sapOverviewCard">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                                <Title text="RISK ANALYSIS" level="H3" class="sapCardSectionTitle" />
+                                <core:Icon src="sap-icon://shield" class="sapMetricIcon warning" />
+                            </HBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Supplier Delivery Risk" class="sapMetricLabel" />
+                                    <ObjectStatus text="{con>/risk/supplierRisk}" state="Success" class="bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Logistics &amp; Customs Risk" class="sapMetricLabel" />
+                                    <ObjectStatus text="{con>/risk/logisticsRisk}" state="Warning" class="bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Assembly Line Stoppage" class="sapMetricLabel" />
+                                    <ObjectStatus text="{con>/risk/productionRisk}" state="Error" class="bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Customer SLA Breach" class="sapMetricLabel" />
+                                    <ObjectStatus text="{con>/risk/customerRisk}" state="Error" class="bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Overall Recovery Risk" class="sapMetricLabel bold" />
+                                    <ObjectStatus text="{con>/risk/overallRisk}" state="Warning" class="bold" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+
+                        <!-- 3. CONTRACT & CLAUSE ANALYSIS -->
+                        <VBox class="sapOverviewCard">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                                <Title text="CONTRACT &amp; CLAUSES" level="H3" class="sapCardSectionTitle" />
+                                <core:Icon src="sap-icon://document-text" class="sapMetricIcon info" />
+                            </HBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Master Agreement" class="sapMetricLabel" />
+                                    <Text text="{con>/contract/agreementId}" class="sapMetricVal bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Emergency Sourcing Clause" class="sapMetricLabel" />
+                                    <Text text="{con>/contract/emergencyClause}" class="sapMetricVal textSuccess bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Cost Sharing / Rebate" class="sapMetricLabel" />
+                                    <Text text="{con>/contract/costSharing}" class="sapMetricVal bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Delay Penalty Terms" class="sapMetricLabel" />
+                                    <Text text="{con>/contract/penaltyTerms}" class="sapMetricVal bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Quality Restr. / Certs" class="sapMetricLabel" />
+                                    <Text text="{con>/contract/qualityTerms}" class="sapMetricVal textSuccess bold" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+
+                        <!-- 4. HARD & SOFT CONSTRAINTS -->
+                        <VBox class="sapOverviewCard">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                                <Title text="CONSTRAINT BOUNDARIES" level="H3" class="sapCardSectionTitle" />
+                                <core:Icon src="sap-icon://bullet-chart" class="sapMetricIcon info" />
+                            </HBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Min Safety Stock (Hard)" class="sapMetricLabel" />
+                                    <Text text="{con>/constraints/hardSafetyStock}" class="sapMetricVal bold textSuccess" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Max Lead Time (Hard)" class="sapMetricLabel" />
+                                    <Text text="{con>/constraints/hardMaxLeadTime}" class="sapMetricVal bold textSuccess" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Max Cost Cap (Hard)" class="sapMetricLabel" />
+                                    <Text text="{con>/constraints/hardMaxCost}" class="sapMetricVal bold textSuccess" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Preferred Carrier (Soft)" class="sapMetricLabel" />
+                                    <Text text="{con>/constraints/softCarrierPref}" class="sapMetricVal bold" />
+                                </HBox>
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween">
+                                    <Text text="Historical Preference (Soft)" class="sapMetricLabel" />
+                                    <Text text="{con>/constraints/softHistoricalPref}" class="sapMetricVal bold" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </layout:Grid>
+
+                    <!-- What-If Cost & Risk Sensitivity Callout -->
+                    <VBox class="sapVisualChainCard sapUiSmallMarginBottom">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapChainHeaderBar">
+                            <VBox>
+                                <Title text="WHAT-IF COST &amp; RISK SENSITIVITY ANALYSIS" level="H3" class="sapSectionTitleSmall" />
+                                <Text text="Agent 2 tested 4 boundary variations against human recovery priority '{con>/priority}'." class="sapSectionSubSmall" />
+                            </VBox>
+                            <Text text="Boundary Simulation" class="sapTagNeutral" />
+                        </HBox>
+
+                        <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginTop">
+                            <VBox class="sapMetricBox">
+                                <Text text="Expedited Air Corridor" class="sapContextItemLabel" />
+                                <Text text="Cost +$4,200 | Time -3d | Feasible" class="textDark bold" />
+                            </VBox>
+                            <VBox class="sapMetricBox">
+                                <Text text="Sister Plant Transfer" class="sapContextItemLabel" />
+                                <Text text="Cost +$1,800 | Time -2d | Feasible" class="textDark bold" />
+                            </VBox>
+                            <VBox class="sapMetricBox">
+                                <Text text="Split Sourcing (50/50)" class="sapContextItemLabel" />
+                                <Text text="Cost +$3,100 | Risk -40% | Feasible" class="textDark bold" />
+                            </VBox>
+                            <VBox class="sapMetricBox">
+                                <Text text="Standard Ocean Wait" class="sapContextItemLabel" />
+                                <Text text="Cost $0 | Line Halts | Hard Constraint Breach" class="textCritical bold" />
+                            </VBox>
+                        </layout:Grid>
+                    </VBox>
+
+                    <!-- Bottom Action Row -->
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageActionsRow sapUiSmallMarginTop">
+                        <Button
+                            text="Back to Priority"
+                            type="Transparent"
+                            icon="sap-icon://nav-back"
+                            press=".onBackToPriority"
+                            class="sapBtnSecondary" />
+                        <Button
+                            id="btnProceedRecoveryPlanningBottom"
+                            text="PROCEED TO RECOVERY PLANNING &#x2192;"
+                            icon="sap-icon://navigation-right-arrow"
+                            type="Emphasized"
+                            press=".onProceedToRecoveryPlanning"
+                            class="sapBtnPrimary" />
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

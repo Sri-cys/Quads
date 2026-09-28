@@ -143,6 +143,15 @@ class ExecutionProgress(BaseModel):
     ai_status: str = "FALLBACK"
     can_replan: bool = False
     can_resolve: bool = False
+    monitoring_status: str = "ON_TRACK"
+    action_required: bool = False
+    supplier_status: str = "CONFIRMED"
+    shipment_status: str = "IN_TRANSIT"
+    inventory_status: str = "PROTECTED"
+    production_status: str = "NORMAL"
+    customer_impact: str = "0 DELAYED ORDERS"
+    risk_status: str = "LOW"
+    last_updated: Optional[str] = None
 
 
 class ExecutePlanRequest(BaseModel):

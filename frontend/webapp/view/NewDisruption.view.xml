@@ -14,18 +14,18 @@
                 <!-- 1. Single Horizontal Header Row -->
                 <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow sapNewDisruptionHeaderRow">
                     <VBox class="sapPageHeaderLeftCol">
-                        <Title text="REGISTER NEW SUPPLY CHAIN DISRUPTION" level="H1" class="sapCorporatePageTitle sapNewDisruptionTitle" />
-                        <Text text="Capture a disruption signal to automatically assess operational impact." class="sapCorporatePageSubtitle sapNewDisruptionSubtitle" />
+                        <Title text="NEW DISRUPTION" level="H1" class="sapCorporatePageTitle sapNewDisruptionTitle" />
+                        <Text text="Create a new supply-chain disruption case for impact analysis and recovery planning." class="sapCorporatePageSubtitle sapNewDisruptionSubtitle" />
                     </VBox>
                     <Link
-                        text="&#x2190; Back to Cases"
-                        press=".onNavBack"
+                        text="&#x2190; Cancel &amp; Return to Cases"
+                        press=".onCancel"
                         class="sapBackLink sapNewDisruptionBackLink" />
                 </HBox>
 
                 <!-- 2. Compact Informational Area: Before You Begin (60–72px) -->
                 <HBox alignItems="Center" class="sapBeforeYouBeginCard">
-                    <core:Icon src="sap-icon://information" class="sapBeforeYouBeginIcon" />
+                    <core:Icon src="sap-icon://hint" class="sapBeforeYouBeginIcon" />
                     <VBox class="sapBeforeYouBeginTextCol">
                         <Text text="Before you begin" class="sapBeforeYouBeginTitle" />
                         <Text text="Submit a disruption signal to create a case, calculate deterministic impact, and prepare the case for human decision-making." class="sapBeforeYouBeginDesc" />
@@ -35,17 +35,17 @@
                 <!-- 3. Visual Workflow Indicator (Compact Horizontal) -->
                 <HBox alignItems="Center" justifyContent="Center" class="sapWorkflowIndicatorRow">
                     <HBox alignItems="Center" class="sapWorkflowStep active">
-                        <core:Icon src="sap-icon://circle-task" class="sapWorkflowDot active" />
+                        <Text text="" class="sapWorkflowDotCustom active" />
                         <Text text="01 Capture Signal" class="sapWorkflowText active" />
                     </HBox>
-                    <core:Icon src="sap-icon://navigation-right-arrow" class="sapWorkflowArrow" />
+                    <core:Icon src="sap-icon://slim-arrow-right" class="sapWorkflowArrow" />
                     <HBox alignItems="Center" class="sapWorkflowStep">
-                        <core:Icon src="sap-icon://circle-task-2" class="sapWorkflowDot inactive" />
+                        <Text text="" class="sapWorkflowDotCustom inactive" />
                         <Text text="02 Analyze Impact" class="sapWorkflowText inactive" />
                     </HBox>
-                    <core:Icon src="sap-icon://navigation-right-arrow" class="sapWorkflowArrow" />
+                    <core:Icon src="sap-icon://slim-arrow-right" class="sapWorkflowArrow" />
                     <HBox alignItems="Center" class="sapWorkflowStep">
-                        <core:Icon src="sap-icon://circle-task-2" class="sapWorkflowDot inactive" />
+                        <Text text="" class="sapWorkflowDotCustom inactive" />
                         <Text text="03 Human Checkpoint" class="sapWorkflowText inactive" />
                     </HBox>
                 </HBox>
@@ -193,22 +193,21 @@
                     <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapFormFooterInside">
                         <HBox alignItems="Center" class="sapFormFooterNoteRow">
                             <core:Icon src="sap-icon://sys-enter-2" class="sapFooterCheckIcon" />
-                            <Text text="Agent 1 will calculate deterministic supply-chain impact after submission." class="sapFooterNoteText" />
+                            <Text text="Case will be registered and prepared for impact analysis." class="sapFooterNoteText" />
                         </HBox>
 
                         <HBox alignItems="Center" class="sapFormBtnGroup">
                             <Button
-                                text="Reset"
-                                press=".onResetDefaults"
-                                class="sapBtnResetSecondary" />
+                                text="Cancel"
+                                press=".onCancel"
+                                class="sapBtnResetSecondary sapUiTinyMarginEnd" />
                             <Button
-                                id="btnAnalyzeDisruption"
-                                text="Analyze Disruption"
-                                icon="sap-icon://navigation-right-arrow"
-                                iconFirst="false"
+                                id="btnCreateDisruption"
+                                text="Create Disruption"
+                                icon="sap-icon://add"
                                 type="Emphasized"
-                                press=".onSubmitAndAnalyze"
-                                class="sapBtnAnalyzePrimary" />
+                                press=".onCreateDisruption"
+                                class="sapBtnPrimary" />
                         </HBox>
                     </HBox>
                 </VBox>

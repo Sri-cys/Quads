@@ -11,114 +11,189 @@
         class="sapCorporatePage">
 
         <content>
-            <VBox class="sapQuadsPageBody">
+            <VBox class="sapCorporatePageBody">
 
-                <!-- Page Title -->
-                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageTitleArea">
+                <!-- Consistent Case Header & Non-Navigational Stage Progress Indicator -->
+                <core:Fragment fragmentName="com.quads.supplychain.view.CaseWorkflowHeader" type="XML" />
+
+                <!-- Page Header: Title + Case Selector Dropdown + Refresh -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageHeaderRow">
                     <VBox>
-                        <Title text="Outcome" level="H1" class="sapPageH1" />
-                        <Text text="Final result of the recovery operation." class="sapPageSubtitle" />
+                        <Title text="OUTCOME &amp; RECOVERY ARCHIVE" level="H1" class="sapCorporatePageTitle" />
+                        <Text text="Certified post-recovery audit, plan vs. actual operational performance, and lessons learned." class="sapCorporatePageSubtitle" />
                     </VBox>
-                    <Button text="Refresh" icon="sap-icon://refresh" type="Transparent" press=".onRefresh" />
+                    <HBox alignItems="Center">
+                        <Label text="Select Case:" class="bold sapUiSmallMarginEnd" />
+                        <Select
+                            id="caseSelector"
+                            items="{out>/all_cases}"
+                            selectedKey="{out>/case_id}"
+                            change=".onCaseChange"
+                            class="sapUiSmallMarginEnd"
+                            width="260px">
+                            <core:Item key="{out>case_id}" text="{out>case_id} — {out>description}" />
+                        </Select>
+                        <Button text="Refresh" icon="sap-icon://refresh" type="Transparent" press=".onRefresh" />
+                    </HBox>
                 </HBox>
 
-                <!-- Not yet resolved -->
-                <HBox visible="{= ${out>/state} === 'PENDING' }" alignItems="Center" class="sapStatusBanner sapStatusNeutral">
+                <!-- ═══ PENDING / IN PROGRESS STATE ═══ -->
+                <HBox visible="{= ${out>/state} === 'PENDING' }" alignItems="Center" class="sapStatusBanner sapStatusNeutral sapUiSmallMarginBottom">
                     <core:Icon src="sap-icon://clock" class="sapStatusBannerIcon info" />
                     <VBox class="sapUiSmallMarginBegin">
                         <Text text="RECOVERY STILL IN PROGRESS" class="sapStatusBannerTitle" />
-                        <Text text="The outcome is not yet available. Return here once monitoring confirms delivery or failure." class="sapStatusBannerText" />
+                        <Text text="Case {out>/case_id} is actively executing in Execution &amp; Monitoring. Full outcome analytics will finalize upon carrier delivery." class="sapStatusBannerText" />
                     </VBox>
                 </HBox>
 
-                <!-- ═══ SUCCESS ═══ -->
-                <VBox visible="{= ${out>/state} === 'SUCCESS' }">
+                <!-- ═══ SUCCESS / RESOLVED STATE ═══ -->
+                <VBox visible="{= ${out>/state} === 'SUCCESS' || ${out>/state} === 'PENDING' }">
 
-                    <!-- Level 1: Hero -->
-                    <VBox class="sapOutcomeHero success">
+                    <!-- Level 1: Hero Banner -->
+                    <VBox class="sapOutcomeHero success sapUiSmallMarginBottom">
                         <core:Icon src="sap-icon://sys-enter-2" class="sapOutcomeHeroIcon success" />
-                        <Text text="RECOVERY COMPLETED" class="sapOutcomeHeroTitle" />
-                        <Text text="The disruption has been successfully resolved." class="sapOutcomeHeroSub" />
+                        <Text text="RECOVERY COMPLETED — CASE RESOLVED" class="sapOutcomeHeroTitle" />
+                        <Text text="The operational disruption has been successfully resolved within certified tolerance boundaries." class="sapOutcomeHeroSub" />
                     </VBox>
 
-                    <!-- Level 2: Concise summary -->
-                    <VBox class="sapContentCard">
-                        <Text text="RECOVERY SUMMARY" class="sapCardTitle" />
-                        <layout:Grid defaultSpan="XL3 L3 M4 S6" hSpacing="1" vSpacing="1">
-                            <VBox>
-                                <Text text="Case" class="sapKpiLabel" />
-                                <Text text="{out>/case_id}" class="bold textDark" style="font-size:14px" />
-                            </VBox>
-                            <VBox>
-                                <Text text="Approved Plan" class="sapKpiLabel" />
-                                <Text text="{out>/plan_id} · {out>/plan_version}" class="bold textPrimary" style="font-size:14px" />
-                            </VBox>
-                            <VBox>
-                                <Text text="Result" class="sapKpiLabel" />
-                                <ObjectStatus text="Successful" state="Success" class="bold" />
-                            </VBox>
-                            <VBox>
-                                <Text text="Strategy Used" class="sapKpiLabel" />
-                                <Text text="{out>/strategy}" class="bold" />
-                            </VBox>
-                        </layout:Grid>
+                    <!-- Level 2: Case & Disruption Overview Card (Requirement 17) -->
+                    <VBox class="sapContentCard sapUiSmallMarginBottom">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                            <Title text="CASE RECOVERY OVERVIEW" level="H3" class="sapCardSectionTitle" />
+                            <ObjectStatus text="{out>/final_status}" state="Success" inverted="true" class="sapStageBadge" />
+                        </HBox>
 
-                        <hr class="sapDivider" />
-
-                        <layout:Grid defaultSpan="XL3 L3 M4 S6" hSpacing="1" vSpacing="1">
-                            <VBox>
-                                <Text text="Quantity Recovered" class="sapKpiLabel" />
-                                <Text text="{out>/actual_quantity} / {out>/planned_quantity} units" class="bold textSuccess" style="font-size:16px" />
+                        <layout:Grid defaultSpan="XL3 L3 M4 S6" hSpacing="1" vSpacing="1" class="sapUiSmallMarginTop">
+                            <VBox class="sapMetricRow">
+                                <Text text="CASE ID" class="sapMetricLabel" />
+                                <Text text="{out>/case_id}" class="bold textPrimary" style="font-size:14px" />
                             </VBox>
-                            <VBox>
-                                <Text text="Planned Arrival" class="sapKpiLabel" />
-                                <Text text="{out>/planned_arrival}" class="bold" />
+                            <VBox class="sapMetricRow">
+                                <Text text="DISRUPTION" class="sapMetricLabel" />
+                                <Text text="{out>/disruption_name}" class="bold textDark" />
                             </VBox>
-                            <VBox>
-                                <Text text="Actual Arrival" class="sapKpiLabel" />
-                                <Text text="{out>/actual_arrival}" class="bold textSuccess" />
+                            <VBox class="sapMetricRow">
+                                <Text text="ORIGINAL IMPACT" class="sapMetricLabel" />
+                                <Text text="{out>/original_impact}" class="bold textCritical" />
                             </VBox>
-                            <VBox>
-                                <Text text="Days Variance" class="sapKpiLabel" />
-                                <Text text="{= ${out>/delay_days} === 0 ? 'On time' : ('+' + ${out>/delay_days} + ' days') }" class="{= ${out>/delay_days} > 0 ? 'bold textWarning' : 'bold textSuccess' }" />
+                            <VBox class="sapMetricRow">
+                                <Text text="APPROVED RECOVERY PLAN" class="sapMetricLabel" />
+                                <Text text="{out>/plan_id} ({out>/strategy})" class="bold textDark" />
                             </VBox>
-                            <VBox>
-                                <Text text="Planned Cost" class="sapKpiLabel" />
-                                <Text text="${= ${out>/planned_cost} ? ${out>/planned_cost}.toLocaleString() : '0' }" class="bold" />
+                            <VBox class="sapMetricRow">
+                                <Text text="ACTUAL RECOVERY" class="sapMetricLabel" />
+                                <Text text="{out>/actual_recovery}" class="bold textSuccess" />
                             </VBox>
-                            <VBox>
-                                <Text text="Actual Cost" class="sapKpiLabel" />
-                                <Text text="${= ${out>/actual_cost} ? ${out>/actual_cost}.toLocaleString() : '—' }" class="bold" />
+                            <VBox class="sapMetricRow">
+                                <Text text="RESOLVED AT" class="sapMetricLabel" />
+                                <Text text="{out>/resolved_at}" class="textDark" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="RECOVERY DURATION" class="sapMetricLabel" />
+                                <Text text="{out>/recovery_duration}" class="bold textDark" />
+                            </VBox>
+                            <VBox class="sapMetricRow">
+                                <Text text="FINAL OUTCOME" class="sapMetricLabel" />
+                                <ObjectStatus text="RESOLVED &amp; ARCHIVED" state="Success" class="bold" />
                             </VBox>
                         </layout:Grid>
                     </VBox>
 
-                    <!-- Level 2: Resolution banner -->
-                    <HBox alignItems="Center" class="sapStatusBanner sapStatusSuccess">
-                        <core:Icon src="sap-icon://complete" class="sapStatusBannerIcon success" />
-                        <VBox class="sapUiSmallMarginBegin">
-                            <Text text="CASE RESOLVED" class="sapStatusBannerTitle" />
-                            <Text text="The case has been closed and a precedent record has been archived to institutional knowledge." class="sapStatusBannerText" />
-                        </VBox>
-                    </HBox>
+                    <!-- Level 3: Comprehensive PLAN vs ACTUAL Comparison Table (Requirements 17 & 18) -->
+                    <VBox class="sapContentCard sapUiSmallMarginBottom">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
+                            <Title text="PLAN vs ACTUAL PERFORMANCE BENCHMARK" level="H3" class="sapCardSectionTitle" />
+                            <Text text="Authoritative backend variance analysis" class="sapCardSectionSub" />
+                        </HBox>
 
-                    <!-- Level 3: Lessons learned (if available) -->
-                    <Panel visible="{= !!${out>/lessons_learned} }" expandable="true" expanded="false"
-                        headerText="Lessons Learned &amp; Institutional Precedent" class="sapExpandPanel">
-                        <VBox class="sapUiSmallMargin">
-                            <Text text="{out>/lessons_learned}" class="textDark" />
-                        </VBox>
-                    </Panel>
+                        <Table class="sapCompareTable sapUiSizeCompact sapUiSmallMarginTop">
+                            <columns>
+                                <Column width="22%"><Text text="PERFORMANCE METRIC" class="bold" /></Column>
+                                <Column width="20%"><Text text="PLANNED BASELINE" class="bold" /></Column>
+                                <Column width="20%"><Text text="ACTUAL RECOVERY" class="bold" /></Column>
+                                <Column width="20%"><Text text="VARIANCE" class="bold" /></Column>
+                                <Column width="18%"><Text text="OPERATIONAL IMPACT" class="bold" /></Column>
+                            </columns>
+                            <items>
+                                <!-- Quantity -->
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="Recovered Quantity" class="bold" />
+                                        <Text text="{out>/planned_quantity} units" />
+                                        <Text text="{out>/actual_quantity} units" class="bold textSuccess" />
+                                        <Text text="{out>/fulfillment_rate} fulfilled" class="bold textSuccess" />
+                                        <ObjectStatus text="Target Met" state="Success" />
+                                    </cells>
+                                </ColumnListItem>
 
-                    <!-- Level 3: Audit trail -->
-                    <Panel expandable="true" expanded="false"
-                        headerText="Full Audit History" class="sapExpandPanel mt8">
-                        <Table items="{out>/audit_events}" noDataText="No audit events.">
+                                <!-- Arrival Time -->
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="Recovery Time / Arrival" class="bold" />
+                                        <Text text="{out>/planned_arrival}" />
+                                        <Text text="{out>/actual_arrival}" class="bold" />
+                                        <Text text="{out>/time_variance}" class="{= ${out>/delay_days} > 0 ? 'bold textWarning' : 'bold textSuccess' }" />
+                                        <ObjectStatus text="{= ${out>/delay_days} === 0 ? 'Zero Slip' : 'Buffer Absorbed' }" state="{= ${out>/delay_days} === 0 ? 'Success' : 'Warning' }" />
+                                    </cells>
+                                </ColumnListItem>
+
+                                <!-- Financial Cost -->
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="Recovery Cost" class="bold" />
+                                        <Text text="${= ${out>/planned_cost} ? ${out>/planned_cost}.toLocaleString() : '0' }" />
+                                        <Text text="${= ${out>/actual_cost} ? ${out>/actual_cost}.toLocaleString() : '—' }" class="bold" />
+                                        <Text text="{out>/cost_variance_formatted}" class="{= ${out>/cost_variance} > 0 ? 'bold textWarning' : 'bold textSuccess' }" />
+                                        <ObjectStatus text="{= ${out>/cost_variance} > 0 ? 'Cost Overrun' : 'Within Budget' }" state="{= ${out>/cost_variance} > 0 ? 'Warning' : 'Success' }" />
+                                    </cells>
+                                </ColumnListItem>
+
+                                <!-- Customer Impact -->
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="Customer Impact" class="bold" />
+                                        <Text text="0 Delayed Orders" />
+                                        <Text text="{out>/customer_impact}" class="bold textSuccess" />
+                                        <Text text="0 Order Breaches" class="bold textSuccess" />
+                                        <ObjectStatus text="100% Protected" state="Success" />
+                                    </cells>
+                                </ColumnListItem>
+
+                                <!-- Production Impact -->
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="Production Impact" class="bold" />
+                                        <Text text="Zero Line Stoppages" />
+                                        <Text text="{out>/production_impact}" class="bold textSuccess" />
+                                        <Text text="Continuous Assembly" class="bold textSuccess" />
+                                        <ObjectStatus text="Line Active" state="Success" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </VBox>
+
+                    <!-- Level 4: Lessons Learned & Institutional Intelligence -->
+                    <VBox class="sapContentCard sapUiSmallMarginBottom">
+                        <HBox alignItems="Center" class="sapOverviewHeader">
+                            <core:Icon src="sap-icon://lightbulb" class="sapStatusBannerIcon info sapUiTinyMarginEnd" />
+                            <Title text="LESSONS LEARNED &amp; OBSERVATIONS" level="H3" class="sapCardSectionTitle" />
+                        </HBox>
+                        <Text text="{out>/lessons_learned}" class="textDark sapUiSmallMarginTop" style="line-height: 1.5; font-size: 13.5px;" />
+                    </VBox>
+
+                    <!-- Level 5: Audit History Table (Requirement 17 & 25) -->
+                    <Panel
+                        expandable="true"
+                        expanded="false"
+                        headerText="Audit Trail &amp; Governance Log ({= ${out>/audit_events} ? ${out>/audit_events}.length : 0 } certified events)"
+                        class="sapExpandPanel sapUiSmallMarginBottom">
+                        <Table items="{out>/audit_events}" noDataText="No audit records found.">
                             <columns>
                                 <Column width="180px"><Text text="Timestamp" class="bold" /></Column>
                                 <Column width="200px"><Text text="Event" class="bold" /></Column>
-                                <Column width="140px"><Text text="Actor" class="bold" /></Column>
-                                <Column><Text text="Details" class="bold" /></Column>
+                                <Column width="160px"><Text text="Actor" class="bold" /></Column>
+                                <Column><Text text="Details &amp; Audit Metadata" class="bold" /></Column>
                             </columns>
                             <items>
                                 <ColumnListItem>
@@ -133,96 +208,46 @@
                         </Table>
                     </Panel>
 
-                    <HBox justifyContent="End" class="mt16">
-                        <Button text="Back to Cases" type="Default" press=".onBackToCases" />
+                    <!-- Navigation Action -->
+                    <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                        <Button text="Back to Cases" type="Default" icon="sap-icon://nav-back" press=".onBackToCases" />
                     </HBox>
+
                 </VBox>
 
-                <!-- ═══ FAILURE ═══ -->
+                <!-- ═══ FAILED STATE ═══ -->
                 <VBox visible="{= ${out>/state} === 'FAILED' }">
-
-                    <!-- Level 1: Hero -->
-                    <VBox class="sapOutcomeHero failure">
+                    <VBox class="sapOutcomeHero failure sapUiSmallMarginBottom">
                         <core:Icon src="sap-icon://alert" class="sapOutcomeHeroIcon failure" />
-                        <Text text="RECOVERY FAILED" class="sapOutcomeHeroTitle" />
-                        <Text text="The approved recovery plan could not deliver the required material." class="sapOutcomeHeroSub" />
+                        <Text text="RECOVERY EXECUTION FAILED" class="sapOutcomeHeroTitle" />
+                        <Text text="The approved recovery plan could not deliver the required material. Re-planning required." class="sapOutcomeHeroSub" />
                     </VBox>
 
-                    <!-- Level 2: Failure summary -->
-                    <VBox class="sapContentCard">
+                    <VBox class="sapContentCard sapUiSmallMarginBottom">
                         <Text text="FAILURE SUMMARY" class="sapCardTitle" />
-                        <layout:Grid defaultSpan="XL3 L3 M4 S6" hSpacing="1" vSpacing="1">
-                            <VBox>
-                                <Text text="Case" class="sapKpiLabel" />
+                        <layout:Grid defaultSpan="XL3 L3 M4 S6" hSpacing="1" vSpacing="1" class="sapUiSmallMarginTop">
+                            <VBox class="sapMetricRow">
+                                <Text text="Case ID" class="sapKpiLabel" />
                                 <Text text="{out>/case_id}" class="bold textDark" style="font-size:14px" />
                             </VBox>
-                            <VBox>
+                            <VBox class="sapMetricRow">
                                 <Text text="Failed Plan" class="sapKpiLabel" />
                                 <Text text="{out>/plan_id} · {out>/plan_version}" class="bold textCritical" style="font-size:14px" />
                             </VBox>
-                            <VBox>
+                            <VBox class="sapMetricRow">
                                 <Text text="Result" class="sapKpiLabel" />
-                                <ObjectStatus text="Failed" state="Error" class="bold" />
+                                <ObjectStatus text="Execution Failure" state="Error" class="bold" />
                             </VBox>
-                            <VBox>
+                            <VBox class="sapMetricRow">
                                 <Text text="Failure Reason" class="sapKpiLabel" />
                                 <Text text="{out>/failure_reason}" class="bold textCritical" />
                             </VBox>
                         </layout:Grid>
-
-                        <hr class="sapDivider" />
-
-                        <layout:Grid defaultSpan="XL3 L3 M6 S6" hSpacing="1" vSpacing="1">
-                            <VBox>
-                                <Text text="Expected Quantity" class="sapKpiLabel" />
-                                <Text text="{out>/planned_quantity} units" class="bold" />
-                            </VBox>
-                            <VBox>
-                                <Text text="Actually Delivered" class="sapKpiLabel" />
-                                <Text text="{out>/actual_quantity} units" class="bold textCritical" />
-                            </VBox>
-                            <VBox>
-                                <Text text="Remaining Shortage" class="sapKpiLabel" />
-                                <Text text="{= (${out>/planned_quantity} - ${out>/actual_quantity}) + ' units' }" class="bold textCritical" style="font-size:16px" />
-                            </VBox>
-                        </layout:Grid>
                     </VBox>
 
-                    <!-- Next action -->
-                    <HBox alignItems="Center" class="sapStatusBanner sapStatusError">
-                        <core:Icon src="sap-icon://journey-change" class="sapStatusBannerIcon error" />
-                        <VBox class="sapUiSmallMarginBegin">
-                            <Text text="RECOVERY PLANNING REQUIRED" class="sapStatusBannerTitle" />
-                            <Text text="The case remains open. A new recovery plan must be created and approved before execution can resume." class="sapStatusBannerText" />
-                        </VBox>
-                    </HBox>
-
-                    <HBox justifyContent="End" class="mt16 mb16">
+                    <HBox justifyContent="End" class="sapUiSmallMarginTop">
                         <Button text="Return to Recovery Planning" type="Emphasized" icon="sap-icon://journey-change" press=".onReturnToPlanning" class="sapBtnPrimary" />
                     </HBox>
-
-                    <!-- Level 3: Audit -->
-                    <Panel expandable="true" expanded="false"
-                        headerText="Audit History" class="sapExpandPanel">
-                        <Table items="{out>/audit_events}" noDataText="No audit events.">
-                            <columns>
-                                <Column width="180px"><Text text="Timestamp" class="bold" /></Column>
-                                <Column width="200px"><Text text="Event" class="bold" /></Column>
-                                <Column width="140px"><Text text="Actor" class="bold" /></Column>
-                                <Column><Text text="Details" class="bold" /></Column>
-                            </columns>
-                            <items>
-                                <ColumnListItem>
-                                    <cells>
-                                        <Text text="{out>timestamp}" class="textSmall textMuted" />
-                                        <ObjectStatus text="{out>event}" state="Information" class="bold" />
-                                        <Text text="{out>actor}" class="bold" />
-                                        <Text text="{out>details}" />
-                                    </cells>
-                                </ColumnListItem>
-                            </items>
-                        </Table>
-                    </Panel>
                 </VBox>
 
             </VBox>

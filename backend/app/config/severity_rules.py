@@ -22,4 +22,4 @@ SEVERITY_MEDIUM: str = "MEDIUM"
 SEVERITY_LOW: str = "LOW"
 
 # Valid Recovery Priority Decisions at Checkpoint 1
-VALID_CHECKPOINT_PRIORITIES: set[str] = {"TIME", "COST", "RISK", "BALANCED"}
+VALID_CHECKPOINT_PRIORITIES: set[str] = {"TIME", "COST", "STOCK", "RISK", "CUSTOMER", "BALANCED"}

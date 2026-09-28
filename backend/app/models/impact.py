@@ -20,16 +20,16 @@ class DownstreamImpact(BaseModel):
 class ImpactAnalysis(BaseModel):
     case_id: str
     severity: str
-    available_inventory: float
-    reserved_quantity: float
-    total_inventory: float
+    available_inventory: Optional[float] = None
+    reserved_quantity: Optional[float] = None
+    total_inventory: Optional[float] = None
     daily_demand: Optional[float] = None
     demand_status: str = Field(default="AVAILABLE", description="AVAILABLE, ZERO_DEMAND, or DATA_UNAVAILABLE")
     days_of_cover: Optional[float] = None
     stockout_date: Optional[str] = None
-    safety_stock_quantity: float = 0.0
+    safety_stock_quantity: Optional[float] = None
     safety_stock_breach: bool = False
-    supply_gap_quantity: float = 0.0
+    supply_gap_quantity: Optional[float] = None
     downstream_impact: DownstreamImpact
     calculated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     ai_explanation: Optional[str] = None

@@ -212,8 +212,12 @@ class RecoveryService:
             weights = {"time": 0.50, "cost": 0.15, "risk": 0.15, "fulfillment": 0.20}
         elif p_upper == "COST":
             weights = {"time": 0.15, "cost": 0.50, "risk": 0.15, "fulfillment": 0.20}
+        elif p_upper == "STOCK":
+            weights = {"time": 0.15, "cost": 0.15, "risk": 0.20, "fulfillment": 0.50}
         elif p_upper == "RISK":
             weights = {"time": 0.15, "cost": 0.15, "risk": 0.50, "fulfillment": 0.20}
+        elif p_upper == "CUSTOMER":
+            weights = {"time": 0.40, "cost": 0.10, "risk": 0.15, "fulfillment": 0.35}
         else:  # BALANCED
             weights = {"time": 0.25, "cost": 0.25, "risk": 0.25, "fulfillment": 0.25}
 
@@ -267,8 +271,12 @@ class RecoveryService:
                 factors.append(f"Heavily prioritized delivery speed (50% weight): {p.recovery_days} days lead time")
             elif p_upper == "COST":
                 factors.append(f"Heavily prioritized total recovery cost (50% weight): ${p.total_cost:,.2f}")
+            elif p_upper == "STOCK":
+                factors.append(f"Heavily prioritized inventory protection and replenishment (50% weight): {p.fulfillment_pct:.0f}% fulfillment")
             elif p_upper == "RISK":
                 factors.append(f"Heavily prioritized operational safety & reliability (50% weight): {p.operational_risk} risk")
+            elif p_upper == "CUSTOMER":
+                factors.append("Heavily prioritized customer delivery commitments and rapid replenishment")
             else:
                 factors.append("Balanced weighting across lead time, financial cost, operational risk, and quantity fulfillment")
 

@@ -81,42 +81,48 @@
                 <!-- ═══ LEVEL 2: Planned vs Actual comparison ═══ -->
                 <VBox class="sapContentCard">
                     <Text text="PLANNED vs ACTUAL" class="sapCardTitle" />
-                    <table class="sapCompareTable" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>PLANNED</th>
-                                <th>ACTUAL / CURRENT</th>
-                                <th>STATUS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="colLabel">Quantity</td>
-                                <td class="colPlanned">{mon>/planned_quantity} units</td>
-                                <td class="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'colActual ontrack' : (${mon>/actual_quantity} > 0 ? 'colActual delayed' : 'colActual') }">{= ${mon>/actual_quantity} > 0 ? ${mon>/actual_quantity} + ' units' : '—' }</td>
-                                <td class="colStatus"><ObjectStatus text="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'Fulfilled' : (${mon>/actual_quantity} > 0 ? 'Partial' : 'Pending') }" state="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'Success' : (${mon>/actual_quantity} > 0 ? 'Warning' : 'None') }" /></td>
-                            </tr>
-                            <tr>
-                                <td class="colLabel">Arrival</td>
-                                <td class="colPlanned">{mon>/planned_arrival}</td>
-                                <td class="{= ${mon>/delay_days} > 2 ? 'colActual failed' : (${mon>/delay_days} > 0 ? 'colActual delayed' : 'colActual ontrack') }">{= ${mon>/current_eta} || '—' }</td>
-                                <td class="colStatus"><ObjectStatus text="{= ${mon>/delay_days} === 0 ? 'On Schedule' : ('+' + ${mon>/delay_days} + 'd late') }" state="{= ${mon>/delay_days} > 2 ? 'Error' : (${mon>/delay_days} > 0 ? 'Warning' : 'Success') }" /></td>
-                            </tr>
-                            <tr>
-                                <td class="colLabel">Cost</td>
-                                <td class="colPlanned">${= ${mon>/planned_cost} ? ${mon>/planned_cost}.toLocaleString() : '0' }</td>
-                                <td class="colActual">${= ${mon>/actual_cost} ? ${mon>/actual_cost}.toLocaleString() : '—' }</td>
-                                <td class="colStatus"><ObjectStatus text="{= ${mon>/cost_variance} > 0 ? '+$' + ${mon>/cost_variance} + ' overrun' : 'Nominal' }" state="{= ${mon>/cost_variance} > 0 ? 'Warning' : 'Success' }" /></td>
-                            </tr>
-                            <tr>
-                                <td class="colLabel">Status</td>
-                                <td class="colPlanned">{mon>/planned_status}</td>
-                                <td class="colActual ontrack">{mon>/current_status}</td>
-                                <td class="colStatus"><ObjectStatus text="{mon>/track_status_display}" state="{mon>/track_state}" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <Table class="sapCompareTable sapUiSizeCompact">
+                        <columns>
+                            <Column width="25%"><Text text="" /></Column>
+                            <Column width="25%"><Text text="PLANNED" class="bold" /></Column>
+                            <Column width="25%"><Text text="ACTUAL / CURRENT" class="bold" /></Column>
+                            <Column width="25%"><Text text="STATUS" class="bold" /></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="Quantity" class="colLabel" />
+                                    <Text text="{= ${mon>/planned_quantity} + ' units' }" class="colPlanned" />
+                                    <Text text="{= ${mon>/actual_quantity} > 0 ? ${mon>/actual_quantity} + ' units' : '—' }" class="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'colActual ontrack' : (${mon>/actual_quantity} > 0 ? 'colActual delayed' : 'colActual') }" />
+                                    <ObjectStatus text="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'Fulfilled' : (${mon>/actual_quantity} > 0 ? 'Partial' : 'Pending') }" state="{= ${mon>/actual_quantity} >= ${mon>/planned_quantity} ? 'Success' : (${mon>/actual_quantity} > 0 ? 'Warning' : 'None') }" />
+                                </cells>
+                            </ColumnListItem>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="Arrival" class="colLabel" />
+                                    <Text text="{mon>/planned_arrival}" class="colPlanned" />
+                                    <Text text="{= ${mon>/current_eta} || '—' }" class="{= ${mon>/delay_days} > 2 ? 'colActual failed' : (${mon>/delay_days} > 0 ? 'colActual delayed' : 'colActual ontrack') }" />
+                                    <ObjectStatus text="{= ${mon>/delay_days} === 0 ? 'On Schedule' : ('+' + ${mon>/delay_days} + 'd late') }" state="{= ${mon>/delay_days} > 2 ? 'Error' : (${mon>/delay_days} > 0 ? 'Warning' : 'Success') }" />
+                                </cells>
+                            </ColumnListItem>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="Cost" class="colLabel" />
+                                    <Text text="{= '$' + (${mon>/planned_cost} || 0) }" class="colPlanned" />
+                                    <Text text="{= ${mon>/actual_cost} ? '$' + ${mon>/actual_cost} : '—' }" class="colActual" />
+                                    <ObjectStatus text="{= ${mon>/cost_variance} > 0 ? '+$' + ${mon>/cost_variance} + ' overrun' : 'Nominal' }" state="{= ${mon>/cost_variance} > 0 ? 'Warning' : 'Success' }" />
+                                </cells>
+                            </ColumnListItem>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="Status" class="colLabel" />
+                                    <Text text="{mon>/planned_status}" class="colPlanned" />
+                                    <Text text="{mon>/current_status}" class="colActual ontrack" />
+                                    <ObjectStatus text="{mon>/track_status_display}" state="{mon>/track_state}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
                 </VBox>
 
                 <!-- ═══ LEVEL 2: Telemetry Timeline ═══ -->
@@ -129,7 +135,7 @@
                                     <core:Icon src="{= ${mon>status} === 'DELIVERED' ? 'sap-icon://accept' : (${mon>status} === 'FAILED' ? 'sap-icon://sys-cancel' : (${mon>status} === 'DELAYED' ? 'sap-icon://history' : 'sap-icon://shipping-status')) }" />
                                 </VBox>
                                 <VBox class="sapTimelineContent sapUiSmallMarginBegin">
-                                    <Text text="{= ${mon>status}.replace(/_/g,' ') }" class="sapTimelineStatus" />
+                                    <Text text="{mon>status}" class="sapTimelineStatus" />
                                     <Text text="{mon>timestamp}" class="sapTimelineTime" />
                                     <Text text="{mon>description}" class="sapTimelineDesc" />
                                     <Text visible="{= !!${mon>location} }" text="{mon>location}" class="sapTimelineDesc textMuted" />
