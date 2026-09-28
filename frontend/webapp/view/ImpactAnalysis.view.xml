@@ -9,9 +9,19 @@
         id="impactPage"
         showHeader="false"
         enableScrolling="true"
-        class="sapCorporatePage">
+        class="quadsPageBg">
         <content>
-            <VBox class="sapCorporatePageBody">
+            <VBox class="quadsPagePadding">
+                
+                <!-- BREADCRUMBS -->
+                <HBox alignItems="Center" class="quadsBreadcrumbRow sapUiSmallMarginBottom">
+                    <Link text="&#x2190; Back to Cases" press=".onNavBackToCaseOverview" class="quadsBreadcrumbLink" />
+                    <Text text="&#160;/&#160;" class="quadsBreadcrumbText" />
+                    <Text text="{impact>/case/case_id}" class="quadsBreadcrumbLink" />
+                    <Text text="&#160;/&#160;" class="quadsBreadcrumbText" />
+                    <Text text="Impact Analysis" class="quadsBreadcrumbActive" />
+                </HBox>
+
 
                 <!-- 8-Stage Non-Navigational Workflow Header -->
                 <core:Fragment fragmentName="com.quads.supplychain.view.CaseWorkflowHeader" type="XML" />
@@ -55,26 +65,215 @@
                             press=".onProceedPriority"
                             visible="{= ${impact>/analysisState} === 'COMPLETED' }"
                             class="sapBtnPrimary" />
+=======
+                <!-- HEADER CARD -->
+                <HBox class="quadsWhiteCard quadsHeaderCard sapUiSmallMarginBottom" alignItems="Center" justifyContent="SpaceBetween">
+                    <!-- Left Side -->
+                    <HBox alignItems="Center" class="quadsHeaderLeft">
+                        <VBox class="quadsHeaderWarningIconBox sapUiSmallMarginEnd" justifyContent="Center" alignItems="Center">
+                            <core:Icon src="sap-icon://alert" class="quadsHeaderWarningIcon" />
+                        </VBox>
+                        <VBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                <Title text="{impact>/case/case_id}" class="quadsHeaderTitle sapUiSmallMarginEnd" />
+                                <ObjectStatus text="{impact>/deterministic/severity} Impact" class="quadsHeaderBadgeCritical" />
+                            </HBox>
+                            <Text text="{impact>/case/disruption_name}" class="quadsHeaderSubtitle" />
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Right Side: Grid of Metadata -->
+                    <HBox alignItems="Center" class="quadsHeaderRight" renderType="Bare">
+                        <VBox class="quadsHeaderMetaBox" renderType="Bare">
+                            <Text text="Supplier" class="quadsMetaLabel" wrapping="false" />
+                            <Text text="{impact>/supplier/name}" class="quadsMetaValueMain" />
+                            <Text text="({impact>/supplier/id})" class="quadsMetaValueSub" />
+                        </VBox>
+                        <VBox class="quadsHeaderMetaDivider" />
+                        <VBox class="quadsHeaderMetaBox">
+                            <Text text="Material" class="quadsMetaLabel" />
+                            <Text text="{impact>/case/material_id}" class="quadsMetaValueMain" />
+                            <Text text="(Hydraulic Pump)" class="quadsMetaValueSub" />
+                        </VBox>
+                        <VBox class="quadsHeaderMetaDivider" />
+                        <VBox class="quadsHeaderMetaBox">
+                            <Text text="Plant" class="quadsMetaLabel" />
+                            <Text text="{impact>/production/plantId}" class="quadsMetaValueMain" />
+                            <Text text="({impact>/production/plantName})" class="quadsMetaValueSub" />
+                        </VBox>
+                        <VBox class="quadsHeaderMetaDivider" />
+                        <VBox class="quadsHeaderMetaBox">
+                            <Text text="Disruption Type" class="quadsMetaLabel" />
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://shipping-status" class="quadsMetaIcon sapUiTinyMarginEnd" />
+                                <Text text="{impact>/case/disruption_type}" class="quadsMetaValueMain" />
+                            </HBox>
+                        </VBox>
+                        <VBox class="quadsHeaderMetaDivider" />
+                        <VBox class="quadsHeaderMetaBox">
+                            <Text text="Created On" class="quadsMetaLabel" />
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://calendar" class="quadsMetaIcon sapUiTinyMarginEnd" />
+                                <VBox>
+                                    <Text text="27 Sep 2026" class="quadsMetaValueMain" />
+                                    <Text text="10:24 AM" class="quadsMetaValueSub" />
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                        <VBox class="quadsHeaderMetaDivider" />
+                        <VBox class="quadsHeaderMetaBox">
+                            <Text text="Current Status" class="quadsMetaLabel" />
+                            <ObjectStatus text="Impact Analysis" class="quadsStatusBadgeWarning sapUiTinyMarginBottom" />
+                            <HBox alignItems="Center" renderType="Bare">
+                                <core:Icon src="sap-icon://sys-enter-2" class="quadsStatusIconSuccess sapUiTinyMarginEnd" />
+                                <Text text="Completed" class="quadsStatusText" wrapping="false" />
+                            </HBox>
+                        </VBox>
+>>>>>>> 23a7683 (Saran altered)
                     </HBox>
                 </HBox>
 
-                <!-- Failure Banner (Visible on Error) -->
-                <VBox
-                    visible="{= ${impact>/analysisState} === 'FAILED' }"
-                    class="sapChoiceCard sapUiSmallMarginBottom"
-                    style="border-left: 4px solid #BB0000; background: #FFF5F5;">
-                    <HBox alignItems="Center" justifyContent="SpaceBetween">
-                        <HBox alignItems="Center">
-                            <core:Icon src="sap-icon://error" color="#BB0000" size="20px" class="sapUiSmallMarginEnd" />
-                            <VBox>
-                                <Title text="Impact Analysis Failed" level="H3" class="bold textCritical" />
-                                <Text text="{impact>/errorMessage}" class="textSmall textDark" />
+                <!-- TOP KPI CARDS (4 COLUMNS) -->
+                <HBox class="quadsImpact4Grid sapUiSmallMarginBottom">
+                    <!-- Days of Cover -->
+                    <HBox class="quadsWhiteCard quadsKpiCard" alignItems="Center" justifyContent="SpaceBetween" renderType="Bare">
+                        <HBox alignItems="Center" class="quadsKpiLeft" renderType="Bare">
+                            <VBox class="quadsKpiIconBox blue" justifyContent="Center" alignItems="Center" renderType="Bare">
+                                <core:Icon src="sap-icon://product" />
+                            </VBox>
+                            <VBox renderType="Bare">
+                                <Text text="Days of Cover" class="quadsKpiTitle" wrapping="false" />
+                                <Text text="{impact>/inventory/daysOfCover_formatted}" class="quadsKpiValueCritical" wrapping="false" />
+                                <Text text="Safety stock breached" class="quadsKpiSub" wrapping="false" />
                             </VBox>
                         </HBox>
-                        <Button text="Retry Analysis" type="Reject" press=".onStartImpactAnalysis" />
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsKpiArrow" />
+                    </HBox>
+                    
+                    <!-- Projected Stockout Date -->
+                    <HBox class="quadsWhiteCard quadsKpiCard" alignItems="Center" justifyContent="SpaceBetween" renderType="Bare">
+                        <HBox alignItems="Center" class="quadsKpiLeft" renderType="Bare">
+                            <VBox class="quadsKpiIconBox blue" justifyContent="Center" alignItems="Center" renderType="Bare">
+                                <core:Icon src="sap-icon://calendar" />
+                            </VBox>
+                            <VBox renderType="Bare">
+                                <Text text="Projected Stockout Date" class="quadsKpiTitle" wrapping="false" />
+                                <Text text="{impact>/inventory/stockoutDate_formatted}" class="quadsKpiValueDark" wrapping="false" />
+                                <Text text="In 5 days" class="quadsKpiSub" wrapping="false" />
+                            </VBox>
+                        </HBox>
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsKpiArrow" />
+                    </HBox>
+                    
+                    <!-- Supply Gap -->
+                    <HBox class="quadsWhiteCard quadsKpiCard borderCritical" alignItems="Center" justifyContent="SpaceBetween" renderType="Bare">
+                        <HBox alignItems="Center" class="quadsKpiLeft" renderType="Bare">
+                            <VBox class="quadsKpiIconBox red" justifyContent="Center" alignItems="Center" renderType="Bare">
+                                <core:Icon src="sap-icon://alert" />
+                            </VBox>
+                            <VBox renderType="Bare">
+                                <Text text="Supply Gap" class="quadsKpiTitle" wrapping="false" />
+                                <Text text="{impact>/inventory/supplyGap_formatted}" class="quadsKpiValueCritical" wrapping="false" />
+                                <Text text="vs. required 500 units" class="quadsKpiSub" wrapping="false" />
+                            </VBox>
+                        </HBox>
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsKpiArrow" />
+                    </HBox>
+                    
+                    <!-- Severity Assessment -->
+                    <HBox class="quadsWhiteCard quadsKpiCard" alignItems="Center" justifyContent="SpaceBetween" renderType="Bare">
+                        <HBox alignItems="Center" class="quadsKpiLeft" renderType="Bare">
+                            <VBox class="quadsKpiIconBox blue" justifyContent="Center" alignItems="Center" renderType="Bare">
+                                <core:Icon src="sap-icon://bar-chart" />
+                            </VBox>
+                            <VBox renderType="Bare">
+                                <Text text="Severity Assessment" class="quadsKpiTitle" wrapping="false" />
+                                <Text text="{impact>/deterministic/severity}" class="quadsKpiValueCritical" wrapping="false" />
+                                <Text text="Production &amp; Financial Impact" class="quadsKpiSub" wrapping="false" />
+                            </VBox>
+                        </HBox>
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsKpiArrow" />
+                    </HBox>
+                </HBox>
+
+                <!-- SUPPLY TIMELINE -->
+                <VBox class="quadsWhiteCard sapUiSmallMarginBottom">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiMediumMarginBottom">
+                        <HBox alignItems="Center">
+                            <core:Icon src="sap-icon://shipping-status" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                            <VBox>
+                                <Title text="Supply Timeline" class="quadsSectionTitle" />
+                                <Text text="Key milestones and current status of the disrupted supply." class="quadsSectionSub" />
+                            </VBox>
+                        </HBox>
+                        <Button text="View Details" icon="sap-icon://action" type="Transparent" class="quadsBtnOutline" />
+                    </HBox>
+
+                    <!-- The Custom Timeline visualization -->
+                    <HBox class="quadsCustomTimelineContainer" alignItems="Center" renderType="Bare">
+                        
+                        <!-- Node 1 -->
+                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
+                            <Text text="PO Created" class="quadsTlLabel" wrapping="false" />
+                            <Text text="28 Aug" class="quadsTlDate" wrapping="false" />
+                            <core:Icon src="sap-icon://sys-enter-2" class="quadsTlIcon done" />
+                        </VBox>
+                        <VBox class="quadsTlLine done" />
+                        
+                        <!-- Node 2 -->
+                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
+                            <Text text="Supplier Dispatch" class="quadsTlLabel" wrapping="false" />
+                            <Text text="01 Sep" class="quadsTlDate" wrapping="false" />
+                            <core:Icon src="sap-icon://sys-enter-2" class="quadsTlIcon done" />
+                        </VBox>
+                        <VBox class="quadsTlLine done" />
+
+                        <!-- Node 3 -->
+                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
+                            <Text text="In Transit" class="quadsTlLabel bold" wrapping="false" />
+                            <Text text="03 Sep" class="quadsTlDate bold" wrapping="false" />
+                            <VBox class="quadsTlIcon currentBox" alignItems="Center" justifyContent="Center">
+                                <core:Icon src="sap-icon://shipping-status" class="quadsTlIconCurrent" />
+                            </VBox>
+                        </VBox>
+                        <VBox class="quadsTlLine current" />
+
+                        <!-- Node 4 (Disruption) -->
+                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
+                            <VBox class="quadsTlLabelBoxCritical" alignItems="Center" renderType="Bare">
+                                <Text text="Disruption" class="quadsTlLabelBoxText" wrapping="false" />
+                            </VBox>
+                            <Text text="06 Sep" class="quadsTlDate bold" wrapping="false" />
+                            <VBox class="quadsTlIcon criticalBox" alignItems="Center" justifyContent="Center">
+                                <core:Icon src="sap-icon://alert" class="quadsTlIconCritical" />
+                            </VBox>
+                        </VBox>
+                        
+                        <!-- Delay line -->
+                        <VBox class="quadsTlLine delayLineBox" alignItems="Center" justifyContent="Center" renderType="Bare">
+                            <VBox class="delayDashedLine" renderType="Bare" />
+                            <Text text="5 days delay" class="delayLineText" wrapping="false" />
+                        </VBox>
+
+                        <!-- Node 5 (Revised Delivery) -->
+                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
+                            <Text text="Revised Delivery" class="quadsTlLabel critical" wrapping="false" />
+                            <Text text="{impact>/inventory/stockoutDate_formatted}" class="quadsTlDate critical" wrapping="false" />
+                            <VBox class="quadsTlIcon futureBoxCritical" />
+                        </VBox>
+                        <VBox class="quadsTlLine future" />
+
+                        <!-- Node 6 (Expected Delivery) -->
+                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
+                            <Text text="Expected Delivery" class="quadsTlLabel future" wrapping="false" />
+                            <Text text="{impact>/case/expected_delivery_date}" class="quadsTlDate future" wrapping="false" />
+                            <VBox class="quadsTlIcon futureBox" />
+                        </VBox>
+
                     </HBox>
                 </VBox>
 
+<<<<<<< HEAD
                 <!-- Running Indicator Banner (Real Backend Telemetry Progress) -->
                 <VBox
                     visible="{= ${impact>/analysisState} === 'RUNNING' }"
@@ -104,480 +303,304 @@
                     </VBox>
                 </VBox>
 
-                <!-- Content Area: Rendered when analysis is COMPLETED -->
-                <VBox visible="{= ${impact>/analysisState} === 'COMPLETED' }">
-
-                    <!-- 11. SEVERITY / IMPACT SUMMARY & 1. INVENTORY BUFFER (4 Top KPI Blocks) -->
-                    <layout:Grid
-                        defaultSpan="XL3 L3 M6 S12"
-                        hSpacing="1"
-                        vSpacing="1"
-                        class="sapImpactMetricGrid">
-
-                        <!-- Days of Cover -->
-                        <VBox class="sapImpactMetricCard criticalHighlight">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                <Text text="DAYS OF COVER" class="sapMetricHeaderTitle" />
-                                <core:Icon src="sap-icon://time-entry-request" class="sapMetricIcon critical" />
-                            </HBox>
-                            <Text text="{impact>/inventory/daysOfCover_formatted}" class="sapMetricLargeNumber textCritical" />
-                            <Text text="Threshold &#x2264; 3 days for Critical rating" class="sapMetricFootnote" />
-                        </VBox>
-
-                        <!-- Stockout Date -->
-                        <VBox class="sapImpactMetricCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                <Text text="PROJECTED STOCKOUT DATE" class="sapMetricHeaderTitle" />
-                                <core:Icon src="sap-icon://calendar" class="sapMetricIcon info" />
-                            </HBox>
-                            <Text text="{impact>/inventory/stockoutDate_formatted}" class="sapMetricLargeNumber textDark" />
-                            <Text text="Immediate assembly risk milestone" class="sapMetricFootnote" />
-                        </VBox>
-
-                        <!-- Supply Gap -->
-                        <VBox class="sapImpactMetricCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                <Text text="SUPPLY GAP" class="sapMetricHeaderTitle" />
-                                <core:Icon src="sap-icon://product" class="sapMetricIcon warning" />
-                            </HBox>
-                            <Text text="{impact>/inventory/supplyGap_formatted}" class="sapMetricLargeNumber textWarning" />
-                            <Text text="Net replenishment deficit" class="sapMetricFootnote" />
-                        </VBox>
-
-                        <!-- Severity -->
-                        <VBox class="sapImpactMetricCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                <Text text="SEVERITY ASSESSMENT" class="sapMetricHeaderTitle" />
-                                <core:Icon src="sap-icon://status-critical" class="sapMetricIcon critical" />
-                            </HBox>
-                            <Text text="{impact>/deterministic/severity}" class="sapMetricLargeNumber textCritical" />
-                            <Text text="Safety Stock Breach: {impact>/inventory/safetyStockBreach_formatted}" class="sapMetricFootnote" />
-                        </VBox>
-                    </layout:Grid>
-
-                    <!-- 1. DETAILED INVENTORY DATA BREAKDOWN (Audited Real Backend Values) -->
-                    <VBox class="sapOverviewCard sapUiSmallMarginBottom">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                            <VBox>
-                                <Title text="1. INVENTORY &amp; BUFFER DEPLETION ANALYSIS" level="H3" class="sapCardSectionTitle" />
-                                <Text text="Formulas: availableStock = currentStock - reservedStock | daysOfCover = availableStock / dailyConsumption" class="sapCardSectionSub" />
-                            </VBox>
-                            <ObjectStatus text="Deterministic Calculation" state="Information" class="bold" />
+                <!-- DETAILS 3-COLUMN GRID -->
+                <HBox class="quadsImpact3Grid sapUiSmallMarginBottom">
+                    
+                    <!-- Inventory Details -->
+                    <VBox class="quadsWhiteCard quadsDetailCard">
+                        <HBox alignItems="Center" class="sapUiMediumMarginBottom">
+                            <core:Icon src="sap-icon://product" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                            <Title text="Inventory Details" class="quadsSectionTitle" />
                         </HBox>
-
-                        <layout:Grid defaultSpan="XL4 L4 M6 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginTop">
-                            <VBox class="sapMetricBox">
-                                <Text text="Current Stock (Total On Hand)" class="sapContextItemLabel" />
-                                <Text text="{impact>/inventory/currentStock_formatted}" class="bold textMedium textDark" />
-                            </VBox>
-                            <VBox class="sapMetricBox">
-                                <Text text="Reserved Stock (Committed)" class="sapContextItemLabel" />
-                                <Text text="{impact>/inventory/reservedStock_formatted}" class="bold textMedium textDark" />
-                            </VBox>
-                            <VBox class="sapMetricBox">
-                                <Text text="Available Stock (Unrestricted)" class="sapContextItemLabel" />
-                                <Text text="{impact>/inventory/availableStock_formatted}" class="bold textMedium textPrimary" />
-                            </VBox>
-                            <VBox class="sapMetricBox">
-                                <Text text="Daily Consumption Rate" class="sapContextItemLabel" />
-                                <Text text="{impact>/inventory/dailyConsumption_formatted}" class="bold textMedium textDark" />
-                            </VBox>
-                            <VBox class="sapMetricBox">
-                                <Text text="Safety Stock Policy Level" class="sapContextItemLabel" />
-                                <Text text="{impact>/inventory/safetyStock_formatted}" class="bold textMedium textDark" />
-                            </VBox>
-                            <VBox class="sapMetricBox">
-                                <Text text="Quantity At Risk" class="sapContextItemLabel" />
-                                <Text text="{impact>/inventory/quantityAtRisk_formatted}" class="bold textMedium textCritical" />
-                            </VBox>
-                        </layout:Grid>
-                    </VBox>
-
-                    <!-- 8. END-TO-END IMPACT CHAIN (Horizontal Trajectory) -->
-                    <VBox class="sapVisualChainCard sapUiSmallMarginBottom">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapChainHeaderBar">
-                            <VBox>
-                                <Title text="8. END-TO-END IMPACT PROPAGATION CHAIN" level="H3" class="sapSectionTitleSmall" />
-                                <Text text="Supplier Delay &#x2192; Inventory Pressure &#x2192; Production Risk &#x2192; Customer Risk &#x2192; Financial Exposure" class="sapSectionSubSmall" />
-                            </VBox>
-                            <Text text="Propagation Trace" class="sapTagNeutral" />
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Current Stock" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/currentStock_formatted}" class="quadsDetailValueCritical" />
                         </HBox>
-
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapChainNodesRow">
-                            <VBox class="sapChainNode">
-                                <HBox alignItems="Center">
-                                    <core:Icon src="sap-icon://supplier" class="sapChainIcon" />
-                                    <Text text="SUPPLIER DELAY" class="sapChainNodeTag" />
-                                </HBox>
-                                <Text text="{impact>/supplier/name}" class="sapChainNodeTitle" />
-                                <Text text="+{impact>/case/expected_delay_days} Days Delay" class="sapChainNodeSub textCritical bold" />
-                            </VBox>
-
-                            <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
-
-                            <VBox class="sapChainNode">
-                                <HBox alignItems="Center">
-                                    <core:Icon src="sap-icon://product" class="sapChainIcon" />
-                                    <Text text="INVENTORY PRESSURE" class="sapChainNodeTag" />
-                                </HBox>
-                                <Text text="{impact>/inventory/daysOfCover_formatted}" class="sapChainNodeTitle textCritical" />
-                                <Text text="{impact>/inventory/safetyStockBreach_formatted} Safety Stock" class="sapChainNodeSub" />
-                            </VBox>
-
-                            <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
-
-                            <VBox class="sapChainNode">
-                                <HBox alignItems="Center">
-                                    <core:Icon src="sap-icon://factory" class="sapChainIcon" />
-                                    <Text text="PRODUCTION RISK" class="sapChainNodeTag" />
-                                </HBox>
-                                <Text text="{impact>/production/stoppageRisk}" class="sapChainNodeTitle textCritical" />
-                                <Text text="{impact>/production/plantName}" class="sapChainNodeSub" />
-                            </VBox>
-
-                            <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
-
-                            <VBox class="sapChainNode">
-                                <HBox alignItems="Center">
-                                    <core:Icon src="sap-icon://customer" class="sapChainIcon" />
-                                    <Text text="CUSTOMER RISK" class="sapChainNodeTag" />
-                                </HBox>
-                                <Text text="{impact>/customer/affectedOrdersCount} Orders Impacted" class="sapChainNodeTitle" />
-                                <Text text="{impact>/customer/maxDelay} Delivery Delay" class="sapChainNodeSub textWarning bold" />
-                            </VBox>
-
-                            <core:Icon src="sap-icon://navigation-right-arrow" class="sapChainArrow" />
-
-                            <VBox class="sapChainNode">
-                                <HBox alignItems="Center">
-                                    <core:Icon src="sap-icon://money-bills" class="sapChainIcon" />
-                                    <Text text="FINANCIAL EXPOSURE" class="sapChainNodeTag" />
-                                </HBox>
-                                <Text text="{impact>/financial/totalExposure_formatted}" class="sapChainNodeTitle textCritical bold" />
-                                <Text text="Recovery Exposure" class="sapChainNodeSub" />
-                            </VBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Reserved Stock" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/reservedStock_formatted}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Available Stock" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/availableStock_formatted}" class="quadsDetailValueCritical" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Safety Stock" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/safetyStock_formatted}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Required Quantity" class="quadsDetailLabel" />
+                            <Text text="{impact>/production/dailyRequirement} units" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Daily Consumption Rate" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/dailyConsumption_formatted}/day" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Days of Cover" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/daysOfCover_formatted}" class="quadsDetailValueCritical" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Projected Stockout Date" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/stockoutDate_formatted}" class="quadsDetailValueCritical" />
+                        </HBox>
+                        <HBox class="quadsAlertBanner sapUiMediumMarginTop" alignItems="Center">
+                            <core:Icon src="sap-icon://alert" class="sapUiTinyMarginEnd" />
+                            <Text text="Available stock is below safety stock. Projected stockout in 5 days." />
                         </HBox>
                     </VBox>
 
-                    <!-- 2. SUPPLIER, 3. LOGISTICS, 4. PLANT, 5. CUSTOMER (2x2 Grid) -->
-                    <layout:Grid
-                        defaultSpan="XL6 L6 M12 S12"
-                        hSpacing="1"
-                        vSpacing="1"
-                        class="sapOverviewGrid sapUiSmallMarginBottom">
 
-                        <!-- 2. SUPPLIER ANALYSIS -->
-                        <VBox class="sapOverviewCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                                <Title text="2. SUPPLIER ANALYSIS" level="H3" class="sapCardSectionTitle" />
-                                <core:Icon src="sap-icon://supplier" class="sapMetricIcon info" />
-                            </HBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Supplier Name" class="sapMetricLabel" />
-                                    <Text text="{impact>/supplier/name} ({impact>/supplier/id})" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Historical Reliability / OTD" class="sapMetricLabel" />
-                                    <Text text="{impact>/supplier/reliabilityScore} / {impact>/supplier/otdScore}" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Open Purchase Orders" class="sapMetricLabel" />
-                                    <Text text="{impact>/supplier/openPos}" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Supplier Risk / Delay Reason" class="sapMetricLabel" />
-                                    <Text text="{impact>/supplier/riskTier} · {impact>/supplier/delayReason}" class="sapMetricVal textWarning bold" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
-
-                        <!-- 3. LOGISTICS & ROUTING -->
-                        <VBox class="sapOverviewCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                                <Title text="3. LOGISTICS &amp; TRANSPORT ANALYSIS" level="H3" class="sapCardSectionTitle" />
-                                <core:Icon src="sap-icon://shipping-status" class="sapMetricIcon info" />
-                            </HBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Origin &#x2192; Destination" class="sapMetricLabel" />
-                                    <Text text="{impact>/logistics/origin} &#x2192; {impact>/logistics/destination}" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Carrier &amp; Mode" class="sapMetricLabel" />
-                                    <Text text="{impact>/logistics/carrier} ({impact>/logistics/mode})" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Current ETA &amp; Transit Delay" class="sapMetricLabel" />
-                                    <Text text="{impact>/logistics/eta} (+{impact>/case/expected_delay_days}d transit)" class="sapMetricVal textCritical bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Alternative Logistics Option" class="sapMetricLabel" />
-                                    <Text text="Premium Air Freight (DHL Aviation, 2-day recovery)" class="sapMetricVal textPrimary bold" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
-
-                        <!-- 4. PLANT & PRODUCTION -->
-                        <VBox class="sapOverviewCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                                <Title text="4. PLANT &amp; PRODUCTION IMPACT" level="H3" class="sapCardSectionTitle" />
-                                <core:Icon src="sap-icon://factory" class="sapMetricIcon warning" />
-                            </HBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Affected Plant" class="sapMetricLabel" />
-                                    <Text text="{impact>/production/plantName} ({impact>/production/plantId})" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Production Rate / Requirement" class="sapMetricLabel" />
-                                    <Text text="{impact>/production/dailyRequirement} Units/Day" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Interruption Stoppage Hazard" class="sapMetricLabel" />
-                                    <Text text="{impact>/production/stoppageHazard}" class="sapMetricVal textCritical bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Affected Assembly Orders" class="sapMetricLabel" />
-                                    <Text text="{impact>/production/affectedOrders}" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
-
-                        <!-- 5. CUSTOMER ORDER EXPOSURE -->
-                        <VBox class="sapOverviewCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                                <Title text="5. CUSTOMER COMMITMENT ANALYSIS" level="H3" class="sapCardSectionTitle" />
-                                <core:Icon src="sap-icon://customer" class="sapMetricIcon warning" />
-                            </HBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Impacted Customer Orders" class="sapMetricLabel" />
-                                    <Text text="{impact>/customer/affectedOrdersCount} Sales Orders Committed" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Total Customer Quantity" class="sapMetricLabel" />
-                                    <Text text="{impact>/customer/totalQuantity} Units" class="sapMetricVal bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Customer Priority Tier" class="sapMetricLabel" />
-                                    <Text text="TIER 1 AUTOMOTIVE OEM" class="sapMetricVal textCritical bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Expected Delivery Delay" class="sapMetricLabel" />
-                                    <Text text="{impact>/case/expected_delay_days} Days SLA Breach Hazard" class="sapMetricVal textCritical bold" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
-                    </layout:Grid>
-
-                    <!-- 6. FINANCIAL EXPOSURE (CONFIRMED, ESTIMATED, POTENTIAL) -->
-                    <VBox class="sapOverviewCard sapUiSmallMarginBottom">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                            <VBox>
-                                <Title text="6. FINANCIAL IMPACT EXPOSURE BREAKDOWN" level="H3" class="sapCardSectionTitle" />
-                                <Text text="Quantified financial risk classified by confirmation certainty" class="sapCardSectionSub" />
-                            </VBox>
-                            <ObjectStatus text="Audit Financial Review" state="Warning" class="bold" />
+                    <!-- Supplier Details -->
+                    <VBox class="quadsWhiteCard quadsDetailCard">
+                        <HBox alignItems="Center" class="sapUiMediumMarginBottom">
+                            <core:Icon src="sap-icon://group" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                            <Title text="Supplier Details" class="quadsSectionTitle" />
                         </HBox>
-
-                        <layout:Grid defaultSpan="XL4 L4 M4 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginTop">
-                            <!-- CONFIRMED -->
-                            <VBox class="sapMetricBox" style="border-left: 3px solid #107E3E;">
-                                <Text text="CONFIRMED FINANCIAL IMPACT" class="sapContextItemLabel bold textSuccess" />
-                                <Text text="{impact>/financial/confirmed_display}" class="bold textLarge textDark sapUiTinyMarginTop" />
-                                <Text text="Contractual SLA penalties &amp; expedite pre-authorizations." class="textSmall textMuted sapUiTinyMarginTop" />
-                            </VBox>
-
-                            <!-- ESTIMATED -->
-                            <VBox class="sapMetricBox" style="border-left: 3px solid #E9730C;">
-                                <Text text="ESTIMATED FINANCIAL EXPOSURE" class="sapContextItemLabel bold textWarning" />
-                                <Text text="{impact>/financial/estimated_display}" class="bold textLarge textWarning sapUiTinyMarginTop" />
-                                <Text text="Projected assembly downtime ($12,500/hr) &amp; freight surcharges." class="textSmall textMuted sapUiTinyMarginTop" />
-                            </VBox>
-
-                            <!-- POTENTIAL -->
-                            <VBox class="sapMetricBox" style="border-left: 3px solid #BB0000;">
-                                <Text text="POTENTIAL REVENUE AT RISK" class="sapContextItemLabel bold textCritical" />
-                                <Text text="{impact>/financial/potential_display}" class="bold textLarge textCritical sapUiTinyMarginTop" />
-                                <Text text="Customer cancellation liability &amp; secondary line shutdowns." class="textSmall textMuted sapUiTinyMarginTop" />
-                            </VBox>
-                        </layout:Grid>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Supplier Name" class="quadsDetailLabel" />
+                            <Text text="{impact>/supplier/name} ({impact>/supplier/id})" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Supplier Reliability" class="quadsDetailLabel" />
+                            <Text text="{impact>/supplier/reliabilityScore}%" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="On-Time Delivery (OTD)" class="quadsDetailLabel" />
+                            <Text text="{impact>/supplier/otdScore}%" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Open POs" class="quadsDetailLabel" />
+                            <Text text="{impact>/supplier/openPos} (500 units)" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Current Shipment" class="quadsDetailLabel" />
+                            <Text text="In Transit" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Expected Delivery" class="quadsDetailLabel" />
+                            <Text text="{impact>/case/expected_delivery_date}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Delay" class="quadsDetailLabel" />
+                            <Text text="+{impact>/case/expected_delay_days} days" class="quadsDetailValueCritical" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Supplier Capacity" class="quadsDetailLabel" />
+                            <Text text="Normal" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Supplier Risk" class="quadsDetailLabel" />
+                            <ObjectStatus text="{impact>/supplier/riskTier}" class="quadsBadgeWarning" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Recent Performance" class="quadsDetailLabel" />
+                            <Text text="2 delays in last 6 months" class="quadsDetailValue" />
+                        </HBox>
                     </VBox>
 
-                    <!-- 7. SUPPLY TIMELINE & 9. WHAT-IF SCENARIOS (2-Column Grid) -->
-                    <layout:Grid
-                        defaultSpan="XL6 L6 M12 S12"
-                        hSpacing="1"
-                        vSpacing="1"
-                        class="sapOverviewGrid sapUiSmallMarginBottom">
+                    <!-- Logistics & Transport Details -->
+                    <VBox class="quadsWhiteCard quadsDetailCard">
+                        <HBox alignItems="Center" class="sapUiMediumMarginBottom">
+                            <core:Icon src="sap-icon://shipping-status" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                            <Title text="Logistics &amp; Transport Details" class="quadsSectionTitle" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Origin" class="quadsDetailLabel" />
+                            <Text text="{impact>/logistics/origin}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Destination" class="quadsDetailLabel" />
+                            <Text text="{impact>/logistics/destination}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Carrier" class="quadsDetailLabel" />
+                            <Text text="{impact>/logistics/carrier}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Transport Mode" class="quadsDetailLabel" />
+                            <Text text="{impact>/logistics/mode}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Current ETA" class="quadsDetailLabel" />
+                            <Text text="{impact>/inventory/stockoutDate_formatted}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Expected ETA" class="quadsDetailLabel" />
+                            <Text text="{impact>/case/expected_delivery_date}" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Delay" class="quadsDetailLabel" />
+                            <Text text="+{impact>/case/expected_delay_days} days" class="quadsDetailValueCritical" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Transit Time" class="quadsDetailLabel" />
+                            <Text text="6 days (Planned)" class="quadsDetailValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Logistics Risk" class="quadsDetailLabel" />
+                            <ObjectStatus text="High" class="quadsBadgeCritical" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                            <Text text="Alternate Logistics" class="quadsDetailLabel" />
+                            <Text text="Available (Air Freight, 3 days)" class="quadsDetailValue" />
+                        </HBox>
+                    </VBox>
 
-                        <!-- 7. SUPPLY TIMELINE -->
-                        <VBox class="sapOverviewCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                                <Title text="7. DYNAMIC SUPPLY TIMELINE" level="H3" class="sapCardSectionTitle" />
-                                <core:Icon src="sap-icon://history" class="sapMetricIcon info" />
-                            </HBox>
+                </HBox>
 
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Day 0: Disruption Detected" class="sapMetricLabel bold" />
-                                    <Text text="Telemetry flag recorded" class="sapMetricVal" />
+                <!-- BOTTOM 2 CARDS (PLANT & FINANCIAL) -->
+                <HBox class="quadsImpact2Grid sapUiSmallMarginBottom">
+                    
+                    <!-- Plant & Production Details -->
+                    <VBox class="quadsWhiteCard">
+                        <HBox alignItems="Center" class="sapUiMediumMarginBottom">
+                            <core:Icon src="sap-icon://factory" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                            <Title text="Plant &amp; Production Details" class="quadsSectionTitle" />
+                        </HBox>
+                        <HBox class="quadsPlantGrid">
+                            <VBox>
+                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                                    <Text text="Plant" class="quadsDetailLabel" />
+                                    <Text text="{impact>/production/plantId} ({impact>/production/plantName})" class="quadsDetailValue" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                                    <Text text="Production Rate (Normal)" class="quadsDetailLabel" />
+                                    <Text text="100 cars/day" class="quadsDetailValue" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                                    <Text text="Production Orders Affected" class="quadsDetailLabel" />
+                                    <VBox>
+                                        <Text text="{impact>/production/affectedOrders} orders (PO-1001, PO-1002, PO-1003)" class="quadsDetailValue" />
+                                    </VBox>
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                                    <Text text="Material Requirement" class="quadsDetailLabel" />
+                                    <Text text="{impact>/production/dailyRequirement} units" class="quadsDetailValue" />
                                 </HBox>
                             </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Day 1: Warehouse Stock Depletion" class="sapMetricLabel bold" />
-                                    <Text text="Buffer drops below safety threshold" class="sapMetricVal textWarning bold" />
+                            <VBox>
+                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                                    <Text text="Current Available Capacity" class="quadsDetailLabel" />
+                                    <Text text="Normal" class="quadsDetailValue" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                                    <Text text="Production Interruption Risk" class="quadsDetailLabel" />
+                                    <ObjectStatus text="High" class="quadsBadgeCriticalBox" />
+                                </HBox>
+                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                                    <Text text="Production Start/Stop Date" class="quadsDetailLabel" />
+                                    <Text text="{impact>/inventory/stockoutDate_formatted} (Delayed)" class="quadsDetailValue" />
                                 </HBox>
                             </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Day {impact>/inventory/daysOfCover_formatted}: Stockout Milestone" class="sapMetricLabel bold textCritical" />
-                                    <Text text="{impact>/inventory/stockoutDate_formatted} — Line Halts" class="sapMetricVal textCritical bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Day +{impact>/case/expected_delay_days}: Delayed Arrival" class="sapMetricLabel bold" />
-                                    <Text text="Replenishment delivered (if unmitigated)" class="sapMetricVal" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
+                        </HBox>
+                    </VBox>
 
-                        <!-- 9. WHAT-IF SCENARIOS -->
-                        <VBox class="sapOverviewCard">
-                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapOverviewHeader">
-                                <Title text="9. WHAT-IF IMPACT SCENARIOS" level="H3" class="sapCardSectionTitle" />
-                                <core:Icon src="sap-icon://simulate" class="sapMetricIcon info" />
-                            </HBox>
-
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Scenario A: Additional 3-Day Port Hold" class="sapMetricLabel" />
-                                    <Text text="Cover drops to 0.5d; Stockout 48h sooner" class="sapMetricVal textCritical bold" />
-                                </HBox>
+                    <!-- Financial Exposure -->
+                    <VBox class="quadsWhiteCard">
+                        <HBox alignItems="Center" class="sapUiMediumMarginBottom">
+                            <core:Icon src="sap-icon://money-bills" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                            <Title text="Financial Exposure" class="quadsSectionTitle" />
+                        </HBox>
+                        
+                        <HBox class="quadsFinancial3Grid sapUiMediumMarginBottom">
+                            <VBox class="quadsFinBox">
+                                <Text text="Production Loss" class="quadsFinLabel" />
+                                <Text text="{impact>/financial/estimated_display}" class="quadsFinValue" />
+                                <Text text="(Based on {impact>/case/expected_delay_days} days)" class="quadsFinSub" />
                             </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Scenario B: Demand Increase +20%" class="sapMetricLabel" />
-                                    <Text text="Supply gap increases by 120 units" class="sapMetricVal textWarning bold" />
-                                </HBox>
+                            <VBox class="quadsFinDivider" />
+                            <VBox class="quadsFinBox">
+                                <Text text="Revenue at Risk" class="quadsFinLabel" />
+                                <Text text="{impact>/financial/potential_display}" class="quadsFinValue" />
+                                <Text text="(Delayed orders)" class="quadsFinSub" />
                             </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Scenario C: Premium Air Freight Sourcing" class="sapMetricLabel" />
-                                    <Text text="Lead time recovers by 3 days; Stockout averted" class="sapMetricVal textSuccess bold" />
-                                </HBox>
+                            <VBox class="quadsFinDivider" />
+                            <VBox class="quadsFinBox">
+                                <Text text="Customer Penalty (Est.)" class="quadsFinLabel" />
+                                <Text text="{impact>/financial/confirmed_display}" class="quadsFinValue" />
+                                <Text text="(Based on 3% of order value)" class="quadsFinSub" />
                             </VBox>
-                            <VBox class="sapMetricRow">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <Text text="Scenario D: Alternate Supplier Activation" class="sapMetricLabel" />
-                                    <Text text="Full volume restored with +$3,800 freight delta" class="sapMetricVal textPrimary bold" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
-                    </layout:Grid>
-
-                    <!-- 10. CROSS-FUNCTIONAL ASSESSMENT (6 Pillars) -->
-                    <VBox class="sapAiAssessmentCard sapUiSmallMarginBottom">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapAiHeaderBar">
+                        </HBox>
+                        
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsFinTotalBox">
                             <HBox alignItems="Center">
-                                <Title text="10. CROSS-FUNCTIONAL ASSESSMENT" level="H2" class="sapAiTitle" />
-                                <Text text="•" class="sapAiDot" />
-                                <Text text="Enterprise Operational Consensus" class="sapAiSub" />
+                                <core:Icon src="sap-icon://trend-up" class="sapUiSmallMarginEnd quadsFinTotalIcon" />
+                                <Text text="Total Financial Exposure" class="quadsFinTotalLabel" />
                             </HBox>
-                            <ObjectStatus text="Unified Synthesis" state="Success" class="bold" />
+                            <HBox alignItems="Center">
+                                <Text text="{impact>/financial/totalExposure_formatted}" class="quadsFinTotalValue sapUiSmallMarginEnd" />
+                                <core:Icon src="sap-icon://slim-arrow-right" class="quadsFinTotalArrow" />
+                            </HBox>
                         </HBox>
-
-                        <layout:Grid defaultSpan="XL2 L2 M4 S6" hSpacing="1" vSpacing="1" class="sapAiGrid">
-                            <VBox class="sapAiBlock">
-                                <Text text="SUPPLY" class="sapAiBlockTag" />
-                                <Text text="Severe replenishment gap; buffer below 3d." class="sapAiBlockText" maxLines="3" />
-                            </VBox>
-                            <VBox class="sapAiBlock">
-                                <Text text="PROCUREMENT" class="sapAiBlockTag" />
-                                <Text text="Contract Clause 11.4 allows emergency sourcing." class="sapAiBlockText" maxLines="3" />
-                            </VBox>
-                            <VBox class="sapAiBlock">
-                                <Text text="LOGISTICS" class="sapAiBlockTag" />
-                                <Text text="Ocean lane congested; air corridor available." class="sapAiBlockText" maxLines="3" />
-                            </VBox>
-                            <VBox class="sapAiBlock">
-                                <Text text="PRODUCTION" class="sapAiBlockTag" />
-                                <Text text="Munich Line 2 at risk of shutdown in 48 hours." class="sapAiBlockText" maxLines="3" />
-                            </VBox>
-                            <VBox class="sapAiBlock">
-                                <Text text="CUSTOMER" class="sapAiBlockTag" />
-                                <Text text="OEM SLA penalty exposure active after 5 days." class="sapAiBlockText" maxLines="3" />
-                            </VBox>
-                            <VBox class="sapAiBlock highlight">
-                                <Text text="FINANCE" class="sapAiBlockTag" />
-                                <Text text="Total recovery cost exposure capped at $28,000." class="sapAiBlockText" maxLines="3" />
-                            </VBox>
-                        </layout:Grid>
                     </VBox>
+                </HBox>
 
-                    <!-- Bottom Action Row: Proceed strictly visible when completed -->
-                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageActionsRow">
-                        <Button
-                            text="Back to Case Overview"
-                            type="Transparent"
-                            icon="sap-icon://nav-back"
-                            press=".onNavBackToCaseOverview"
-                            class="sapBtnSecondary" />
-                        <HBox alignItems="Center">
-                            <Button
-                                id="btnProceedPriorityBottom"
-                                text="PROCEED TO RECOVERY PRIORITY &#x2192;"
-                                icon="sap-icon://navigation-right-arrow"
-                                type="Emphasized"
-                                press=".onProceedPriority"
-                                class="sapBtnPrimary" />
+                <!-- END TO END PROPAGATION -->
+                <VBox class="quadsWhiteCard sapUiMediumMarginBottom">
+                    <HBox alignItems="Center" class="sapUiMediumMarginBottom">
+                        <core:Icon src="sap-icon://chain-link" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                        <VBox>
+                            <Title text="End-to-End Impact Propagation" class="quadsSectionTitle" />
+                            <Text text="How the disruption propagates across the supply chain." class="quadsSectionSub" />
+                        </VBox>
+                    </HBox>
+                    
+                    <HBox class="quadsPropagationContainer" alignItems="Center">
+                        <HBox class="quadsPropNode" alignItems="Center">
+                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://shipping-status" /></VBox>
+                            <VBox class="sapUiSmallMarginBegin">
+                                <Text text="Supplier Delay" class="quadsPropLabel" />
+                                <Text text="+{impact>/case/expected_delay_days} days" class="quadsPropValue" />
+                            </VBox>
+                        </HBox>
+                        
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
+                        
+                        <HBox class="quadsPropNode" alignItems="Center">
+                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://product" /></VBox>
+                            <VBox class="sapUiSmallMarginBegin">
+                                <Text text="Reduced Inbound Supply" class="quadsPropLabel" />
+                                <Text text="{impact>/inventory/supplyGap_formatted}" class="quadsPropValue" />
+                            </VBox>
+                        </HBox>
+                        
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
+                        
+                        <HBox class="quadsPropNode" alignItems="Center">
+                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://factory" /></VBox>
+                            <VBox class="sapUiSmallMarginBegin">
+                                <Text text="Production Impact" class="quadsPropLabel" />
+                                <Text text="3 orders delayed" class="quadsPropValue" />
+                            </VBox>
+                        </HBox>
+                        
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
+                        
+                        <HBox class="quadsPropNode" alignItems="Center">
+                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://money-bills" /></VBox>
+                            <VBox class="sapUiSmallMarginBegin">
+                                <Text text="Revenue at Risk" class="quadsPropLabel" />
+                                <Text text="{impact>/financial/potential_display}" class="quadsPropValue" />
+                            </VBox>
+                        </HBox>
+                        
+                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
+                        
+                        <HBox class="quadsPropNode" alignItems="Center">
+                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://document-text" /></VBox>
+                            <VBox class="sapUiSmallMarginBegin">
+                                <Text text="Penalty Risk" class="quadsPropLabel" />
+                                <Text text="{impact>/financial/confirmed_display}" class="quadsPropValue" />
+                            </VBox>
                         </HBox>
                     </HBox>
                 </VBox>
 
-                <!-- Pending State Info Banner (No second start button) -->
-                <VBox
-                    visible="{= ${impact>/analysisState} === 'PENDING' }"
-                    class="sapChoiceCard sapUiMediumMarginTop sapUiMediumMarginBottom"
-                    alignItems="Center"
-                    style="padding: 48px; text-align: center;">
-                    <core:Icon src="sap-icon://line-chart-time-axis" size="48px" color="#0A6ED1" class="sapUiMediumMarginBottom" />
-                    <Title text="Impact Analysis Pending Execution" level="H2" class="bold textDark sapUiTinyMarginBottom" />
-                    <Text text="Agent 1 triage has not been initiated for this disruption. Click START IMPACT ANALYSIS from the Case Overview page." class="textMuted textMedium sapUiMediumMarginBottom" />
-                    <Button
-                        text="&#x2190; Return to Case Overview"
-                        type="Emphasized"
-                        icon="sap-icon://nav-back"
-                        press=".onNavBackToCaseOverview"
-                        class="sapBtnPrimary" />
-                </VBox>
+                <!-- PROCEED TO RECOVERY -->
+                <HBox justifyContent="End" class="sapUiMediumMarginBottom">
+                    <Button id="btnProceedPriorityBottom" text="PROCEED TO RECOVERY PRIORITY" icon="sap-icon://navigation-right-arrow" type="Emphasized" press=".onProceedPriority" class="quadsProceedBtn" />
+                </HBox>
 
             </VBox>
         </content>

@@ -136,36 +136,52 @@
                         <Title text="Select a Feasible Plan to Review &amp; Authorize" level="H3" class="sapCardSectionTitle sapUiTinyMarginBottom" />
                         <Text text="Only validated, feasible options are selectable. Nothing is preselected." class="textMuted textSmall sapUiSmallMarginBottom" />
 
-                        <layout:Grid
-                            defaultSpan="XL4 L4 M6 S12"
-                            hSpacing="1"
-                            vSpacing="1"
-                            content="{dec>/feasible_plans}"
-                            class="sapUiSmallMarginBottom">
+                        <VBox
+                            items="{dec>/feasible_plans}"
+                            renderType="Bare"
+                            class="quadsPlanGrid sapUiSmallMarginBottom">
 
-                            <VBox class="sapChoiceCard">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                                    <ObjectStatus text="{dec>plan_id} ({dec>version})" state="Information" inverted="true" class="bold" />
+                            <VBox class="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'sapChoiceCard quadsPlanCard sapChoiceSelected' : 'sapChoiceCard quadsPlanCard' }">
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsCardHeaderRow">
+                                    <Text text="{= ${dec>version} ? ${dec>plan_id} + ' (' + ${dec>version} + ')' : ${dec>plan_id} }" class="quadsPlanId bold" />
                                     <ObjectStatus text="{dec>score} pts" state="Success" class="bold" />
                                 </HBox>
 
-                                <Title text="{dec>strategy}" level="H4" class="bold textDark sapUiTinyMarginBottom" />
-                                <Text text="Source: {dec>source_name}" class="textSmall bold" />
+                                <Title text="{dec>strategy}" level="H3" class="quadsCardStrategy bold textDark" />
+                                <Text text="Source: {dec>source_name}" visible="{= !!${dec>source_name} }" class="quadsCardRoute textSmall textMuted" />
 
-                                <HBox justifyContent="SpaceBetween" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
-                                    <Text text="Cost: ${= ${dec>total_cost} ? ${dec>total_cost}.toLocaleString() : 'N/A' }" class="bold textSmall" />
-                                    <Text text="Lead Time: {dec>recovery_days} Days" class="bold textSmall textPrimary" />
-                                    <ObjectStatus text="{dec>operational_risk} RISK" state="{= ${dec>operational_risk} === 'LOW' ? 'Success' : 'Warning' }" class="bold textSmall" />
+                                <HBox class="quadsCardMetaGrid sapUiTinyMarginTop sapUiTinyMarginBottom">
+                                    <VBox class="quadsMetaCol">
+                                        <VBox class="quadsMetaItem">
+                                            <Text text="TOTAL COST" class="quadsMetaLabel" />
+                                            <Text text="{= ${dec>total_cost} ? '$' + ${dec>total_cost}.toLocaleString() : '' }" class="quadsMetaValue bold" />
+                                        </VBox>
+                                    </VBox>
+                                    <VBox class="quadsMetaCol">
+                                        <VBox class="quadsMetaItem">
+                                            <Text text="LEAD TIME" class="quadsMetaLabel" />
+                                            <Text text="{dec>recovery_days} Days" class="quadsMetaValue bold textPrimary" />
+                                        </VBox>
+                                    </VBox>
                                 </HBox>
 
-                                <Button
-                                    text="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Selected &#x2713;' : 'Select Plan' }"
-                                    type="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Emphasized' : 'Default' }"
-                                    icon="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'sap-icon://accept' : 'sap-icon://cursor-arrow' }"
-                                    press=".onSelectFeasiblePlan"
-                                    class="sapUiTinyMarginTop" />
+                                <VBox class="quadsMetaItem sapUiTinyMarginBottom">
+                                    <Text text="CUSTOMER IMPACT" class="quadsMetaLabel" />
+                                    <Text text="{dec>expected_customer_impact}" class="quadsMetaValue" />
+                                </VBox>
+
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginTop" style="border-top: 1px solid #E5E5E5; padding-top: 12px;">
+                                    <ObjectStatus text="{= ${dec>risk_score} ? ${dec>operational_risk} + ' RISK (' + ${dec>risk_score} + ')' : ${dec>operational_risk} + ' RISK' }" state="{= ${dec>operational_risk} === 'LOW' ? 'Success' : 'Warning' }" class="bold textSmall" />
+                                    <Button
+                                        text="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Selected' : 'Select Plan' }"
+                                        type="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Emphasized' : 'Default' }"
+                                        icon="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'sap-icon://accept' : 'sap-icon://cursor-arrow' }"
+                                        press=".onSelectFeasiblePlan"
+                                        class="quadsSelectPlanBtn"
+                                        style="min-height: 36px; min-width: 140px;" />
+                                </HBox>
                             </VBox>
-                        </layout:Grid>
+                        </VBox>
                     </VBox>
 
                     <!-- Selected Plan Review Block (Visible once a plan is chosen) -->
@@ -175,7 +191,7 @@
                         <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1" class="sapUiTinyMarginTop sapUiSmallMarginBottom">
                             <VBox class="sapMetricBox">
                                 <Text text="Plan Identifier &amp; Version" class="sapContextItemLabel" />
-                                <Text text="{dec>/selectedPlan/plan_id} ({dec>/selectedPlan/version})" class="bold textLarge textPrimary" />
+                                <Text text="{= ${dec>/selectedPlan/version} ? ${dec>/selectedPlan/plan_id} + ' (' + ${dec>/selectedPlan/version} + ')' : ${dec>/selectedPlan/plan_id} }" class="bold textLarge textPrimary" />
                             </VBox>
                             <VBox class="sapMetricBox">
                                 <Text text="Recovery Strategy" class="sapContextItemLabel" />
@@ -187,7 +203,7 @@
                             </VBox>
                             <VBox class="sapMetricBox">
                                 <Text text="Total Recovery Cost" class="sapContextItemLabel" />
-                                <Text text="${= ${dec>/selectedPlan/total_cost} ? ${dec>/selectedPlan/total_cost}.toLocaleString() : 'N/A' }" class="bold textLarge textDark" />
+                                <Text text="{= ${dec>/selectedPlan/total_cost} ? '$' + ${dec>/selectedPlan/total_cost}.toLocaleString() : '' }" class="bold textLarge textDark" />
                             </VBox>
                         </layout:Grid>
 
@@ -198,7 +214,7 @@
                             </VBox>
                             <VBox class="sapMetricBox">
                                 <Text text="Source Partner" class="sapContextItemLabel" />
-                                <Text text="{dec>/selectedPlan/source_name} ({dec>/selectedPlan/source_location})" class="bold textMedium textDark" />
+                                <Text text="{= ${dec>/selectedPlan/source_location} ? ${dec>/selectedPlan/source_name} + ' (' + ${dec>/selectedPlan/source_location} + ')' : ${dec>/selectedPlan/source_name} }" class="bold textMedium textDark" />
                             </VBox>
                             <VBox class="sapMetricBox">
                                 <Text text="Transport Carrier" class="sapContextItemLabel" />
@@ -261,14 +277,14 @@
                     <Panel
                         expandable="true"
                         expanded="false"
-                        headerText="Infeasible Plans ({= ${dec>/infeasible_plans} ? ${dec>/infeasible_plans}.length : 0 } Options Filtered Out)"
+                        headerText="Infeasible Plans · {= ${dec>/infeasible_plans} ? ${dec>/infeasible_plans}.length : 0 } option{= ${dec>/infeasible_plans} &amp;&amp; ${dec>/infeasible_plans}.length === 1 ? '' : 's' } filtered out"
                         class="sapUiSmallMarginTop sapContextCard">
 
                         <Table items="{dec>/infeasible_plans}" noDataText="No infeasible options.">
                             <columns>
-                                <Column width="120px"><Text text="Plan ID" class="bold" /></Column>
-                                <Column><Text text="Recovery Strategy" class="bold" /></Column>
-                                <Column><Text text="Source" class="bold" /></Column>
+                                <Column width="130px"><Text text="Plan ID" class="bold" /></Column>
+                                <Column width="220px"><Text text="Recovery Strategy" class="bold" /></Column>
+                                <Column width="200px"><Text text="Source" class="bold" /></Column>
                                 <Column><Text text="Reason for Infeasibility" class="bold textCritical" /></Column>
                             </columns>
                             <items>
@@ -277,7 +293,7 @@
                                         <Text text="{dec>plan_id} ({dec>version})" class="bold" />
                                         <Text text="{dec>strategy}" />
                                         <Text text="{dec>source_name}" />
-                                        <Text text="{dec>infeasibility_reason}" class="textCritical bold" />
+                                        <Text text="{dec>infeasibility_reason}" class="textCritical textSmall" />
                                     </cells>
                                 </ColumnListItem>
                             </items>

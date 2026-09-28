@@ -55,34 +55,23 @@
                     </HBox>
                 </VBox>
 
-                <!-- Continuous Flow Status Banner (Agent 2 -> Agent 3) -->
-                <VBox
-                    class="sapChoiceCard sapUiSmallMarginBottom"
-                    style="border-left: 4px solid #0A6ED1; background: #F0F7FF; padding: 18px 24px;">
-                    <HBox alignItems="Center" justifyContent="SpaceBetween">
-                        <HBox alignItems="Center">
-                            <core:Icon
-                                src="{= ${rec>/agent2_status} === 'COMPLETED' ? 'sap-icon://accept' : 'sap-icon://synchronize' }"
-                                color="{= ${rec>/agent2_status} === 'COMPLETED' ? '#107E3E' : '#0A6ED1' }"
-                                size="18px"
-                                class="sapUiSmallMarginEnd" />
-                            <VBox>
-                                <Title
-                                    text="{= ${rec>/agent2_status} === 'COMPLETED' ? '✓ Agent 2 Completed: ' + (${rec>/candidates} ? ${rec>/candidates}.length : 0) + ' candidate recovery plans generated' : '● Agent 2: Generating candidate recovery alternatives...' }"
-                                    level="H3"
-                                    class="{= ${rec>/agent2_status} === 'COMPLETED' ? 'bold textSuccess' : 'bold textPrimary' }" />
-                                <Text
-                                    text="{= ${rec>/agent3_status} === 'COMPLETED' ? '✓ Agent 3 Completed: Plan-specific cost, multi-dimensional risk, contracts and feasibility evaluated' : (${rec>/agent3_status} === 'RUNNING' ? '● Agent 3: Evaluating candidate plans (Cost, Risk, Constraints, Feasibility)...' : 'Agent 3 automatically chains upon candidate generation') }"
-                                    class="{= ${rec>/agent3_status} === 'COMPLETED' ? 'bold textSuccess textSmall' : (${rec>/agent3_status} === 'RUNNING' ? 'bold textPrimary textSmall' : 'textMuted textSmall') }" />
-                            </VBox>
-                        </HBox>
-                        <ObjectStatus
-                            text="{= ${rec>/state} === 'COMPLETED' ? 'EVALUATION COMPLETED' : (${rec>/agent3_status} === 'RUNNING' ? 'EVALUATING PLANS' : 'GENERATING PLANS') }"
-                            state="{= ${rec>/state} === 'COMPLETED' ? 'Success' : 'Information' }"
-                            inverted="true"
-                            class="bold" />
+                <!-- Compact Status Indicator -->
+                <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsCompactStatusBar sapUiTinyMarginBottom">
+                    <HBox alignItems="Center">
+                        <core:Icon
+                            src="{= ${rec>/state} === 'COMPLETED' ? 'sap-icon://accept' : 'sap-icon://synchronize' }"
+                            color="{= ${rec>/state} === 'COMPLETED' ? '#107E3E' : '#0A6ED1' }"
+                            size="16px"
+                            class="sapUiTinyMarginEnd" />
+                        <Text
+                            text="{= ${rec>/state} === 'COMPLETED' ? (${rec>/candidates} ? ${rec>/candidates}.length : 0) + ' recovery plans generated · Evaluation completed' : (${rec>/agent3_status} === 'RUNNING' ? 'Evaluating candidate plans...' : 'Generating candidate plans...') }"
+                            class="bold textSmall textDark" />
                     </HBox>
-                </VBox>
+                    <ObjectStatus
+                        text="{= ${rec>/state} === 'COMPLETED' ? 'EVALUATION COMPLETED' : (${rec>/agent3_status} === 'RUNNING' ? 'EVALUATING' : 'GENERATING') }"
+                        state="{= ${rec>/state} === 'COMPLETED' ? 'Success' : 'Information' }"
+                        class="bold textSmall" />
+                </HBox>
 
                 <!-- Content Area: Rendered when plans are available -->
                 <VBox visible="{= ${rec>/candidates}.length > 0 || ${rec>/state} === 'COMPLETED' }">
@@ -113,54 +102,55 @@
                         </HBox>
                     </HBox>
 
-                    <!-- SECTION 1: AGENT 2 CANDIDATE RECOVERY PLANS -->
-                    <VBox class="sapUiSmallMarginBottom">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
-                            <VBox>
-                                <Title text="Candidate Recovery Plans (Agent 2)" level="H2" class="sapSectionTitle" />
-                                <Text text="3–6 distinct operational recovery options generated from network topology and available carriers. Cost and time values are pre-evaluation estimates." class="sapSectionSub" />
-                            </VBox>
-                            <ObjectStatus text="Agent 2 Output" state="Information" class="bold" />
-                        </HBox>
-
-                        <layout:Grid
+                    <!-- AGENT 2 CANDIDATE RECOVERY PLANS GRID -->
+                    <VBox class="sapUiSmallMarginBottom sapUiMediumMarginTop">
+                        <VBox
                             id="candidatesGrid"
-                            defaultSpan="XL4 L4 M6 S12"
-                            hSpacing="1"
-                            vSpacing="1"
-                            content="{rec>/candidates}">
+                            items="{rec>/candidates}"
+                            renderType="Bare"
+                            class="quadsPlanGrid sapUiSmallMarginBottom">
 
-                            <VBox class="sapChoiceCard sapRecoveryPlanCard">
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiTinyMarginBottom">
-                                    <ObjectStatus text="{rec>plan_id} ({rec>version})" state="Information" inverted="true" class="bold" />
-                                    <ObjectStatus text="Estimate (pre-evaluation)" state="Warning" class="bold textSmall" />
+                            <VBox class="sapChoiceCard quadsPlanCard">
+                                <VBox>
+                                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsCardHeaderRow">
+                                    <Text text="{= ${rec>version} ? ${rec>plan_id} + ' (' + ${rec>version} + ')' : ${rec>plan_id} }" class="quadsPlanId bold" />
+                                    <ObjectStatus text="PRE-EVALUATION" state="None" class="quadsPreEvalBadge textSmall" />
                                 </HBox>
 
-                                <Title text="{rec>strategy}" level="H3" class="bold textDark sapUiTinyMarginBottom" />
-                                <Text text="Source: {rec>source_name} &#x2192; {rec>destination_name}" class="textSmall bold sapUiTinyMarginBottom" />
+                                <Title text="{rec>strategy}" level="H3" class="quadsCardStrategy bold textDark" />
+                                <Text text="Source: {rec>source_name} &#x2192; {rec>destination_name}" visible="{= !!${rec>source_name} || !!${rec>destination_name} }" class="quadsCardRoute textSmall textMuted" />
 
-                                <layout:Grid defaultSpan="XL6 L6 M6 S6" hSpacing="0.5" vSpacing="0.5" class="sapUiTinyMarginTop sapUiTinyMarginBottom">
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Quantity" class="sapContextItemLabel" />
-                                        <Text text="{rec>recovered_quantity} Units" class="bold textMedium" />
+                                <HBox class="quadsCardMetaGrid sapUiTinyMarginTop sapUiTinyMarginBottom">
+                                    <VBox class="quadsMetaCol">
+                                        <VBox class="quadsMetaItem">
+                                            <Text text="QUANTITY" class="quadsMetaLabel" />
+                                            <Text text="{rec>recovered_quantity} Units" class="quadsMetaValue bold" />
+                                        </VBox>
+                                        <VBox class="quadsMetaItem sapUiTinyMarginTop">
+                                            <Text text="ETA" class="quadsMetaLabel" />
+                                            <Text text="{rec>expected_arrival_date}" visible="{= !!${rec>expected_arrival_date} }" class="quadsMetaValue" />
+                                            <Text text="{rec>recovery_days} Days Lead Time" visible="{= !${rec>expected_arrival_date} }" class="quadsMetaValue" />
+                                        </VBox>
                                     </VBox>
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Mode / Carrier" class="sapContextItemLabel" />
-                                        <Text text="{rec>transport_name}" class="bold textMedium" />
+                                    <VBox class="quadsMetaCol">
+                                        <VBox class="quadsMetaItem">
+                                            <Text text="RECOVERY TIME" class="quadsMetaLabel" />
+                                            <Text text="{rec>recovery_days} Days" class="quadsMetaValue bold textPrimary" />
+                                        </VBox>
+                                        <VBox class="quadsMetaItem sapUiTinyMarginTop">
+                                            <Text text="MODE / CARRIER" class="quadsMetaLabel" />
+                                            <Text text="{rec>transport_name}" class="quadsMetaValue" />
+                                        </VBox>
                                     </VBox>
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Estimated Lead Time" class="sapContextItemLabel" />
-                                        <Text text="{rec>recovery_days} Days" class="bold textMedium textPrimary" />
-                                        <Text text="Estimate (pre-evaluation)" class="textMuted textSmall" />
-                                    </VBox>
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Customer Impact" class="sapContextItemLabel" />
-                                        <Text text="{rec>expected_customer_impact}" class="bold textMedium" />
-                                        <Text text="Estimate (pre-evaluation)" class="textMuted textSmall" />
-                                    </VBox>
-                                </layout:Grid>
+                                </HBox>
 
-                                <HBox alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop">
+                                <VBox class="quadsMetaItem sapUiTinyMarginBottom">
+                                    <Text text="CUSTOMER IMPACT" class="quadsMetaLabel" />
+                                    <Text text="{rec>expected_customer_impact}" class="quadsMetaValue" />
+                                </VBox>
+
+                                </VBox>
+                                <HBox alignItems="Center" justifyContent="End" class="sapUiSmallMarginTop" style="border-top: 1px solid #E5E5E5; padding-top: 12px;">
                                     <Button
                                         text="View Plan Details"
                                         type="Transparent"
@@ -168,45 +158,37 @@
                                         press=".onInspectPlan" />
                                 </HBox>
                             </VBox>
-                        </layout:Grid>
+                        </VBox>
                     </VBox>
 
-                    <!-- SECTION 2: AGENT 3 PLAN EVALUATION & FEASIBILITY COMPARISON TABLE -->
-                    <VBox class="sapUiSmallMarginTop sapUiSmallMarginBottom">
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
-                            <VBox>
-                                <Title text="PLAN EVALUATION &amp; FEASIBILITY (AGENT 3)" level="H2" class="sapSectionTitle" />
-                                <Text text="Deterministic evaluation of candidate plans: plan-specific recovery cost, multi-dimensional risk, contract validation, and hard/soft constraints." class="sapSectionSub" />
-                            </VBox>
-                            <Text text="NO AUTOMATIC APPROVAL — Human Decision Required in Stage 6" class="bold textCritical" />
-                        </HBox>
-
-                        <Table items="{rec>/all_evaluated_plans}" class="sapUiSmallMarginBottom" noDataText="Evaluation running...">
+                    <!-- AGENT 3 PLAN EVALUATION & FEASIBILITY COMPARISON TABLE -->
+                    <VBox class="sapUiMediumMarginTop sapUiMediumMarginBottom quadsImpactCard">
+                        <Table items="{rec>/all_evaluated_plans}" class="quadsEvaluationTable sapUiSmallMarginBottom" noDataText="Evaluation running...">
                             <columns>
-                                <Column width="140px"><Text text="Plan ID / Strategy" class="bold" /></Column>
-                                <Column width="110px"><Text text="Recovery Time" class="bold" /></Column>
-                                <Column width="110px"><Text text="ETA" class="bold" /></Column>
-                                <Column width="110px"><Text text="Total Cost" class="bold" /></Column>
-                                <Column width="110px"><Text text="Risk" class="bold" /></Column>
-                                <Column width="110px"><Text text="Customer Delay" class="bold" /></Column>
-                                <Column width="110px"><Text text="Qty Recovered" class="bold" /></Column>
-                                <Column width="130px"><Text text="Constraint Status" class="bold" /></Column>
+                                <Column width="160px"><Text text="Plan ID / Strategy" class="bold" /></Column>
+                                <Column width="115px" minScreenWidth="Desktop" demandPopin="true"><Text text="Recovery Time" class="bold" /></Column>
+                                <Column width="105px" minScreenWidth="Desktop" demandPopin="true"><Text text="ETA" class="bold" /></Column>
+                                <Column width="115px"><Text text="Total Cost" class="bold" /></Column>
+                                <Column width="100px"><Text text="Risk" class="bold" /></Column>
+                                <Column width="125px" minScreenWidth="Desktop" demandPopin="true"><Text text="Customer Delay" class="bold" /></Column>
+                                <Column width="115px" minScreenWidth="Tablet" demandPopin="true"><Text text="Qty Recovered" class="bold" /></Column>
+                                <Column width="130px" minScreenWidth="Tablet" demandPopin="true"><Text text="Constraint Status" class="bold" /></Column>
                                 <Column width="130px"><Text text="Feasibility" class="bold" /></Column>
-                                <Column width="90px"><Text text="Score" class="bold" /></Column>
-                                <Column width="150px"><Text text="Action" class="bold" /></Column>
+                                <Column width="85px"><Text text="Score" class="bold" /></Column>
+                                <Column width="180px"><Text text="Action" class="bold" /></Column>
                             </columns>
                             <items>
                                 <ColumnListItem>
                                     <cells>
                                         <VBox>
-                                            <Text text="{rec>plan_id} ({rec>version})" class="bold textPrimary" />
-                                            <Text text="{rec>strategy}" class="textSmall textMuted" />
+                                            <Text text="{= ${rec>version} ? ${rec>plan_id} + ' (' + ${rec>version} + ')' : ${rec>plan_id} }" class="bold textPrimary" />
+                                            <Text text="{rec>strategy}" class="textSmall textMuted sapUiTinyMarginTop" />
                                         </VBox>
                                         <Text text="{rec>recovery_days} Days" class="bold" />
                                         <Text text="{rec>expected_arrival_date}" />
                                         <Text text="${= ${rec>total_cost} ? ${rec>total_cost}.toLocaleString() : 'N/A' }" class="bold" />
                                         <ObjectStatus
-                                            text="{rec>operational_risk} ({rec>composite_risk_score})"
+                                            text="{= ${rec>composite_risk_score} ? ${rec>operational_risk} + ' (' + ${rec>composite_risk_score} + ')' : ${rec>operational_risk} }"
                                             state="{= ${rec>operational_risk} === 'LOW' ? 'Success' : (${rec>operational_risk} === 'MEDIUM' ? 'Warning' : 'Error') }"
                                             class="bold" />
                                         <Text text="{rec>customer_delay_days} Days" class="{= ${rec>customer_delay_days} > 0 ? 'textCritical bold' : 'textSuccess bold' }" />
@@ -215,7 +197,7 @@
                                             text="{= ${rec>is_feasible} ? 'Passed' : 'Breached' }"
                                             state="{= ${rec>is_feasible} ? 'Success' : 'Error' }"
                                             class="bold" />
-                                        <VBox>
+                                        <VBox class="quadsFeasibilityCell">
                                             <ObjectStatus
                                                 text="{= ${rec>is_feasible} ? 'FEASIBLE' : 'NOT FEASIBLE' }"
                                                 state="{= ${rec>is_feasible} ? 'Success' : 'Error' }"
@@ -223,17 +205,18 @@
                                             <Text
                                                 text="{rec>infeasibility_reason}"
                                                 visible="{= !${rec>is_feasible} }"
-                                                class="textCritical textSmall bold" />
+                                                class="textCritical textSmall" />
                                         </VBox>
                                         <ObjectStatus
                                             text="{= ${rec>is_feasible} ? ${rec>score} + ' pts' : 'N/A' }"
                                             state="{= ${rec>score} >= 85 ? 'Success' : 'Information' }"
                                             class="bold" />
                                         <Button
-                                            text="CALCULATION DETAILS"
+                                            text="View Calculation Details"
                                             icon="sap-icon://inspection"
                                             press=".onInspectPlan"
-                                            type="Default" />
+                                            type="Default"
+                                            class="sapUiTinyMarginTop" />
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -270,21 +253,24 @@
                     </Panel>
 
                     <!-- Bottom Action Row: Proceed to Stage 6 Final Decision -->
-                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageActionsRow sapUiSmallMarginTop">
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapPageActionsRow sapUiLargeMarginTop" style="border-top: 1px solid #D9E2EC; padding-top: 24px;">
                         <Button
                             text="Back to Recovery Priority"
                             type="Transparent"
                             icon="sap-icon://nav-back"
                             press=".onBackToPriority"
                             class="sapBtnSecondary" />
-                        <Button
-                            id="btnProceedDecisionBottom"
-                            text="PROCEED TO FINAL DECISION &#x2192;"
-                            icon="sap-icon://navigation-right-arrow"
-                            type="Emphasized"
-                            press=".onProceedToDecision"
-                            enabled="{= ${rec>/state} === 'COMPLETED' }"
-                            class="sapBtnPrimary" />
+                        <HBox alignItems="Center">
+                            <ObjectStatus text="Awaiting Human Authorization" state="Warning" class="bold sapUiMediumMarginEnd" />
+                            <Button
+                                id="btnProceedDecisionBottom"
+                                text="PROCEED TO FINAL DECISION &#x2192;"
+                                icon="sap-icon://navigation-right-arrow"
+                                type="Emphasized"
+                                press=".onProceedToDecision"
+                                enabled="{= ${rec>/state} === 'COMPLETED' }"
+                                class="sapBtnPrimary" />
+                        </HBox>
                     </HBox>
                 </VBox>
 
