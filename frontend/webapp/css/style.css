@@ -473,24 +473,22 @@ body {
     margin-bottom: 14px;
 }
 
-/* ---- 11. KPI Metric Row (Single Row, 4 Equal Columns across Chrome & Safari) ---- */
+/* ---- 11. KPI Metric Row (Single Row, 6 Equal Columns) ---- */
 .sapKpiGrid {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 1rem !important;
     align-items: stretch !important;
-    gap: 16px !important;
     margin-bottom: 20px !important;
     width: 100% !important;
     padding: 0 !important;
 }
 
 .sapKpiGrid.sapUiRespGrid {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 1rem !important;
     align-items: stretch !important;
-    gap: 16px !important;
     margin-bottom: 20px !important;
     width: 100% !important;
     padding: 0 !important;
@@ -498,14 +496,24 @@ body {
 
 .sapKpiGrid.sapUiRespGrid>div,
 .sapKpiGrid>div {
-    flex: 1 1 25% !important;
-    width: calc(25% - 12px) !important;
-    max-width: 25% !important;
+    width: 100% !important;
+    max-width: none !important;
     min-width: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     float: none !important;
     box-sizing: border-box !important;
+}
+
+@media (max-width: 1100px) {
+    .sapKpiGrid, .sapKpiGrid.sapUiRespGrid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+@media (max-width: 600px) {
+    .sapKpiGrid, .sapKpiGrid.sapUiRespGrid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }
 
 .sapKpiCard {
@@ -2219,7 +2227,8 @@ body {
 }
 
 .quadsTextMedium {
-    color: #0070F2 !important;
+    color: #F59E0B !important;
+    font-weight: 600 !important;
 }
 
 .quadsTextLow {
@@ -6113,3 +6122,86 @@ body {
 }
 .sapCategoryBtnResolved.sapCategoryBtnActive .sapMBtnInner { color: #059669 !important; }
 
+
+/* ====================================================================
+   GLOBAL CARD STYLING (Subtle Blue Outline + Soft Shadow)
+   ==================================================================== */
+.sapCard, 
+.sapKpiCard, 
+.quadsWhiteCard, 
+.sapImpactContextCard, 
+.sapRecoveryPlanCard, 
+.sapExpandPanel.sapMPanel, 
+.sapExecCard, 
+.quadsImpactCard,
+.sapFilterCard,
+.sapTableCard,
+.sapDecisionCard,
+.sapContentCard,
+.sapContextCard,
+.sapFormCardWide,
+.sapVisualChainCard,
+.sapBeforeYouBeginCard,
+.sapOverviewCard,
+.sapCaseWorkflowHeaderContainer,
+.sapFioriObjectHeader,
+.sapFioriSection,
+.sapAnalyticsCard,
+.quadsDetailCard {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(10, 110, 209, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba(10, 110, 209, 0.04), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    border-radius: 8px !important;
+}
+
+
+
+/* Re-apply top borders for KPI cards so they are not fully overridden */
+.sapKpiCard.infoBorder { border-top: 3px solid #0070F2 !important; }
+.sapKpiCard.criticalBorder { border-top: 3px solid #DC2626 !important; }
+.sapKpiCard.warningBorder { border-top: 3px solid #D97706 !important; }
+.sapKpiCard.successBorder { border-top: 3px solid #16A34A !important; }
+
+/* Dashboard Typography increases */
+.sapKpiTitle {
+    font-size: 12px !important;
+}
+.sapKpiNumber, .sapKpiValue {
+    font-size: 28px !important;
+}
+.sapKpiNumberSmall {
+    font-size: 16px !important;
+}
+.sapCard .sapMTitle {
+    font-size: 18px !important;
+}
+.quadsDashboardTable .sapMText {
+    font-size: 14px !important;
+}
+.quadsDashboardTable .sapMObjStatus {
+    font-size: 14px !important;
+}
+
+/* Dashboard Two Column Layout */
+.quadsDashboardTwoColRow {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: stretch;
+    width: 100%;
+}
+.quadsStretchCard {
+    height: 100% !important;
+    box-sizing: border-box !important;
+}
+@media (max-width: 800px) {
+    .quadsDashboardTwoColRow {
+        grid-template-columns: 1fr;
+    }
+}
+.quadsDonutContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
