@@ -139,7 +139,8 @@
                         <VBox
                             items="{dec>/feasible_plans}"
                             renderType="Bare"
-                            class="quadsPlanGrid sapUiSmallMarginBottom">
+                            class="quadsPlanGrid sapUiSmallMarginBottom"
+                            style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch;">
 
                             <VBox class="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'sapChoiceCard quadsPlanCard sapChoiceSelected' : 'sapChoiceCard quadsPlanCard' }">
                                 <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsCardHeaderRow">
@@ -170,15 +171,16 @@
                                     <Text text="{dec>expected_customer_impact}" class="quadsMetaValue" />
                                 </VBox>
 
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginTop" style="border-top: 1px solid #E5E5E5; padding-top: 12px;">
+                                <VBox class="quadsCardSpacer" />
+
+                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsCardBottom">
                                     <ObjectStatus text="{= ${dec>risk_score} ? ${dec>operational_risk} + ' RISK (' + ${dec>risk_score} + ')' : ${dec>operational_risk} + ' RISK' }" state="{= ${dec>operational_risk} === 'LOW' ? 'Success' : 'Warning' }" class="bold textSmall" />
                                     <Button
                                         text="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Selected' : 'Select Plan' }"
                                         type="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'Emphasized' : 'Default' }"
                                         icon="{= ${dec>plan_id} === ${dec>/selectedPlan/plan_id} ? 'sap-icon://accept' : 'sap-icon://cursor-arrow' }"
                                         press=".onSelectFeasiblePlan"
-                                        class="quadsSelectPlanBtn"
-                                        style="min-height: 36px; min-width: 140px;" />
+                                        class="quadsSelectPlanBtn" />
                                 </HBox>
                             </VBox>
                         </VBox>

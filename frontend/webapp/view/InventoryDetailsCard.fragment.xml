@@ -1,0 +1,46 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <VBox class="sapFioriSection">
+        <HBox alignItems="Center" class="sapFioriSectionHeader">
+            <Text text="3" class="sapSectionNum" />
+            <Title text="Inventory Details" level="H2" class="sapFioriSectionTitle" />
+        </HBox>
+        <VBox class="sapFioriSectionBody">
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Current Stock" class="quadsDetailLabel" />
+                <Text text="{case>/inventory/currentStock_formatted}" class="quadsDetailValueCritical" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Reserved Stock" class="quadsDetailLabel" />
+                <Text text="{case>/inventory/reservedStock_formatted}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Available Stock" class="quadsDetailLabel" />
+                <Text text="{case>/inventory/availableStock_formatted}" class="quadsDetailValueCritical" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Safety Stock" class="quadsDetailLabel" />
+                <Text text="{case>/safety_stock_display}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Required Quantity" class="quadsDetailLabel" />
+                <Text text="{case>/production/dailyRequirement} units" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Daily Consumption Rate" class="quadsDetailLabel" />
+                <Text text="{case>/inventory/dailyConsumption_formatted}/day" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Days of Cover" class="quadsDetailLabel" />
+                <Text text="{case>/doc_display}" class="quadsDetailValueCritical" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Projected Stockout Date" class="quadsDetailLabel" />
+                <Text text="{case>/stockout_display}" class="quadsDetailValueCritical" />
+            </HBox>
+            <HBox class="quadsAlertBanner sapUiMediumMarginTop" alignItems="Center">
+                <core:Icon src="sap-icon://alert" class="sapUiTinyMarginEnd" />
+                <Text text="Available stock is below safety stock. Projected stockout in 5 days." />
+            </HBox>
+        </VBox>
+    </VBox>
+</core:FragmentDefinition>

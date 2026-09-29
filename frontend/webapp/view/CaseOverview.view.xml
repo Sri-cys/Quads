@@ -125,99 +125,13 @@
                 </VBox>
 
                 <!-- ===== SECTION 2: Supplier Details ===== -->
-                <VBox class="sapFioriSection">
-                    <HBox alignItems="Center" class="sapFioriSectionHeader">
-                        <Text text="2" class="sapSectionNum" />
-                        <Title text="Supplier Details" level="H2" class="sapFioriSectionTitle" />
-                    </HBox>
-                    <VBox class="sapFioriSectionBody">
-                        <layout:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="2" vSpacing="0">
-                            <VBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Supplier Name" class="sapFormLabel" />
-                                    <Text text="{case>/supplier_name}" class="sapFormVal bold" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Supplier ID" class="sapFormLabel" />
-                                    <Text text="{case>/supplier_id}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow sapFormRowLast">
-                                    <Text text="Material" class="sapFormLabel" />
-                                    <Text text="{case>/material_name}" class="sapFormVal" />
-                                </HBox>
-                            </VBox>
-                            <VBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Material ID" class="sapFormLabel" />
-                                    <Text text="{case>/material_id}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Plant" class="sapFormLabel" />
-                                    <Text text="{case>/plant_name}" class="sapFormVal bold" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow sapFormRowLast">
-                                    <Text text="Plant ID" class="sapFormLabel" />
-                                    <Text text="{case>/plant_id}" class="sapFormVal" />
-                                </HBox>
-                            </VBox>
-                        </layout:Grid>
-                    </VBox>
-                </VBox>
+                <core:Fragment fragmentName="com.quads.supplychain.view.SupplierDetailsCard" type="XML" />
 
                 <!-- ===== SECTION 3: Inventory Details ===== -->
-                <VBox class="sapFioriSection">
-                    <HBox alignItems="Center" class="sapFioriSectionHeader">
-                        <Text text="3" class="sapSectionNum" />
-                        <Title text="Inventory Details" level="H2" class="sapFioriSectionTitle" />
-                    </HBox>
-                    <VBox class="sapFioriSectionBody">
-                        <!-- Inventory metrics in a 4-col grid -->
-                        <layout:Grid defaultSpan="XL3 L3 M6 S12" hSpacing="1" vSpacing="1" class="sapUiSmallMarginBottom">
-                            <VBox class="sapInventoryKpi">
-                                <Text text="Days of Cover" class="sapInventoryKpiLabel" />
-                                <Text text="{case>/doc_display}" class="sapInventoryKpiVal textCritical" />
-                            </VBox>
-                            <VBox class="sapInventoryKpi">
-                                <Text text="Projected Stockout" class="sapInventoryKpiLabel" />
-                                <Text text="{case>/stockout_display}" class="sapInventoryKpiVal textCritical" />
-                            </VBox>
-                            <VBox class="sapInventoryKpi">
-                                <Text text="Supply Gap" class="sapInventoryKpiLabel" />
-                                <Text text="{case>/supply_gap_display}" class="sapInventoryKpiVal textWarning" />
-                            </VBox>
-                            <VBox class="sapInventoryKpi">
-                                <Text text="Safety Stock" class="sapInventoryKpiLabel" />
-                                <Text text="{case>/safety_stock_display}" class="sapInventoryKpiVal" />
-                            </VBox>
-                        </layout:Grid>
+                <core:Fragment fragmentName="com.quads.supplychain.view.InventoryDetailsCard" type="XML" />
 
-                        <!-- Insufficient Stock Message Strip -->
-                        <HBox alignItems="Center" class="sapFioriMessageStrip warning">
-                            <core:Icon src="sap-icon://warning" class="sapMsgStripIcon" />
-                            <Text text="Insufficient stock to cover production requirements. Immediate recovery action is required to avoid assembly line stoppage." class="sapMsgStripText" />
-                        </HBox>
-
-                        <!-- Financial Exposure -->
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapInventoryFinRow">
-                            <HBox alignItems="Start" class="sapFormRow sapUiNoMargin">
-                                <Text text="Financial Exposure" class="sapFormLabel" />
-                                <Text text="{case>/financial_exposure_display}" class="sapFormVal textCritical bold" />
-                            </HBox>
-                            <HBox alignItems="Start" class="sapFormRow sapUiNoMargin">
-                                <Text text="Expediting Cost" class="sapFormLabel" />
-                                <Text text="{case>/expediting_cost_display}" class="sapFormVal textWarning" />
-                            </HBox>
-                            <HBox alignItems="Start" class="sapFormRow sapUiNoMargin">
-                                <Text text="SLA Penalty Risk" class="sapFormLabel" />
-                                <Text text="{case>/sla_penalty_display}" class="sapFormVal textWarning" />
-                            </HBox>
-                            <HBox alignItems="Start" class="sapFormRow sapUiNoMargin">
-                                <Text text="Net Recovery Cost" class="sapFormLabel" />
-                                <Text text="{case>/net_recovery_cost_display}" class="sapFormVal" />
-                            </HBox>
-                        </HBox>
-                    </VBox>
-                </VBox>
+                <!-- ===== SECTION 4: Logistics & Transport Details ===== -->
+                <core:Fragment fragmentName="com.quads.supplychain.view.LogisticsDetailsCard" type="XML" />
 
                 <!-- Workflow Progression Guidance Card -->
                 <VBox class="sapVisualChainCard sapUiSmallMarginTop">

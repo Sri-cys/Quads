@@ -108,7 +108,8 @@
                             id="candidatesGrid"
                             items="{rec>/candidates}"
                             renderType="Bare"
-                            class="quadsPlanGrid sapUiSmallMarginBottom">
+                            class="quadsPlanGrid sapUiSmallMarginBottom"
+                            style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch;">
 
                             <VBox class="sapChoiceCard quadsPlanCard">
                                 <VBox>

@@ -1,0 +1,50 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <VBox class="sapFioriSection">
+        <HBox alignItems="Center" class="sapFioriSectionHeader">
+            <Text text="4" class="sapSectionNum" />
+            <Title text="Logistics &amp; Transport Details" level="H2" class="sapFioriSectionTitle" />
+        </HBox>
+        <VBox class="sapFioriSectionBody">
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Origin" class="quadsDetailLabel" />
+                <Text text="{case>/origin}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Destination" class="quadsDetailLabel" />
+                <Text text="{case>/destination}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Carrier" class="quadsDetailLabel" />
+                <Text text="{case>/carrier}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Transport Mode" class="quadsDetailLabel" />
+                <Text text="{case>/transport_mode}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Current ETA" class="quadsDetailLabel" />
+                <Text text="{case>/current_eta}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Expected ETA" class="quadsDetailLabel" />
+                <Text text="{case>/expected_delivery_date}" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Delay" class="quadsDetailLabel" />
+                <Text text="+{case>/expected_delay_days} days" class="quadsDetailValueCritical" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Transit Time" class="quadsDetailLabel" />
+                <Text text="6 days (Planned)" class="quadsDetailValue" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Logistics Risk" class="quadsDetailLabel" />
+                <ObjectStatus text="High" class="quadsBadgeCritical" />
+            </HBox>
+            <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
+                <Text text="Alternate Logistics" class="quadsDetailLabel" />
+                <Text text="Available (Air Freight, 3 days)" class="quadsDetailValue" />
+            </HBox>
+        </VBox>
+    </VBox>
+</core:FragmentDefinition>

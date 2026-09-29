@@ -146,43 +146,52 @@
                             <ObjectStatus text="{dashboard>/stats/totalCases} Total" state="None" class="bold" />
                         </HBox>
 
-                        <!-- Donut and Legend -->
-                        <HBox alignItems="Center" justifyContent="Center" class="quadsDonutContainer sapUiMediumMarginTopBottom">
+                        <!-- Donut and Severity Table -->
+                        <HBox alignItems="Center" justifyContent="Start" class="quadsDonutRow">
                             <!-- Donut Chart (Dynamic Proportional CSS via Formatter) -->
                             <core:HTML content="{
                                 path: 'dashboard>/stats',
                                 formatter: '.formatDonutChart'
                             }" />
-                            
-                            <!-- Legend -->
-                            <VBox>
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
-                                    <HBox alignItems="Center">
-                                        <core:Icon src="sap-icon://error" size="16px" class="sapUiTinyMarginEnd textCritical" />
+
+                            <!-- Severity Table -->
+                            <VBox class="quadsSeverityTable">
+                                <!-- Table Header -->
+                                <HBox class="quadsSevTableHeader">
+                                    <Text text="SEVERITY" class="quadsSevColLabel" />
+                                    <Text text="COUNT" class="quadsSevColCount quadsSevColCountHeader" />
+                                </HBox>
+                                <!-- Critical Row -->
+                                <HBox alignItems="Center" class="quadsSevTableRow">
+                                    <HBox alignItems="Center" class="quadsSevName">
+                                        <core:Icon src="sap-icon://error" size="14px" class="quadsSevDot sapUiTinyMarginEnd textCritical" />
                                         <Text text="Critical" class="textDark" />
                                     </HBox>
-                                    <Text text="{dashboard>/stats/critical}" class="bold textCritical sapKpiNumberSmall sapUiLargeMarginLeft" />
+                                    <Text text="{dashboard>/stats/critical}" class="bold textCritical quadsSevColCount" />
                                 </HBox>
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
-                                    <HBox alignItems="Center">
-                                        <core:Icon src="sap-icon://alert" size="16px" class="sapUiTinyMarginEnd textWarning" />
+                                <!-- High Risk Row -->
+                                <HBox alignItems="Center" class="quadsSevTableRow">
+                                    <HBox alignItems="Center" class="quadsSevName">
+                                        <core:Icon src="sap-icon://alert" size="14px" class="quadsSevDot sapUiTinyMarginEnd textWarning" />
                                         <Text text="High Risk" class="textDark" />
                                     </HBox>
-                                    <Text text="{dashboard>/stats/high}" class="bold textWarning sapKpiNumberSmall sapUiLargeMarginLeft" />
+                                    <Text text="{dashboard>/stats/high}" class="bold textWarning quadsSevColCount" />
                                 </HBox>
-                                <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginBottom">
-                                    <HBox alignItems="Center">
-                                        <core:Icon src="sap-icon://information" size="16px" class="sapUiTinyMarginEnd quadsTextMedium" />
+                                <!-- Medium Risk Row -->
+                                <HBox alignItems="Center" class="quadsSevTableRow">
+                                    <HBox alignItems="Center" class="quadsSevName">
+                                        <core:Icon src="sap-icon://information" size="14px" class="quadsSevDot sapUiTinyMarginEnd quadsTextMedium" />
                                         <Text text="Medium Risk" class="textDark" />
                                     </HBox>
-                                    <Text text="{dashboard>/stats/medium}" class="bold quadsTextMedium sapKpiNumberSmall sapUiLargeMarginLeft" />
+                                    <Text text="{dashboard>/stats/medium}" class="bold quadsTextMedium quadsSevColCount" />
                                 </HBox>
-                                <HBox alignItems="Center" justifyContent="SpaceBetween">
-                                    <HBox alignItems="Center">
-                                        <core:Icon src="sap-icon://sys-enter-2" size="16px" class="sapUiTinyMarginEnd textSuccess" />
+                                <!-- Low Risk Row -->
+                                <HBox alignItems="Center" class="quadsSevTableRow quadsSevTableRowLast">
+                                    <HBox alignItems="Center" class="quadsSevName">
+                                        <core:Icon src="sap-icon://sys-enter-2" size="14px" class="quadsSevDot sapUiTinyMarginEnd textSuccess" />
                                         <Text text="Low Risk" class="textDark" />
                                     </HBox>
-                                    <Text text="{dashboard>/stats/low}" class="bold textSuccess sapKpiNumberSmall sapUiLargeMarginLeft" />
+                                    <Text text="{dashboard>/stats/low}" class="bold textSuccess quadsSevColCount" />
                                 </HBox>
                             </VBox>
                         </HBox>

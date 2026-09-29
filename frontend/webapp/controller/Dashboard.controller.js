@@ -285,10 +285,10 @@ sap.ui.define([
                 "#16A34A " + stop3 + "% 100%" +
             ")";
 
-            return "<div style='width: 280px; height: 280px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 32px; background: " + gradient + ";'>" +
-                   "<div style='width: 200px; height: 200px; background: #FFFFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column;'>" +
-                   "<span style='font-size: 42px; font-weight: 800; color: #1D2D3E; margin: 0; line-height: 1.1;'>" + stats.totalCases + "</span>" +
-                   "<span style='font-size: 14px; color: #94A3B8; margin-top: 2px; font-weight: 700; text-transform: uppercase;'>Cases</span>" +
+            return "<div style='width: 260px; height: 260px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 4px; margin-right: 20px; background: " + gradient + ";'>" +
+                   "<div style='width: 185px; height: 185px; background: #FFFFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column;'>" +
+                   "<span style='font-size: 38px; font-weight: 800; color: #1D2D3E; margin: 0; line-height: 1.1;'>" + stats.totalCases + "</span>" +
+                   "<span style='font-size: 12px; color: #94A3B8; margin-top: 2px; font-weight: 700; text-transform: uppercase;'>Cases</span>" +
                    "</div></div>";
         },
 
