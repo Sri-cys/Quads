@@ -405,8 +405,7 @@ sap.ui.define([
 
         onGoToOutcome: function () {
             var sCaseId = this._sCurrentCaseId || "CASE-0001";
-            WorkflowNavHelper.markStageCompleted(sCaseId, 7);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 7);
+            WorkflowNavHelper.completeStage(sCaseId, 7, 7);
             this.getOwnerComponent().getRouter().navTo("outcome", { caseId: sCaseId });
         },
 

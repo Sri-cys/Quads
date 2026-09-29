@@ -23,6 +23,148 @@ sap.ui.define([
     };
 
     return Controller.extend("com.quads.supplychain.controller.ImpactAnalysis", {
+        formatter: {
+            formatExecLine1: function(delay, revised, original) {
+                if (delay === undefined || delay === null) return "—";
+                return "The supplier shipment is delayed by " + delay + " days and is now expected on " + (revised || "—") + " instead of " + (original || "—") + ".";
+            },
+            formatExecLine2: function(doc) {
+                if (doc === undefined || doc === null) return "—";
+                return "The plant has " + doc + " days of stock remaining, so production may be affected if the material does not arrive on time.";
+            },
+            formatExecLine3: function(prodOrdersStr, custOrdersCount) {
+                if (prodOrdersStr === undefined || prodOrdersStr === null) return "—";
+                var prodCount = 0;
+                if (prodOrdersStr) {
+                    prodCount = prodOrdersStr.split(",").length;
+                }
+                var custCount = custOrdersCount || 0;
+                return prodCount + " critical production orders and " + custCount + " customer deliveries may be affected by the delay.";
+            },
+            formatExecLine4: function(exposure) {
+                if (!exposure) return "—";
+                return "The current gross financial exposure is " + exposure + ".";
+            },
+            
+            formatSeverityBadge: function(severity) {
+                if (!severity) return "—";
+                var s = String(severity).toUpperCase();
+                if (s === "CRITICAL") return "CRITICAL RISK";
+                if (s === "HIGH") return "HIGH RISK";
+                if (s === "MEDIUM") return "MODERATE RISK";
+                if (s === "LOW") return "LOW RISK";
+                return s + " RISK";
+            },
+            formatSeverityColor: function(severity) {
+                if (!severity) return "green";
+                var s = String(severity).toUpperCase();
+                if (s === "CRITICAL" || s === "HIGH") return "red";
+                if (s === "MEDIUM") return "amber";
+                return "green";
+            },
+            formatTimelineDate: function(dateStr) {
+                if (!dateStr) return "—";
+                var d = new Date(dateStr);
+                if (isNaN(d.getTime())) return "—";
+                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                var day = String(d.getDate()).padStart(2, "0");
+                return day + " " + months[d.getMonth()];
+            },
+            formatDelayDays: function(expected, revised) {
+                if (!expected || !revised) return "0 days delay";
+                var d1 = new Date(expected).getTime();
+                var d2 = new Date(revised).getTime();
+                if (isNaN(d1) || isNaN(d2)) return "0 days delay";
+                var diff = d2 - d1;
+                var days = Math.round(diff / 86400000);
+                return days + " days delay";
+            },
+            formatDelayVisible: function(expected, revised) {
+                if (!expected || !revised) return false;
+                var d1 = new Date(expected).getTime();
+                var d2 = new Date(revised).getTime();
+                if (isNaN(d1) || isNaN(d2)) return false;
+                return d2 > d1;
+            },
+            formatProductionHighlight: function(prodOrdersStr) {
+                if (!prodOrdersStr) return "0 Orders Affected";
+                return prodOrdersStr.split(",").length + " Orders Affected";
+            },
+            formatProductionSubtext: function(breach, daysOfCover) {
+                var doc = daysOfCover !== null && daysOfCover !== undefined ? daysOfCover : "—";
+                if (breach === "BREACHED" || breach === true) {
+                    return "Safety stock breach · Line stoppage hazard in " + doc + " Days";
+                }
+                return "Line stoppage hazard in " + doc + " Days";
+            },
+            formatInventoryBufferColor: function(doc, delay) {
+                if (doc === null || doc === undefined) return "green";
+                var delayNum = delay || 0;
+                if (doc < delayNum || doc <= 3) return "red";
+                return "green";
+            },
+            formatOperationalStatus: function(doc) {
+                if (doc === null || doc === undefined) return "Normal";
+                if (doc <= 3) return "Line Stoppage Hazard";
+                return "Normal";
+            },
+            formatOperationalStatusColor: function(doc) {
+                if (doc === null || doc === undefined) return "green";
+                if (doc <= 3) return "red";
+                return "green";
+            },
+            formatOperationalStatusIcon: function(doc) {
+                if (doc === null || doc === undefined) return "sap-icon://sys-enter-2";
+                if (doc <= 3) return "sap-icon://warning2";
+                return "sap-icon://sys-enter-2";
+            },
+            
+            formatSlaBadgeText: function(customerDelay) {
+                if (customerDelay && parseInt(customerDelay, 10) > 0) return "SLA AT RISK";
+                return "ON TRACK";
+            },
+            formatSlaBadgeColor: function(customerDelay) {
+                if (customerDelay && parseInt(customerDelay, 10) > 0) return "amber";
+                return "green";
+            },
+            formatCustomerHighlight: function(customerDelay) {
+                if (customerDelay && parseInt(customerDelay, 10) > 0) {
+                    return "+" + parseInt(customerDelay, 10) + " days delay";
+                }
+                return "No Delay";
+            },
+            formatSlaRiskText: function(customerDelay) {
+                if (customerDelay && parseInt(customerDelay, 10) > 0) return "Late Delivery Clause Triggered";
+                return "No clause triggered";
+            },
+            formatSlaRiskColor: function(customerDelay) {
+                if (customerDelay && parseInt(customerDelay, 10) > 0) return "amber";
+                return ""; 
+            },
+            formatCustomerETA: function(expectedEta, customerDelay) {
+                if (!expectedEta) return "—";
+                var cd = parseInt(customerDelay, 10) || 0;
+                if (cd > 0) {
+                    return expectedEta + " (+" + cd + "d variance)";
+                }
+                return expectedEta + " (On Track)";
+            },
+            formatCustomerETAColor: function(customerDelay) {
+                if (customerDelay && parseInt(customerDelay, 10) > 0) return "amber";
+                return ""; 
+            },
+            
+            formatFinancialHighlight: function(prodLossStr, custPenaltyStr) {
+                if (!prodLossStr && !custPenaltyStr) return "—";
+                var v1 = prodLossStr ? parseFloat(prodLossStr.replace(/[^0-9.-]+/g, "")) : 0;
+                var v2 = custPenaltyStr ? parseFloat(custPenaltyStr.replace(/[^0-9.-]+/g, "")) : 0;
+                return "$" + (v1 + v2).toLocaleString(undefined, { minimumFractionDigits: 2 });
+            },
+            formatTotalHighlight: function(totalExposure) {
+                return totalExposure || "—";
+            }
+        },
+
         onInit: function () {
             var oModel = new JSONModel({
                 analysisState: "PENDING", // PENDING, RUNNING, COMPLETED, FAILED
@@ -169,10 +311,6 @@ sap.ui.define([
                 oModel.setProperty("/case", caseData);
                 that._populateImpactData(caseData, impactData);
                 oModel.setProperty("/analysisState", "COMPLETED");
-                sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
-                    WorkflowNavHelper.markStageCompleted(caseData.case_id || that._sCurrentCaseId, 2);
-                    WorkflowNavHelper.setStepperState(caseData.case_id || that._sCurrentCaseId, 2);
-                });
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
             })
             .catch(function (err) {
@@ -207,6 +345,13 @@ sap.ui.define([
         _populateImpactData: function (caseData, impactData) {
             var oModel = this.getView().getModel("impact");
             var ds = impactData.downstream_impact || {};
+
+            var dDetected = caseData.detected_at ? new Date(caseData.detected_at) : new Date();
+            var dExpDelivery = new Date(dDetected.getTime() + 2 * 86400000);
+            var delayDays = caseData.expected_delay_days || 0;
+            var dCurrentEta = new Date(dExpDelivery.getTime() + (delayDays * 86400000));
+            caseData.expected_delivery_date = dExpDelivery.toISOString();
+            caseData.current_eta = dCurrentEta.toISOString();
 
             // 1. Precise, non-fake Inventory Formatting
             var currentStockStr = "Data unavailable";
@@ -334,28 +479,44 @@ sap.ui.define([
             oModel.setProperty("/production", productionFormatted);
             oModel.setProperty("/customer", customerFormatted);
             oModel.setProperty("/financial", financialFormatted);
+            
+            console.log("[TIMELINE] caseData.expected_delivery_date raw value:", caseData.expected_delivery_date, "type:", typeof caseData.expected_delivery_date);
+            console.log("[TIMELINE] caseData.current_eta raw value:", caseData.current_eta, "type:", typeof caseData.current_eta);
+            console.log("[TIMELINE] impactData.stockout_date raw value:", impactData.stockout_date, "type:", typeof impactData.stockout_date);
+            console.log("[TIMELINE] caseData.expected_delay_days raw value:", caseData.expected_delay_days, "type:", typeof caseData.expected_delay_days);
+            console.log("[TIMELINE] Formatter output for expected_delivery_date (none used currently in UI): N/A");
+            console.log("[TIMELINE] Binding path for Expected Delivery (Node 6): {impact>/case/expected_delivery_date}");
+            console.log("[TIMELINE] Binding path for Revised Delivery (Node 5): {impact>/inventory/stockoutDate_formatted}");
+            
         },
 
         onProceedPriority: function () {
-            var sState = this.getView().getModel("impact").getProperty("/analysisState");
-            if (sState !== "COMPLETED") {
-                MessageBox.warning("Please complete Impact Analysis before proceeding to Recovery Priority.");
-                return;
-            }
-            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
             var sCaseId = this._sCurrentCaseId;
             var that = this;
 
+            // Stage 2 already done → pure navigation, no backend call
+            if (WorkflowNavHelper.getCompletedStage(sCaseId) >= 2) {
+                that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
+                return;
+            }
+
+            // Stage not yet complete: analysis must be finished first
+            var sState = this.getView().getModel("impact").getProperty("/analysisState");
+            if (sState !== "COMPLETED") {
+                MessageBox.warning("Please wait for Impact Analysis to complete before proceeding.");
+                return;
+            }
+
+            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
             fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/proceed", { method: "POST" })
                 .then(function () {
                     that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "PRIORITY_PENDING");
-                    WorkflowNavHelper.markStageCompleted(sCaseId, 2);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 2);
+                    WorkflowNavHelper.completeStage(sCaseId, 2, 2);
                     that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
                 })
                 .catch(function () {
-                    WorkflowNavHelper.markStageCompleted(sCaseId, 2);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 2);
+                    // Proceed anyway (backend may already be in this state)
+                    WorkflowNavHelper.completeStage(sCaseId, 2, 2);
                     that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
                 });
         },

@@ -92,20 +92,6 @@ sap.ui.define([
                 var caseData = results[0] || {};
                 var impactData = results[1];
 
-                // Route guard: Impact Analysis must be completed first
-                if (!impactData && caseData.status !== "ANALYZED" && caseData.status !== "CHECKPOINT_APPROVED" && caseData.status !== "RECOVERY_APPROVED" && caseData.status !== "RESOLVED") {
-                    MessageBox.warning(
-                        "Impact Analysis has not been performed yet for " + sCaseId + ".\n\nPlease complete Stage 2 before setting recovery priority.",
-                        {
-                            title: "Workflow Stage Locked",
-                            onClose: function () {
-                                that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
-                            }
-                        }
-                    );
-                    return;
-                }
-
                 var docStr = "Data unavailable";
                 if (impactData && impactData.days_of_cover !== null && impactData.days_of_cover !== undefined) {
                     docStr = impactData.days_of_cover + " Days";
@@ -190,6 +176,13 @@ sap.ui.define([
             var sCaseId = this._sCurrentCaseId;
             var that = this;
             var oBtn = this.byId("btnConfirmPriorityAndGenerate");
+
+            // Stage 3 already done → pure navigation
+            if (WorkflowNavHelper.getCompletedStage(sCaseId) >= 3) {
+                that.getOwnerComponent().getRouter().navTo("constraints", { caseId: sCaseId });
+                return;
+            }
+
             if (oBtn) oBtn.setEnabled(false);
 
             fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/priority", {
@@ -207,8 +200,8 @@ sap.ui.define([
             })
             .then(function (caseData) {
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
-                WorkflowNavHelper.markStageCompleted(sCaseId, 3);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 3);
+                WorkflowNavHelper.savePriority(sCaseId, sPriority);
+                WorkflowNavHelper.completeStage(sCaseId, 3, 3);
                 MessageToast.show("Priority '" + sPriority + "' confirmed. Launching Agent 2...");
                 that.getOwnerComponent().getRouter().navTo("constraints", { caseId: sCaseId });
             })

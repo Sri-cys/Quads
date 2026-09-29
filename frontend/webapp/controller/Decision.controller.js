@@ -314,9 +314,9 @@ sap.ui.define([
         },
 
         onProceedToExecution: function () {
-            WorkflowNavHelper.markStageCompleted(this._sCurrentCaseId, 6);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 6);
-            this.getOwnerComponent().getRouter().navTo("executionMonitoring", { caseId: this._sCurrentCaseId });
+            var sCaseId = this._sCurrentCaseId;
+            WorkflowNavHelper.completeStage(sCaseId, 6, 6);
+            this.getOwnerComponent().getRouter().navTo("executionMonitoring", { caseId: sCaseId });
         },
 
         onBackToRecoveryPlanning: function () {

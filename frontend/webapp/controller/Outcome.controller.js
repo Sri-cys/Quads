@@ -56,6 +56,7 @@ sap.ui.define([
             }
             this._sCaseId = sCaseId;
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
+            WorkflowNavHelper.setStepperState(sCaseId, 8);
             this._loadCaseList();
             this.loadOutcomeData(sCaseId);
         },

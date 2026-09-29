@@ -29,7 +29,7 @@
                             class="sapBackLink sapUiMediumMarginEnd" />
                         <Button
                             id="btnProceedDecisionTop"
-                            text="PROCEED TO FINAL DECISION &#x2192;"
+                            text="{= ${app>/completedStage} >= 5 ? 'GO TO FINAL DECISION &#x2192;' : 'PROCEED TO FINAL DECISION &#x2192;' }"
                             type="Emphasized"
                             icon="sap-icon://navigation-right-arrow"
                             press=".onProceedToDecision"
@@ -265,7 +265,7 @@
                             <ObjectStatus text="Awaiting Human Authorization" state="Warning" class="bold sapUiMediumMarginEnd" />
                             <Button
                                 id="btnProceedDecisionBottom"
-                                text="PROCEED TO FINAL DECISION &#x2192;"
+                                text="{= ${app>/completedStage} >= 5 ? 'GO TO FINAL DECISION &#x2192;' : 'PROCEED TO FINAL DECISION &#x2192;' }"
                                 icon="sap-icon://navigation-right-arrow"
                                 type="Emphasized"
                                 press=".onProceedToDecision"

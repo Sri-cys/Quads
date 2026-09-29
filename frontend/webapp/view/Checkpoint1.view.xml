@@ -307,7 +307,7 @@
                                 class="sapUiSmallMarginEnd" />
                             <Button
                                 id="btnConfirmPriorityAndGenerate"
-                                text="CONFIRM PRIORITY &amp; GENERATE PLANS &#x2192;"
+                                text="{= ${app>/completedStage} >= 3 ? 'GO TO CONSTRAINTS &#x2192;' : 'CONFIRM PRIORITY &amp; GENERATE PLANS &#x2192;' }"
                                 icon="sap-icon://play"
                                 type="Emphasized"
                                 enabled="{= !!${cp>/selectedPriority} }"

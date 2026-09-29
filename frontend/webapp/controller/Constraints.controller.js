@@ -55,21 +55,7 @@ sap.ui.define([
                     return r.json();
                 })
                 .then(function (caseData) {
-                    // Route guard: Priority must be saved before Constraints can run
-                    if (!caseData.checkpoint1_decision && caseData.status !== "CHECKPOINT_APPROVED" && caseData.status !== "RECOVERY_APPROVED" && caseData.status !== "RESOLVED") {
-                        MessageBox.warning(
-                            "Human Checkpoint 1 priority has not been saved for " + sCaseId + ".\n\nPlease save recovery priority before proceeding to Stage 4 Constraints.",
-                            {
-                                title: "Workflow Stage Locked",
-                                onClose: function () {
-                                    that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
-                                }
-                            }
-                        );
-                        return;
-                    }
-
-                    var sPriority = caseData.checkpoint1_decision || "BALANCED";
+                    var sPriority = WorkflowNavHelper.getSavedPriority(sCaseId) || caseData.checkpoint1_decision || "BALANCED";
 
                     // Cost Analysis
                     var costData = {
@@ -132,9 +118,9 @@ sap.ui.define([
         },
 
         onProceedToRecoveryPlanning: function () {
-            WorkflowNavHelper.markStageCompleted(this._sCurrentCaseId, 4);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 4);
-            this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: this._sCurrentCaseId });
+            var sCaseId = this._sCurrentCaseId;
+            WorkflowNavHelper.completeStage(sCaseId, 4, 4);
+            this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
         },
 
         onBackToPriority: function () {

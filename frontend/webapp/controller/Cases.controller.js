@@ -163,19 +163,61 @@ sap.ui.define([
                 })
                 .then(function (data) {
                     var items = data.items || [];
-                    items.forEach(function (c) {
-                        c.disruption_name = DISRUPTION_NAMES[c.disruption_type] || c.disruption_type.replace(/_/g, " ");
-                        var sSup = SUPPLIER_NAMES[c.supplier_id];
-                        c.supplier_display = sSup ? sSup + " (" + c.supplier_id + ")" : c.supplier_id;
+                    sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
+                        items.forEach(function (c) {
+                            c.disruption_name = DISRUPTION_NAMES[c.disruption_type] || c.disruption_type.replace(/_/g, " ");
+                            var sSup = SUPPLIER_NAMES[c.supplier_id];
+                            c.supplier_display = sSup ? sSup + " (" + c.supplier_id + ")" : c.supplier_id;
 
-                        var lookup = DOC_LOOKUP[c.case_id] || {
-                            doc: c.expected_delay_days ? c.expected_delay_days + ".0 d" : "—",
-                            stockout: "None"
-                        };
-                        c.doc_display = lookup.doc;
-                        c.stockout_display = lookup.stockout;
+                            var lookup = DOC_LOOKUP[c.case_id] || {
+                                doc: c.expected_delay_days ? c.expected_delay_days + ".0 d" : "—",
+                                stockout: "None"
+                            };
+                            c.doc_display = lookup.doc;
+                            c.stockout_display = lookup.stockout;
 
-                        // Severity plain text & semantic styling (NO capsules)
+                            // Prime WorkflowNavHelper from list data without sync XHR
+                            if (c.checkpoint1_decision) {
+                                WorkflowNavHelper.savePriority(c.case_id, c.checkpoint1_decision);
+                            }
+                            if (WorkflowNavHelper.getCompletedStage(c.case_id) === 0) {
+                                var maxCompleted = 0;
+                                if (c.completed_stages && Array.isArray(c.completed_stages) && c.completed_stages.length > 0) {
+                                    c.completed_stages.forEach(function (stageName) {
+                                        var n = 0;
+                                        var sLower = stageName.toLowerCase();
+                                        if (sLower.indexOf("case") !== -1) n = 1;
+                                        if (sLower.indexOf("impact") !== -1) n = 2;
+                                        if (sLower.indexOf("priority") !== -1) n = 3;
+                                        if (sLower.indexOf("constraints") !== -1) n = 4;
+                                        if (sLower.indexOf("recovery") !== -1) n = 5;
+                                        if (sLower.indexOf("decision") !== -1) n = 6;
+                                        if (sLower.indexOf("exec") !== -1 || sLower.indexOf("monitoring") !== -1) n = 7;
+                                        if (sLower.indexOf("outcome") !== -1) n = 8;
+                                        if (n > maxCompleted) maxCompleted = n;
+                                    });
+                                } else {
+                                    // Fallback if completed_stages is not provided
+                                    var sStat = c.status || "";
+                                    if (sStat === "RESOLVED") maxCompleted = 8;
+                                    else if (["EXECUTION_IN_PROGRESS", "MONITORING"].indexOf(sStat) !== -1) maxCompleted = 7;
+                                    else if (sStat === "RECOVERY_APPROVED") maxCompleted = 6;
+                                    else if (sStat === "AWAITING_CHECKPOINT_2") maxCompleted = 5;
+                                    else if (sStat === "CONSTRAINTS_ANALYZED") maxCompleted = 4;
+                                    else if (sStat === "CHECKPOINT_APPROVED") maxCompleted = 3;
+                                    else if (["ANALYZED", "AWAITING_CHECKPOINT_1"].indexOf(sStat) !== -1) maxCompleted = 2;
+                                    else if (sStat !== "CREATED") maxCompleted = 1;
+                                }
+
+                                if (maxCompleted >= 3 && !WorkflowNavHelper.isPrioritySaved(c.case_id)) {
+                                    maxCompleted = 2;
+                                }
+                                if (maxCompleted > 0) {
+                                    window.localStorage.setItem("quads_completed_stage_" + c.case_id, String(maxCompleted));
+                                }
+                            }
+
+                            // Severity plain text & semantic styling (NO capsules)
                         var sSev = (c.severity || "").toUpperCase();
                         if (!sSev) {
                             if (c.case_id === "CASE-0001" || c.case_id === "CASE-0002") sSev = "CRITICAL";
@@ -309,6 +351,7 @@ sap.ui.define([
                     oModel.setProperty("/rawItems", items);
                     oModel.setProperty("/total", nTotal);
                     that._applyFilters();
+                    }); // Close sap.ui.require
                 })
                 .catch(function (err) {
                     MessageBox.error("Failed to load cases: " + err.message);

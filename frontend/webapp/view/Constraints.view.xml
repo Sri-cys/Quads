@@ -49,7 +49,7 @@
                         <!-- Completed State Button -->
                         <Button
                             id="btnProceedRecoveryPlanningTop"
-                            text="PROCEED TO RECOVERY PLANNING &#x2192;"
+                            text="{= ${app>/completedStage} >= 4 ? 'GO TO RECOVERY PLANNING &#x2192;' : 'PROCEED TO RECOVERY PLANNING &#x2192;' }"
                             type="Emphasized"
                             icon="sap-icon://navigation-right-arrow"
                             press=".onProceedToRecoveryPlanning"
@@ -315,7 +315,7 @@
                             class="sapBtnSecondary" />
                         <Button
                             id="btnProceedRecoveryPlanningBottom"
-                            text="PROCEED TO RECOVERY PLANNING &#x2192;"
+                            text="{= ${app>/completedStage} >= 4 ? 'GO TO RECOVERY PLANNING &#x2192;' : 'PROCEED TO RECOVERY PLANNING &#x2192;' }"
                             icon="sap-icon://navigation-right-arrow"
                             type="Emphasized"
                             press=".onProceedToRecoveryPlanning"

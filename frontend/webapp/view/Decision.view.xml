@@ -100,7 +100,7 @@
                                 <Text text="Plan baseline locked at {dec>/approvalTimestamp} by {dec>/approvalActor}. Immutable execution snapshot created. Ready for Execution &amp; Monitoring." class="sapBannerText bold" />
                                 <HBox class="sapUiSmallMarginTop">
                                     <Button
-                                        text="PROCEED TO EXECUTION &amp; MONITORING &#x2192;"
+                                        text="{= ${app>/completedStage} >= 6 ? 'GO TO EXECUTION &amp; MONITORING &#x2192;' : 'PROCEED TO EXECUTION &amp; MONITORING &#x2192;' }"
                                         type="Emphasized"
                                         icon="sap-icon://shipping-status"
                                         press=".onProceedToExecution"

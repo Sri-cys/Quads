@@ -214,9 +214,9 @@ sap.ui.define([
         },
 
         onProceedToDecision: function () {
-            WorkflowNavHelper.markStageCompleted(this._sCurrentCaseId, 5);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 5);
-            this.getOwnerComponent().getRouter().navTo("decision", { caseId: this._sCurrentCaseId });
+            var sCaseId = this._sCurrentCaseId;
+            WorkflowNavHelper.completeStage(sCaseId, 5, 5);
+            this.getOwnerComponent().getRouter().navTo("decision", { caseId: sCaseId });
         },
 
         onBackToPriority: function () {

@@ -144,7 +144,7 @@
                 <HBox justifyContent="End" class="sapUiMediumMarginBottom">
                     <Button
                         id="btnStartImpactAnalysis"
-                        text="{= ${case>/status} === 'CASE_CREATED' || ${case>/status} === 'CASE_OVERVIEW' || ${case>/status} === 'IMPACT_ANALYSIS_PENDING' ? 'START IMPACT ANALYSIS &#x2192;' : 'VIEW IMPACT ANALYSIS &#x2192;' }"
+                        text="{= ${app>/completedStage} >= 1 ? 'GO TO IMPACT ANALYSIS &#x2192;' : 'START IMPACT ANALYSIS &#x2192;' }"
                         type="Emphasized"
                         icon="sap-icon://play"
                         press=".onStartImpactAnalysis"

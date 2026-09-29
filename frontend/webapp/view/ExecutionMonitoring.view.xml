@@ -296,7 +296,7 @@
 
                     <!-- ═══ BOTTOM ACTIONS ═══ -->
                     <HBox visible="{exec>/is_success}" justifyContent="End" class="sapUiLargeMarginTop" style="border-top: 1px solid #D9E2EC; padding-top: 24px;">
-                        <Button text="View Outcome &#x2192;" type="Emphasized" icon="sap-icon://sys-enter-2" press=".onGoToOutcome" class="sapBtnSuccess" />
+                        <Button text="{= ${app>/completedStage} >= 7 ? 'GO TO OUTCOME &#x2192;' : 'PROCEED TO OUTCOME &#x2192;' }" type="Emphasized" icon="sap-icon://sys-enter-2" press=".onGoToOutcome" class="sapBtnSuccess" />
                     </HBox>
 
                     <HBox visible="{exec>/is_failed}" justifyContent="End" class="sapUiLargeMarginTop" style="border-top: 1px solid #D9E2EC; padding-top: 24px;">

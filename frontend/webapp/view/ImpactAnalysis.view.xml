@@ -249,26 +249,44 @@
                                 <core:Icon src="sap-icon://alert" class="quadsTlIconCritical" />
                             </VBox>
                         </VBox>
-                        
-                        <!-- Delay line -->
-                        <VBox class="quadsTlLine delayLineBox" alignItems="Center" justifyContent="Center" renderType="Bare">
-                            <VBox class="delayDashedLine" renderType="Bare" />
-                            <Text text="5 days delay" class="delayLineText" wrapping="false" />
-                        </VBox>
-
-                        <!-- Node 5 (Revised Delivery) -->
-                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
-                            <Text text="Revised Delivery" class="quadsTlLabel critical" wrapping="false" />
-                            <Text text="{impact>/inventory/stockoutDate_formatted}" class="quadsTlDate critical" wrapping="false" />
-                            <VBox class="quadsTlIcon futureBoxCritical" />
-                        </VBox>
                         <VBox class="quadsTlLine future" />
-
-                        <!-- Node 6 (Expected Delivery) -->
+                        
+                        <!-- Node 5 (Expected Delivery) -->
                         <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare">
                             <Text text="Expected Delivery" class="quadsTlLabel future" wrapping="false" />
-                            <Text text="{impact>/case/expected_delivery_date}" class="quadsTlDate future" wrapping="false" />
+                            <Text text="{ path: 'impact>/case/expected_delivery_date', formatter: '.formatter.formatTimelineDate' }" class="quadsTlDate future" wrapping="false" />
                             <VBox class="quadsTlIcon futureBox" />
+                        </VBox>
+
+                        <!-- Delay line -->
+                        <VBox class="quadsTlLine delayLineBox" alignItems="Center" justifyContent="Center" renderType="Bare" visible="{
+                                parts: [
+                                    {path: 'impact>/case/expected_delivery_date'},
+                                    {path: 'impact>/case/current_eta'}
+                                ],
+                                formatter: '.formatter.formatDelayVisible'
+                            }">
+                            <VBox class="delayDashedLine" renderType="Bare" />
+                            <Text text="{
+                                parts: [
+                                    {path: 'impact>/case/expected_delivery_date'},
+                                    {path: 'impact>/case/current_eta'}
+                                ],
+                                formatter: '.formatter.formatDelayDays'
+                            }" class="delayLineText" wrapping="false" />
+                        </VBox>
+
+                        <!-- Node 6 (Revised Delivery) -->
+                        <VBox class="quadsTimelineNode" alignItems="Center" renderType="Bare" visible="{
+                                parts: [
+                                    {path: 'impact>/case/expected_delivery_date'},
+                                    {path: 'impact>/case/current_eta'}
+                                ],
+                                formatter: '.formatter.formatDelayVisible'
+                            }">
+                            <Text text="Revised Delivery" class="quadsTlLabel critical" wrapping="false" />
+                            <Text text="{ path: 'impact>/case/current_eta', formatter: '.formatter.formatTimelineDate' }" class="quadsTlDate critical" wrapping="false" />
+                            <VBox class="quadsTlIcon futureBoxCritical" />
                         </VBox>
 
                     </HBox>
@@ -306,97 +324,219 @@
 
 
 
-                <!-- BOTTOM 2 CARDS (PLANT & FINANCIAL) -->
-                <HBox class="quadsImpact2Grid sapUiSmallMarginBottom">
+                <!-- EXECUTIVE SUMMARY & 3 IMPACT CARDS -->
+                <!-- 3 Impact Cards -->
+                <HBox class="quadsImpact3Grid sapUiSmallMarginBottom">
                     
-                    <!-- Plant & Production Details -->
-                    <VBox class="quadsWhiteCard">
-                        <HBox alignItems="Center" class="sapUiMediumMarginBottom">
-                            <core:Icon src="sap-icon://factory" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
-                            <Title text="Plant &amp; Production Details" class="quadsSectionTitle" />
+                    <!-- Card 1: Production Impact -->
+                    <VBox class="quadsWhiteCard quadsImpactCard">
+                        <HBox alignItems="Start" justifyContent="SpaceBetween" class="quadsImpactCardHeader">
+                            <HBox alignItems="Center">
+                                <VBox class="quadsImpactCardIconBox blue sapUiSmallMarginEnd">
+                                    <core:Icon src="sap-icon://factory" />
+                                </VBox>
+                                <VBox>
+                                    <Text text="Production Impact" class="quadsImpactCardTitle" />
+                                    <Text text="Assembly &amp; Line Continuity" class="quadsImpactCardSub" />
+                                </VBox>
+                            </HBox>
+                            <Text class="quadsImpactBadge { path: 'impact>/deterministic/severity', formatter: '.formatter.formatSeverityColor' }"
+                                  text="{ path: 'impact>/deterministic/severity', formatter: '.formatter.formatSeverityBadge' }" />
                         </HBox>
-                        <HBox class="quadsPlantGrid">
-                            <VBox>
-                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
-                                    <Text text="Plant" class="quadsDetailLabel" />
-                                    <Text text="{impact>/production/plantId} ({impact>/production/plantName})" class="quadsDetailValue" />
-                                </HBox>
-                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
-                                    <Text text="Production Rate (Normal)" class="quadsDetailLabel" />
-                                    <Text text="100 cars/day" class="quadsDetailValue" />
-                                </HBox>
-                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
-                                    <Text text="Production Orders Affected" class="quadsDetailLabel" />
-                                    <VBox>
-                                        <Text text="{impact>/production/affectedOrders} orders (PO-1001, PO-1002, PO-1003)" class="quadsDetailValue" />
-                                    </VBox>
-                                </HBox>
-                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
-                                    <Text text="Material Requirement" class="quadsDetailLabel" />
-                                    <Text text="{impact>/production/dailyRequirement} units" class="quadsDetailValue" />
-                                </HBox>
-                            </VBox>
-                            <VBox>
-                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
-                                    <Text text="Current Available Capacity" class="quadsDetailLabel" />
-                                    <Text text="Normal" class="quadsDetailValue" />
-                                </HBox>
-                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
-                                    <Text text="Production Interruption Risk" class="quadsDetailLabel" />
-                                    <ObjectStatus text="High" class="quadsBadgeCriticalBox" />
-                                </HBox>
-                                <HBox justifyContent="SpaceBetween" class="quadsDetailRow">
-                                    <Text text="Production Start/Stop Date" class="quadsDetailLabel" />
-                                    <Text text="{impact>/inventory/stockoutDate_formatted} (Delayed)" class="quadsDetailValue" />
-                                </HBox>
-                            </VBox>
+                        <VBox class="quadsImpactHighlight red">
+                            <Text text="{ path: 'impact>/production/affectedOrders', formatter: '.formatter.formatProductionHighlight' }" class="quadsImpactHighlightValue" />
+                            <Text text="{
+                                      parts: [
+                                          {path: 'impact>/inventory/safetyStockBreach_formatted'},
+                                          {path: 'impact>/deterministic/days_of_cover'}
+                                      ],
+                                      formatter: '.formatter.formatProductionSubtext'
+                                  }" class="quadsImpactHighlightSub" />
+                        </VBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Plant Affected" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/production/plantId} ({impact>/production/plantName})" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Production Orders" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/production/affectedOrders}" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Daily Consumption Rate" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/inventory/dailyConsumption_formatted}" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Inventory Buffer" class="quadsImpactRowLabel" />
+                            <Text class="quadsImpactRowValue {
+                                      parts: [
+                                          {path: 'impact>/deterministic/days_of_cover'},
+                                          {path: 'impact>/case/expected_delay_days'}
+                                      ],
+                                      formatter: '.formatter.formatInventoryBufferColor'
+                                  }" text="{impact>/inventory/daysOfCover_formatted}" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Operational Status" class="quadsImpactRowLabel" />
+                            <HBox alignItems="Center">
+                                <core:Icon class="sapUiTinyMarginEnd" 
+                                           src="{ path: 'impact>/deterministic/days_of_cover', formatter: '.formatter.formatOperationalStatusIcon' }" 
+                                           color="{= ${impact>/deterministic/days_of_cover} &lt;= 3 ? '#DC2626' : '#16A34A' }" />
+                                <Text class="quadsImpactRowValue { path: 'impact>/deterministic/days_of_cover', formatter: '.formatter.formatOperationalStatusColor' }"
+                                      text="{ path: 'impact>/deterministic/days_of_cover', formatter: '.formatter.formatOperationalStatus' }" />
+                            </HBox>
                         </HBox>
                     </VBox>
 
-                    <!-- Financial Exposure -->
-                    <VBox class="quadsWhiteCard">
-                        <HBox alignItems="Center" class="sapUiMediumMarginBottom">
-                            <core:Icon src="sap-icon://money-bills" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
-                            <Title text="Financial Exposure" class="quadsSectionTitle" />
-                        </HBox>
-                        
-                        <HBox class="quadsFinancial3Grid sapUiMediumMarginBottom">
-                            <VBox class="quadsFinBox">
-                                <Text text="Production Loss" class="quadsFinLabel" />
-                                <Text text="{impact>/financial/estimated_display}" class="quadsFinValue" />
-                                <Text text="(Based on {impact>/case/expected_delay_days} days)" class="quadsFinSub" />
-                            </VBox>
-                            <VBox class="quadsFinDivider" />
-                            <VBox class="quadsFinBox">
-                                <Text text="Revenue at Risk" class="quadsFinLabel" />
-                                <Text text="{impact>/financial/potential_display}" class="quadsFinValue" />
-                                <Text text="(Delayed orders)" class="quadsFinSub" />
-                            </VBox>
-                            <VBox class="quadsFinDivider" />
-                            <VBox class="quadsFinBox">
-                                <Text text="Customer Penalty (Est.)" class="quadsFinLabel" />
-                                <Text text="{impact>/financial/confirmed_display}" class="quadsFinValue" />
-                                <Text text="(Based on 3% of order value)" class="quadsFinSub" />
-                            </VBox>
-                        </HBox>
-                        
-                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsFinTotalBox">
+                    <!-- Card 2: Customer Impact -->
+                    <VBox class="quadsWhiteCard quadsImpactCard">
+                        <HBox alignItems="Start" justifyContent="SpaceBetween" class="quadsImpactCardHeader">
                             <HBox alignItems="Center">
-                                <core:Icon src="sap-icon://trend-up" class="sapUiSmallMarginEnd quadsFinTotalIcon" />
-                                <Text text="Total Financial Exposure" class="quadsFinTotalLabel" />
+                                <VBox class="quadsImpactCardIconBox yellow sapUiSmallMarginEnd">
+                                    <core:Icon src="sap-icon://customer" />
+                                </VBox>
+                                <VBox>
+                                    <Text text="Customer Impact" class="quadsImpactCardTitle" />
+                                    <Text text="Fulfillment &amp; SLA Adherence" class="quadsImpactCardSub" />
+                                </VBox>
                             </HBox>
+                            <Text class="quadsImpactBadge { path: 'impact>/case/expected_delay_days', formatter: '.formatter.formatSlaBadgeColor' }"
+                                  text="{ path: 'impact>/case/expected_delay_days', formatter: '.formatter.formatSlaBadgeText' }" />
+                        </HBox>
+                        <VBox class="quadsImpactHighlight yellow">
+                            <Text text="{ path: 'impact>/case/expected_delay_days', formatter: '.formatter.formatCustomerHighlight' }" class="quadsImpactHighlightValue" />
+                            <Text text="Customer sales orders delayed beyond promised delivery date" class="quadsImpactHighlightSub" />
+                        </VBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Sales Orders at Risk" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/customer/affectedOrdersCount} Sales Orders (—)" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Total Volume at Risk" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/customer/totalQuantity}" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Impacted Accounts" class="quadsImpactRowLabel" />
+                            <Text text="—" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Contractual SLA Risk" class="quadsImpactRowLabel" />
+                            <Text class="quadsImpactRowValue { path: 'impact>/case/expected_delay_days', formatter: '.formatter.formatSlaRiskColor' }"
+                                  text="{ path: 'impact>/case/expected_delay_days', formatter: '.formatter.formatSlaRiskText' }" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Customer Delivery ETA" class="quadsImpactRowLabel" />
                             <HBox alignItems="Center">
-                                <Text text="{impact>/financial/totalExposure_formatted}" class="quadsFinTotalValue sapUiSmallMarginEnd" />
-                                <core:Icon src="sap-icon://slim-arrow-right" class="quadsFinTotalArrow" />
+                                <core:Icon src="sap-icon://clock" class="sapUiTinyMarginEnd" 
+                                           color="{= ${impact>/case/expected_delay_days} > 0 ? '#D97706' : '#111827' }" />
+                                <Text class="quadsImpactRowValue { path: 'impact>/case/expected_delay_days', formatter: '.formatter.formatCustomerETAColor' }"
+                                      text="{
+                                          parts: [
+                                              {path: 'impact>/case/expected_delivery_date'},
+                                              {path: 'impact>/case/expected_delay_days'}
+                                          ],
+                                          formatter: '.formatter.formatCustomerETA'
+                                      }" />
                             </HBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Card 3: Financial Impact -->
+                    <VBox class="quadsWhiteCard quadsImpactCard">
+                        <HBox alignItems="Start" justifyContent="SpaceBetween" class="quadsImpactCardHeader">
+                            <HBox alignItems="Center">
+                                <VBox class="quadsImpactCardIconBox red sapUiSmallMarginEnd">
+                                    <core:Icon src="sap-icon://money-bills" />
+                                </VBox>
+                                <VBox>
+                                    <Text text="Financial Impact" class="quadsImpactCardTitle" />
+                                    <Text text="Cost Exposure &amp; Penalties" class="quadsImpactCardSub" />
+                                </VBox>
+                            </HBox>
+                            <Text text="EXPOSURE" class="quadsImpactBadge red" />
+                        </HBox>
+                        <VBox class="quadsImpactHighlight red">
+                            <Text text="{
+                                      parts: [
+                                          {path: 'impact>/financial/estimated_display'},
+                                          {path: 'impact>/financial/confirmed_display'}
+                                      ],
+                                      formatter: '.formatter.formatFinancialHighlight'
+                                  }" class="quadsImpactHighlightValue" />
+                            <Text text="Total estimated financial risk across operations &amp; penalties" class="quadsImpactHighlightSub" />
+                        </VBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Production Delay Loss" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/financial/estimated_display}" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Revenue at Risk" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/financial/potential_display}" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Customer Penalty (Est.)" class="quadsImpactRowLabel" />
+                            <Text text="{impact>/financial/confirmed_display}" class="quadsImpactRowValue red" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" class="quadsImpactRow">
+                            <Text text="Penalty Basis" class="quadsImpactRowLabel" />
+                            <Text text="—" class="quadsImpactRowValue" />
+                        </HBox>
+                        <HBox justifyContent="SpaceBetween" alignItems="Center" class="quadsImpactFooterRow">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://trend-up" class="sapUiTinyMarginEnd" color="#B91C1C" />
+                                <Text text="Gross Financial Exposure" class="quadsImpactFooterLabel" />
+                            </HBox>
+                            <Text text="{impact>/financial/totalExposure_formatted}" class="quadsImpactFooterValue" />
                         </HBox>
                     </VBox>
                 </HBox>
 
+                <!-- Executive Summary -->
+                <VBox class="quadsWhiteCard quadsImpactExecCard sapUiSmallMarginBottom">
+                    <HBox alignItems="Center" class="quadsImpactExecHeader">
+                        <core:Icon src="sap-icon://information" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
+                        <Title text="Executive Summary" class="quadsImpactExecTitle" />
+                    </HBox>
+                    <Text class="quadsImpactExecText"
+                          text="{
+                              parts: [
+                                  {path: 'impact>/case/expected_delay_days'},
+                                  {path: 'impact>/inventory/stockoutDate_formatted'},
+                                  {path: 'impact>/case/expected_delivery_date'}
+                              ],
+                              formatter: '.formatter.formatExecLine1'
+                          }" />
+                    <Text class="quadsImpactExecText"
+                          text="{
+                              parts: [
+                                  {path: 'impact>/deterministic/days_of_cover'}
+                              ],
+                              formatter: '.formatter.formatExecLine2'
+                          }" />
+                    <Text class="quadsImpactExecText"
+                          text="{
+                              parts: [
+                                  {path: 'impact>/production/affectedOrders'},
+                                  {path: 'impact>/customer/affectedOrdersCount'}
+                              ],
+                              formatter: '.formatter.formatExecLine3'
+                          }" />
+                    <Text class="quadsImpactExecTextRed"
+                          text="{
+                              parts: [
+                                  {path: 'impact>/financial/totalExposure_formatted'}
+                              ],
+                              formatter: '.formatter.formatExecLine4'
+                          }" />
+                    <HBox alignItems="Center" class="quadsImpactExecNextStep">
+                        <core:Icon src="sap-icon://navigation-right-arrow" class="sapUiSmallMarginEnd" color="#1D4ED8" />
+                        <Text text="Next step: Review recovery options to reduce the impact." class="quadsImpactExecNextText" />
+                    </HBox>
+                </VBox>
+
 
                 <!-- PROCEED TO RECOVERY -->
                 <HBox justifyContent="End" class="sapUiMediumMarginBottom">
-                    <Button id="btnProceedPriorityBottom" text="PROCEED TO RECOVERY PRIORITY" icon="sap-icon://navigation-right-arrow" type="Emphasized" press=".onProceedPriority" class="quadsProceedBtn" />
+                    <Button id="btnProceedPriorityBottom" text="{= ${app>/completedStage} >= 2 ? 'GO TO RECOVERY PRIORITY &#x2192;' : 'PROCEED TO RECOVERY PRIORITY &#x2192;' }" icon="sap-icon://navigation-right-arrow" type="Emphasized" press=".onProceedPriority" class="quadsProceedBtn" />
                 </HBox>
 
             </VBox>

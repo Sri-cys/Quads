@@ -151,6 +151,12 @@ sap.ui.define([
             var oBtn = this.byId("btnStartImpactAnalysis");
             var that = this;
 
+            // Stage 1 already done → pure navigation, no backend call
+            if (WorkflowNavHelper.getCompletedStage(sCaseId) >= 1) {
+                that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
+                return;
+            }
+
             if (oBtn) oBtn.setEnabled(false);
 
             fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/start", {
@@ -159,17 +165,16 @@ sap.ui.define([
             })
             .then(function (res) {
                 if (!res.ok) {
-                    return res.json().then(function (err) {
-                        throw new Error(err.message || ("HTTP " + res.status));
+                    return res.json().then(function (errData) {
+                        throw new Error(errData.message || ("HTTP " + res.status));
                     });
                 }
                 return res.json();
             })
             .then(function (caseData) {
-                that.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
-                WorkflowNavHelper.markStageCompleted(sCaseId, 1);
-                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 1);
+                // Mark stage 1 complete and refresh the stepper
+                WorkflowNavHelper.completeStage(sCaseId, 1, 1);
                 that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
             })
             .catch(function (err) {
