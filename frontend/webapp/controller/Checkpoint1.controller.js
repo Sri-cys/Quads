@@ -62,6 +62,9 @@ sap.ui.define([
                 sCaseId = this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
             }
             this._sCurrentCaseId = sCaseId;
+            sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
+                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 3);
+            }.bind(this));
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
             this.loadCheckpointData(sCaseId);
         },
@@ -205,6 +208,7 @@ sap.ui.define([
             .then(function (caseData) {
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
                 WorkflowNavHelper.markStageCompleted(sCaseId, 3);
+                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 3);
                 MessageToast.show("Priority '" + sPriority + "' confirmed. Launching Agent 2...");
                 that.getOwnerComponent().getRouter().navTo("constraints", { caseId: sCaseId });
             })

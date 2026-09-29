@@ -190,35 +190,29 @@
                         noDataText="No disruption cases found"
                         class="sapEnterpriseTable">
                         <columns>
-                            <Column width="8rem">
+                            <Column width="9rem">
                                 <Text text="Case ID" class="sapColHeader" />
                             </Column>
-                            <Column width="14rem">
+                            <Column width="18rem">
                                 <Text text="Disruption" class="sapColHeader" />
                             </Column>
-                            <Column width="11rem">
+                            <Column width="14rem">
                                 <Text text="Supplier" class="sapColHeader" />
                             </Column>
-                            <Column width="7rem">
+                            <Column width="9rem">
                                 <Text text="Material" class="sapColHeader" />
                             </Column>
-                            <Column width="6rem">
+                            <Column width="7rem">
                                 <Text text="Plant" class="sapColHeader" />
                             </Column>
                             <Column width="7rem" hAlign="Center">
                                 <Text text="Severity" class="sapColHeader" />
                             </Column>
-                            <Column width="9rem">
+                            <Column width="10rem">
                                 <Text text="Status" class="sapColHeader" />
                             </Column>
-                            <Column width="10rem">
+                            <Column width="11rem">
                                 <Text text="Workflow Stage" class="sapColHeader" />
-                            </Column>
-                            <Column width="6rem" hAlign="Right">
-                                <Text text="Days of Cover" class="sapColHeader" />
-                            </Column>
-                            <Column width="7rem">
-                                <Text text="Stockout Date" class="sapColHeader" />
                             </Column>
                             <Column width="6.5rem">
                                 <Text text="Created On" class="sapColHeader" />
@@ -260,22 +254,13 @@
                                         class="sapPlainStatus" />
                                     <!-- Operational Status -->
                                     <ObjectStatus
-                                        text="{casesModel>status_text}"
-                                        state="{= ${casesModel>status_text} === 'Checkpoint Approved' ? 'Success' : ${casesModel>status_text} === 'Awaiting Checkpoint' ? 'Warning' : 'None' }"
+                                        text="{ path: 'casesModel>status', formatter: '.formatter.formatStatus' }"
+                                        state="{ path: 'casesModel>status', formatter: '.formatter.formatStatusState' }"
                                         class="sapPlainStatus" />
                                     <!-- Workflow Stage -->
-                                    <ObjectStatus
-                                        text="{casesModel>current_stage_display}"
-                                        state="Information"
-                                        class="sapPlainStatus" />
-                                    <!-- Days of Cover -->
                                     <Text
-                                        text="{= ${casesModel>doc_display} ? ${casesModel>doc_display} : '—' }"
-                                        class="{= ${casesModel>days_of_cover} !== null &amp;&amp; ${casesModel>days_of_cover} &lt;= 3 ? 'sapRowPrimary textCritical bold' : 'sapRowPrimary' }" />
-                                    <!-- Stockout Date -->
-                                    <Text
-                                        text="{= ${casesModel>stockout_display} ? ${casesModel>stockout_display} : 'No Stockout' }"
-                                        class="sapRowSecondary" />
+                                        text="{ path: 'casesModel>case_id', formatter: '.formatter.formatWorkflowStage' }"
+                                        class="sapRowPrimary" />
                                     <!-- Created On -->
                                     <Text
                                         text="{casesModel>created_on}"

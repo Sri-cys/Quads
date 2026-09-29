@@ -64,6 +64,9 @@ sap.ui.define([
                 sCaseId = this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
             }
             this._sCurrentCaseId = sCaseId;
+            sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
+                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 2);
+            }.bind(this));
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
             this.loadImpactData(sCaseId);
         },
@@ -166,6 +169,10 @@ sap.ui.define([
                 oModel.setProperty("/case", caseData);
                 that._populateImpactData(caseData, impactData);
                 oModel.setProperty("/analysisState", "COMPLETED");
+                sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
+                    WorkflowNavHelper.markStageCompleted(caseData.case_id || that._sCurrentCaseId, 2);
+                    WorkflowNavHelper.setStepperState(caseData.case_id || that._sCurrentCaseId, 2);
+                });
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
             })
             .catch(function (err) {
@@ -343,10 +350,12 @@ sap.ui.define([
                 .then(function () {
                     that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "PRIORITY_PENDING");
                     WorkflowNavHelper.markStageCompleted(sCaseId, 2);
+                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 2);
                     that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
                 })
                 .catch(function () {
                     WorkflowNavHelper.markStageCompleted(sCaseId, 2);
+                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 2);
                     that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
                 });
         },

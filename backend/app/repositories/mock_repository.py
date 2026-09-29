@@ -300,7 +300,38 @@ class MockRepository(BaseRepository):
         return analysis
 
     def get_impact_analysis(self, case_id: str) -> Optional[ImpactAnalysis]:
-        return self._impact_analyses.get(case_id)
+        res = self._impact_analyses.get(case_id)
+        if res:
+            return res
+        
+        case = self._cases.get(case_id)
+        if case and case.status not in {"CREATED", "TRIAGED", "CASE_CREATED", "CASE_OVERVIEW", "IMPACT_ANALYSIS_PENDING", "IMPACT_ANALYSIS_RUNNING", "IMPACT_ANALYSIS_FAILED"}:
+            from app.models.disruption import Disruption
+            from app.services.impact_service import ImpactService
+            disruption = Disruption(
+                disruption_type=case.disruption_type,
+                description=case.description,
+                detected_at=case.detected_at,
+                expected_delay_days=case.expected_delay_days,
+                affected_quantity=case.affected_quantity,
+            )
+            impact = ImpactService.analyze(
+                case_id=case_id,
+                disruption=disruption,
+                supplier=self.get_supplier(case.supplier_id),
+                material=self.get_material(case.material_id),
+                plant=self.get_plant(case.plant_id),
+                inventory=self.get_inventory(case.material_id, case.plant_id),
+                demand=self.get_demand(case.material_id, case.plant_id),
+                safety_stock=self.get_safety_stock(case.material_id, case.plant_id),
+                purchase_orders=self.get_purchase_orders(case.supplier_id, case.material_id, case.plant_id),
+            )
+            impact.ai_explanation = "Mock AI explanation auto-generated for pre-seeded case."
+            impact.ai_status = "MOCK_FALLBACK"
+            self._impact_analyses[case_id] = impact
+            return impact
+
+        return None
 
     def save_checkpoint(self, case_id: str, priority: str) -> Case:
         case = self._cases.get(case_id)

@@ -43,6 +43,37 @@ sap.ui.define([
             }
         },
 
+        setStepperState: function(sCaseId, nActiveStep) {
+            if (!sCaseId) return;
+            try {
+                var oComp = sap.ui.core.Component.get("container-com.quads.supplychain") || 
+                            sap.ui.core.Component.get("application-com.quads.supplychain-component");
+                if (!oComp) {
+                    var oCore = sap.ui.getCore();
+                    if (oCore && oCore.mComponents) {
+                        var aKeys = Object.keys(oCore.mComponents);
+                        for (var i=0; i<aKeys.length; i++) {
+                            if (aKeys[i].indexOf("com.quads.supplychain") !== -1) {
+                                oComp = oCore.mComponents[aKeys[i]];
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (oComp && oComp.getModel("app")) {
+                    var oAppModel = oComp.getModel("app");
+                    oAppModel.setProperty("/activeStep", nActiveStep);
+                    
+                    var sKey = "quads_completed_stage_" + sCaseId;
+                    var sStored = window.localStorage.getItem(sKey);
+                    var nCompletedStep = sStored ? parseInt(sStored, 10) : 0;
+                    oAppModel.setProperty("/completedStage", nCompletedStep);
+                }
+            } catch(e) {
+                console.warn("Could not set stepper state", e);
+            }
+        },
+
         markStageCompleted: function(sCaseId, nStage) {
             if (!sCaseId) return;
             var sKey = "quads_completed_stage_" + sCaseId;

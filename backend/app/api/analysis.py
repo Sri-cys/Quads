@@ -39,7 +39,7 @@ def start_impact_analysis(
     except ValueError as ve:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail={"error": "INVALID_STATE_TRANSITION", "message": str(ve)},
+            detail={"error": "INVALID_STATE_TRANSITION", "message": "This action is not permitted in the current workflow status."},
         )
     except Exception as e:
         logger.error(f"Error starting impact analysis for {case_id}: {e}", exc_info=True)

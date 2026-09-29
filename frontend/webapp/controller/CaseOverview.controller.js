@@ -63,6 +63,9 @@ sap.ui.define([
                 sCaseId = this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
             }
             this._sCurrentCaseId = sCaseId;
+            sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
+                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 1);
+            }.bind(this));
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
             this.loadCaseData(sCaseId);
         },
@@ -166,6 +169,7 @@ sap.ui.define([
                 that.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
                 WorkflowNavHelper.markStageCompleted(sCaseId, 1);
+                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 1);
                 that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
             })
             .catch(function (err) {

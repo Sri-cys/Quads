@@ -125,8 +125,8 @@ class CaseService:
             raise KeyError(f"Case {case_id} not found")
 
         curr_state = normalize_state(case.status)
-        if curr_state == CaseState.IMPACT_ANALYSIS_RUNNING:
-            logger.info(f"Analysis already running for {case_id} (idempotent)")
+        if curr_state in {CaseState.IMPACT_ANALYSIS_RUNNING, CaseState.IMPACT_ANALYSIS_COMPLETED}:
+            logger.info(f"Analysis already {curr_state.value} for {case_id} (idempotent)")
             return case
 
         # Transition validation

@@ -39,6 +39,9 @@ sap.ui.define([
                 sCaseId = this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
             }
             this._sCurrentCaseId = sCaseId;
+            sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
+                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 6);
+            }.bind(this));
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
             this.loadDecisionData(sCaseId);
         },
@@ -312,6 +315,7 @@ sap.ui.define([
 
         onProceedToExecution: function () {
             WorkflowNavHelper.markStageCompleted(this._sCurrentCaseId, 6);
+                    WorkflowNavHelper.setStepperState(sCaseId || this._sCurrentCaseId, 6);
             this.getOwnerComponent().getRouter().navTo("executionMonitoring", { caseId: this._sCurrentCaseId });
         },
 

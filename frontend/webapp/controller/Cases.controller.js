@@ -38,7 +38,68 @@ sap.ui.define([
         "CASE-0008": { doc: "18.0 d", stockout: "None" }
     };
 
+    var WORKFLOW_STAGES = [
+        {no: 1, name: "Case"},
+        {no: 2, name: "Impact Analysis"},
+        {no: 3, name: "Priority"},
+        {no: 4, name: "Constraints"},
+        {no: 5, name: "Recovery Planning"},
+        {no: 6, name: "Decision"},
+        {no: 7, name: "Exec & Monitoring"},
+        {no: 8, name: "Outcome"}
+    ];
+
     return Controller.extend("com.quads.supplychain.controller.Cases", {
+        formatter: {
+            formatStatus: function (vStatusOrObj) {
+                var sStatus = "";
+                if (typeof vStatusOrObj === "string") {
+                    sStatus = vStatusOrObj;
+                } else if (vStatusOrObj && vStatusOrObj.status) {
+                    sStatus = vStatusOrObj.status;
+                }
+                if (!sStatus) return "Pending Approval";
+                var upper = sStatus.toUpperCase();
+                if (upper === "RECOVERY_APPROVED" || upper === "PLAN_APPROVED" || upper === "EXECUTION" || upper === "EXECUTION_IN_PROGRESS" || upper === "MONITORING" || upper === "RESOLVED") {
+                    return "Approved";
+                }
+                return "Pending Approval";
+            },
+            
+            formatStatusState: function (vStatusOrObj) {
+                var sStatus = "";
+                if (typeof vStatusOrObj === "string") {
+                    sStatus = vStatusOrObj;
+                } else if (vStatusOrObj && vStatusOrObj.status) {
+                    sStatus = vStatusOrObj.status;
+                }
+                if (!sStatus) return "Warning";
+                var upper = sStatus.toUpperCase();
+                if (upper === "RECOVERY_APPROVED" || upper === "PLAN_APPROVED" || upper === "EXECUTION" || upper === "EXECUTION_IN_PROGRESS" || upper === "MONITORING" || upper === "RESOLVED") {
+                    return "Success";
+                }
+                return "Warning";
+            },
+
+            formatWorkflowStage: function (vCaseIdOrObj) {
+                var sCaseId = "";
+                if (typeof vCaseIdOrObj === "string") {
+                    sCaseId = vCaseIdOrObj;
+                } else if (vCaseIdOrObj && vCaseIdOrObj.case_id) {
+                    sCaseId = vCaseIdOrObj.case_id;
+                }
+                if (!sCaseId) return "1. Case";
+                
+                var sKey = "quads_completed_stage_" + sCaseId;
+                var sStored = window.localStorage.getItem(sKey);
+                var nCompleted = sStored ? parseInt(sStored, 10) : 0;
+                var nStage = nCompleted + 1;
+                if (nStage > 8) nStage = 8;
+                var oStage = WORKFLOW_STAGES[nStage - 1];
+                return oStage.no + ". " + oStage.name;
+            }
+        },
+        
         onInit: function () {
             var oModel = new JSONModel({
                 items: [],
@@ -317,10 +378,9 @@ sap.ui.define([
 
                 var matchesStatus = true;
                 if (sStatus !== "ALL") {
-                    if (sStatus === "NEW") matchesStatus = item.status === "CREATED";
-                    else if (sStatus === "TRIAGED") matchesStatus = item.status === "TRIAGED";
-                    else if (sStatus === "ANALYZED") matchesStatus = item.status === "ANALYZED";
-                    else if (sStatus === "CHECKPOINT_APPROVED") matchesStatus = item.status === "CHECKPOINT_APPROVED";
+                    var sFmtStatus = this.formatter.formatStatus(item.status);
+                    if (sStatus === "PENDING_APPROVAL") matchesStatus = (sFmtStatus === "Pending Approval");
+                    else if (sStatus === "APPROVED") matchesStatus = (sFmtStatus === "Approved");
                 }
 
                 var matchesSupplier = true;
@@ -338,10 +398,9 @@ sap.ui.define([
                 else if (sCategory === "IN_EXECUTION") matchesCategory = item._isInExecution;
 
                 return matchesQuery && matchesSeverity && matchesStatus && matchesSupplier && matchesCategory;
-            });
+            }.bind(this)); // bind this to access formatter
 
             // Sorting logic: CRITICAL -> HIGH -> MEDIUM -> LOW
-            // Then secondary: Days of Cover ascending
             var severityRank = { "CRITICAL": 1, "HIGH": 2, "MEDIUM": 3, "LOW": 4 };
             filtered.sort(function(a, b) {
                 var rankA = severityRank[(a.severity || "LOW").toUpperCase()] || 5;
@@ -349,10 +408,7 @@ sap.ui.define([
                 if (rankA !== rankB) {
                     return rankA - rankB; // Ascending rank (1 is first)
                 }
-                // Secondary sort by Days of Cover (ascending, lower is worse)
-                var docA = (a.days_of_cover !== null && a.days_of_cover !== undefined) ? a.days_of_cover : 999;
-                var docB = (b.days_of_cover !== null && b.days_of_cover !== undefined) ? b.days_of_cover : 999;
-                return docA - docB;
+                return 0; // Days of Cover removed
             });
 
             oModel.setProperty("/items", filtered);
@@ -371,7 +427,7 @@ sap.ui.define([
         },
 
         onTableSettings: function () {
-            MessageToast.show("Personalization: Case ID, Disruption, Supplier, Material, Plant, Severity, Status, DoC");
+            MessageToast.show("Personalization: Case ID, Disruption, Supplier, Material, Plant, Severity, Status");
         },
 
         onExportSpreadsheet: function () {
