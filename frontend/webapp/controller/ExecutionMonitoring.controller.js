@@ -292,7 +292,7 @@ sap.ui.define([
                     that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "RESOLVED");
                     that.getOwnerComponent().getModel("app").setProperty("/caseStatusText", "Resolved & Archived");
                     that.getOwnerComponent().getModel("app").setProperty("/caseStatusState", "Success");
-                    that.getOwnerComponent().getModel("app").setProperty("/stageStep", 7);
+                    that.getOwnerComponent().getModel("app").setProperty("/stageStep", 8);
                     that.getOwnerComponent().getModel("app").setProperty("/currentStageName", "Outcome (Resolved)");
                     MessageBox.success("Success: 100% quantity recovered within tolerance. Case closed and precedent archived!");
                 } else if (updatedProgress.is_failed) {

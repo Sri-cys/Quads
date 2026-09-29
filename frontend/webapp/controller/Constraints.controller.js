@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (Controller, JSONModel, MessageBox, MessageToast, WorkflowNavHelper) {
     "use strict";
 
     return Controller.extend("com.quads.supplychain.controller.Constraints", {
@@ -133,6 +134,10 @@ sap.ui.define([
 
         onBackToPriority: function () {
             this.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: this._sCurrentCaseId });
+        },
+
+        onWorkflowStagePress: function (oEvent) {
+            WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
         }
     });
 });

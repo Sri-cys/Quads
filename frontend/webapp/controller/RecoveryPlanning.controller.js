@@ -159,7 +159,8 @@ sap.ui.define([
                         oModel.setProperty("/total_plans_count", allPlans.length);
 
                         that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "DECISION_PENDING");
-                        that.getOwnerComponent().getModel("app").setProperty("/stageStep", 6);
+                        // Intentionally do NOT set stageStep to 6 here. The user must click "Proceed to Decision"
+                        // to logically complete this stage in the UI, or it will be updated by App.controller.js on route change.
                     })
                     .catch(function (err) {
                         oModel.setProperty("/state", "FAILED");

@@ -2,9 +2,9 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:layout="sap.ui.layout">
-
-    <VBox class="sapCaseWorkflowHeaderContainer">
+    <VBox>
         <!-- Top Row: Case ID · Title | Meta info right -->
+        <VBox class="sapCaseWorkflowHeaderContainer sapUiSmallMarginBottom">
         <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapCaseHeaderTopRow">
             <HBox alignItems="Center">
                 <Text text="{app>/selectedCaseId}" class="sapCaseHeaderId" />
@@ -25,113 +25,114 @@
                 <Text text="{app>/lastUpdated}" class="textMuted textSmall" />
             </HBox>
         </HBox>
+        </VBox>
 
-        <!-- Stage Progress Bar: 8 Stages, compact, no lock emoji clutter -->
-        <HBox alignItems="Center" class="sapCaseStageIndicatorRow">
+        <!-- Workflow Stepper Card -->
+        <VBox class="quadsStepperCard sapUiSmallMarginBottom">
+            <HBox alignItems="Center" class="quadsStepperRow">
 
-            <!-- 1. CASE -->
-            <!-- 1. CASE -->
-            <ObjectStatus
-                text="Case"
-                icon="{= ${app>/stageStep} > 1 ? 'sap-icon://accept' : (${app>/activeStep} === 1 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 1 ? 'sapStageNode active' : (${app>/stageStep} > 1 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="1" />
-                </customData>
-            </ObjectStatus>
-            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+                <!-- 1. CASE -->
+                <Button
+                    text="Case"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 1 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 1 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="1" />
+                    </customData>
+                </Button>
+                <core:Icon src="sap-icon://slim-arrow-right" class="{= ${app>/stageStep} > 1 ? 'quadsWfArrow quadsWfArrowDone' : 'quadsWfArrow' }" />
 
-            <!-- 2. IMPACT ANALYSIS -->
-            <ObjectStatus
-                text="Impact Analysis"
-                icon="{= ${app>/stageStep} > 2 ? 'sap-icon://accept' : (${app>/activeStep} === 2 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 2 ? 'sapStageNode active' : (${app>/stageStep} > 2 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="2" />
-                </customData>
-            </ObjectStatus>
-            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+                <!-- 2. IMPACT ANALYSIS -->
+                <Button
+                    text="Impact Analysis"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 2 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 2 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="2" />
+                    </customData>
+                </Button>
+                <core:Icon src="sap-icon://slim-arrow-right" class="{= ${app>/stageStep} > 2 ? 'quadsWfArrow quadsWfArrowDone' : 'quadsWfArrow' }" />
 
-            <!-- 3. PRIORITY -->
-            <ObjectStatus
-                text="Priority"
-                icon="{= ${app>/stageStep} > 3 ? 'sap-icon://accept' : (${app>/activeStep} === 3 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 3 ? 'sapStageNode active' : (${app>/stageStep} > 3 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="3" />
-                </customData>
-            </ObjectStatus>
-            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+                <!-- 3. PRIORITY -->
+                <Button
+                    text="Priority"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 3 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 3 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="3" />
+                    </customData>
+                </Button>
+                <core:Icon src="sap-icon://slim-arrow-right" class="{= ${app>/stageStep} > 3 ? 'quadsWfArrow quadsWfArrowDone' : 'quadsWfArrow' }" />
 
-            <!-- 4. CONSTRAINTS -->
-            <ObjectStatus
-                text="Constraints"
-                icon="{= ${app>/stageStep} > 4 ? 'sap-icon://accept' : (${app>/activeStep} === 4 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 4 ? 'sapStageNode active' : (${app>/stageStep} > 4 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="4" />
-                </customData>
-            </ObjectStatus>
-            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+                <!-- 4. CONSTRAINTS -->
+                <Button
+                    text="Constraints"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 4 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 4 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="4" />
+                    </customData>
+                </Button>
+                <core:Icon src="sap-icon://slim-arrow-right" class="{= ${app>/stageStep} > 4 ? 'quadsWfArrow quadsWfArrowDone' : 'quadsWfArrow' }" />
 
-            <!-- 5. RECOVERY PLANNING -->
-            <ObjectStatus
-                text="Recovery Planning"
-                icon="{= ${app>/stageStep} > 5 ? 'sap-icon://accept' : (${app>/activeStep} === 5 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 5 ? 'sapStageNode active' : (${app>/stageStep} > 5 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="5" />
-                </customData>
-            </ObjectStatus>
-            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+                <!-- 5. RECOVERY PLANNING -->
+                <Button
+                    text="Recovery Planning"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 5 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 5 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="5" />
+                    </customData>
+                </Button>
+                <core:Icon src="sap-icon://slim-arrow-right" class="{= ${app>/stageStep} > 5 ? 'quadsWfArrow quadsWfArrowDone' : 'quadsWfArrow' }" />
 
-            <!-- 6. DECISION -->
-            <ObjectStatus
-                text="Decision"
-                icon="{= ${app>/stageStep} > 6 ? 'sap-icon://accept' : (${app>/activeStep} === 6 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 6 ? 'sapStageNode active' : (${app>/stageStep} > 6 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="6" />
-                </customData>
-            </ObjectStatus>
-            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+                <!-- 6. DECISION -->
+                <Button
+                    text="Decision"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 6 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 6 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="6" />
+                    </customData>
+                </Button>
+                <core:Icon src="sap-icon://slim-arrow-right" class="{= ${app>/stageStep} > 6 ? 'quadsWfArrow quadsWfArrowDone' : 'quadsWfArrow' }" />
 
-            <!-- 7. EXECUTION & MONITORING -->
-            <ObjectStatus
-                text="Execution &amp; Monitoring"
-                icon="{= ${app>/stageStep} > 7 ? 'sap-icon://accept' : (${app>/activeStep} === 7 ? 'sap-icon://circle-task' : 'sap-icon://circle-task-2') }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 7 ? 'sapStageNode active' : (${app>/stageStep} > 7 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="7" />
-                </customData>
-            </ObjectStatus>
-            <core:Icon src="sap-icon://navigation-right-arrow" class="sapStageArrow" />
+                <!-- 7. EXECUTION & MONITORING -->
+                <Button
+                    text="Exec &amp; Monitoring"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 7 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 7 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="7" />
+                    </customData>
+                </Button>
+                <core:Icon src="sap-icon://slim-arrow-right" class="{= ${app>/stageStep} >= 8 ? 'quadsWfArrow quadsWfArrowDone' : 'quadsWfArrow' }" />
 
-            <!-- 8. OUTCOME -->
-            <ObjectStatus
-                text="Outcome"
-                icon="{= ${app>/stageStep} >= 8 ? (${app>/activeStep} === 8 ? 'sap-icon://circle-task' : 'sap-icon://accept') : 'sap-icon://circle-task-2' }"
-                active="true"
-                press=".onWorkflowStagePress"
-                class="{= ${app>/activeStep} === 8 ? 'sapStageNode active' : (${app>/stageStep} >= 8 ? 'sapStageNode passed' : 'sapStageNode') }">
-                <customData>
-                    <core:CustomData key="step" value="8" />
-                </customData>
-            </ObjectStatus>
-        </HBox>
+                <!-- 8. OUTCOME -->
+                <Button
+                    text="Outcome"
+                    press=".onWorkflowStagePress"
+                    class="{= ${app>/activeStep} === 8 ? 'quadsWfTab quadsWfActive' : (${app>/stageStep} > 8 ? 'quadsWfTab quadsWfPassed' : 'quadsWfTab quadsWfLocked') }">
+                    <customData>
+                        <core:CustomData key="step" value="8" />
+                    </customData>
+                </Button>
+
+                <!-- Spacer -->
+                <HBox class="quadsWfSpacer" />
+
+                <!-- Audit Trail (separate, always accessible) -->
+                <Button
+                    text="Audit Trail"
+                    icon="sap-icon://history"
+                    press=".onWorkflowStagePress"
+                    class="quadsWfTab quadsWfAudit">
+                    <customData>
+                        <core:CustomData key="step" value="9" />
+                    </customData>
+                </Button>
+
+            </HBox>
+        </VBox>
     </VBox>
 </core:FragmentDefinition>

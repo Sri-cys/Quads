@@ -13,11 +13,13 @@ sap.ui.define([
         "checkpoint1": 3,
         "checkpoint1Kebab": 3,
         "checkpoint1Alt": 3,
-        "recoveryPlans": 4,
-        "recoveryPlansAlt": 4,
+        "constraints": 4,
+        "constraintsAlt": 4,
         "recoveryPlanning": 5,
         "recoveryPlanningKebab": 5,
         "recoveryPlanningAlt": 5,
+        "recoveryPlans": 5,
+        "recoveryPlansAlt": 5,
         "decision": 6,
         "decisionAlt": 6,
         "checkpoint2": 6,
@@ -32,12 +34,12 @@ sap.ui.define([
     };
 
     var STEP_TO_STAGE_NAME = {
-        1: "1. CASE OVERVIEW",
+        1: "1. CASE",
         2: "2. IMPACT ANALYSIS",
-        3: "3. RECOVERY PRIORITY",
-        4: "4. RECOVERY PLANS",
-        5: "5. EVALUATION",
-        6: "6. FINAL DECISION",
+        3: "3. PRIORITY",
+        4: "4. CONSTRAINTS",
+        5: "5. RECOVERY PLANNING",
+        6: "6. DECISION",
         7: "7. EXECUTION & MONITORING",
         8: "8. OUTCOME"
     };
@@ -57,6 +59,18 @@ sap.ui.define([
             if (sCaseId && sCaseId !== "undefined") {
                 this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
                 this._syncCaseState(sCaseId, sRouteName);
+                
+                var aWorkflowRoutes = [
+                    "caseOverview", "caseOverviewAlias", "impactAnalysis", "impactAnalysisKebab", "impactAnalysisAlt",
+                    "checkpoint1", "checkpoint1Kebab", "checkpoint1Alt", "constraints", "constraintsAlt",
+                    "recoveryPlanning", "recoveryPlanningKebab", "recoveryPlanningAlt", "recoveryPlans", "recoveryPlansAlt",
+                    "decision", "decisionAlt", "checkpoint2", "checkpoint2Kebab", "checkpoint2Alt",
+                    "executionMonitoring", "executionMonitoringAlt", "monitoring", "monitoringAlt",
+                    "outcome", "outcomeAlt"
+                ];
+                if (aWorkflowRoutes.indexOf(sRouteName) !== -1) {
+                    window.localStorage.setItem("quads_case_stage_" + sCaseId, sRouteName);
+                }
             }
 
             this.getOwnerComponent().getModel("app").setProperty("/currentRoute", sRouteName);
@@ -222,62 +236,6 @@ sap.ui.define([
         onTopNavCases:          function () { this.getOwnerComponent().getRouter().navTo("cases"); },
         onTopNavNewDisruption:  function () { this.getOwnerComponent().getRouter().navTo("newDisruption"); },
 
-        onTopNavImpactAnalysis: function () {
-            var sCaseId = this._getCaseId();
-            var sStatus = (this.getOwnerComponent().getModel("app").getProperty("/caseStatus") || "CREATED").toUpperCase();
-            if (sStatus === "NEW" || sStatus === "CREATED") {
-                this.getOwnerComponent().getRouter().navTo("caseOverview", { caseId: sCaseId });
-            } else {
-                this.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
-            }
-        },
-
-        onTopNavRecovery: function () {
-            var sCaseId = this._getCaseId();
-            var nStep = this.getOwnerComponent().getModel("app").getProperty("/stageStep") || 1;
-
-            if (nStep >= 6) {
-                this.getOwnerComponent().getRouter().navTo("decision", { caseId: sCaseId });
-            } else if (nStep >= 4) {
-                this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
-            } else if (nStep >= 3) {
-                this.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
-            } else {
-                this._showLockedStageDialog(
-                    "Recovery Planning is locked.",
-                    "Recovery Planning is locked until Impact Analysis is completed.",
-                    "impactAnalysis"
-                );
-            }
-        },
-
-        onTopNavExecution: function () {
-            var sStatus = (this.getOwnerComponent().getModel("app").getProperty("/caseStatus") || "CREATED").toUpperCase();
-            var aAllowed = ["PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "RESOLVED"];
-            if (aAllowed.indexOf(sStatus) !== -1) {
-                this.getOwnerComponent().getRouter().navTo("executionMonitoring", { caseId: this._getCaseId() });
-            } else {
-                this._showLockedStageDialog(
-                    "Execution & Monitoring is locked.",
-                    "Execution is locked until a recovery plan is approved by manager at Final Decision.",
-                    "decision"
-                );
-            }
-        },
-
-        onTopNavOutcome: function () {
-            var sStatus = (this.getOwnerComponent().getModel("app").getProperty("/caseStatus") || "CREATED").toUpperCase();
-            if (sStatus === "RESOLVED") {
-                this.getOwnerComponent().getRouter().navTo("outcome", { caseId: this._getCaseId() });
-            } else {
-                this._showLockedStageDialog(
-                    "Outcome is not available yet.",
-                    "Outcome is locked until the case is fully resolved.",
-                    "executionMonitoring"
-                );
-            }
-        },
-
         _getCaseId: function () {
             return this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
         },
@@ -287,6 +245,7 @@ sap.ui.define([
         onHelpPress:         function () { MessageToast.show("Supply Chain Control Tower: 8-Stage Sequential Recovery Help"); },
         onSettingsPress:     function () { MessageToast.show("Control Tower Settings: Localhost Mode"); },
         onUserPress:         function () { MessageToast.show("Operator: Supply Chain Specialist (SC)"); },
+        onAuditTrailPress:   function () { MessageToast.show("Audit Trail accessed."); },
 
         onQuickHealthCheck: function () {
             var oAppModel = this.getOwnerComponent().getModel("app");

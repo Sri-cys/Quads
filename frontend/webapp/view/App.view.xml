@@ -21,7 +21,7 @@
             <!-- Vertical Separator -->
             <VBox class="sapHeaderDivider" />
 
-            <!-- 2. Primary Permanent Navigation: Exactly 6 Product Sections -->
+            <!-- 2. Primary Permanent Navigation: Core Application Sections -->
             <HBox alignItems="Center" class="sapUnifiedNavList">
                 <Button id="topNavDashboard"
                     text="Dashboard"
@@ -32,26 +32,6 @@
                     text="Cases"
                     type="Transparent"
                     press=".onTopNavCases"
-                    class="sapUnifiedNavItem" />
-                <Button id="topNavImpactAnalysis"
-                    text="Impact Analysis"
-                    type="Transparent"
-                    press=".onTopNavImpactAnalysis"
-                    class="sapUnifiedNavItem" />
-                <Button id="topNavRecovery"
-                    text="Recovery Planning"
-                    type="Transparent"
-                    press=".onTopNavRecovery"
-                    class="sapUnifiedNavItem" />
-                <Button id="topNavExecution"
-                    text="Execution &amp; Monitoring"
-                    type="Transparent"
-                    press=".onTopNavExecution"
-                    class="sapUnifiedNavItem" />
-                <Button id="topNavOutcome"
-                    text="Outcome"
-                    type="Transparent"
-                    press=".onTopNavOutcome"
                     class="sapUnifiedNavItem" />
             </HBox>
 

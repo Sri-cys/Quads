@@ -3299,66 +3299,7 @@ body {
     overflow-x: auto;
 }
 
-.sapStageNode {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 11.5px;
-    color: #6A6D70;
-    white-space: nowrap;
-}
-
-.sapStageNode.active {
-    background: #EBF5FF;
-    color: #0A6ED1;
-    font-weight: 700;
-}
-
-.sapStageNode.passed {
-    color: #107E3E;
-    font-weight: 600;
-}
-
-.sapStageNodeIcon {
-    font-size: 11px !important;
-}
-
-.sapStageNode.active .sapStageNodeIcon {
-    color: #0A6ED1 !important;
-}
-
-.sapStageNode.passed .sapStageNodeIcon {
-    color: #107E3E !important;
-}
-
-.sapStageArrow {
-    font-size: 9px !important;
-    color: #CBD5E1 !important;
-}
-
-.sapStageBadge {
-    display: inline-flex !important;
-    align-items: center !important;
-    font-size: 11.5px !important;
-    font-weight: 600 !important;
-}
-
-.sapStageBadge .sapMObjStatusText {
-    font-size: 11.5px !important;
-    font-weight: 600 !important;
-}
-
-.sapStageBadge .sapMObjStatusIcon {
-    font-size: 11px !important;
-    margin-right: 4px !important;
-}
-
-.sapStageBadge.sapMObjStatusInverted {
-    padding: 2px 8px !important;
-    border-radius: 4px !important;
-}
+/* [old stage node block removed - see workflow stepper section at bottom] */
 
 
 /* ====================================================================
@@ -4428,57 +4369,7 @@ body {
     display: none;
 }
 
-/* Stage Node: base */
-.sapStageNode {
-    display: flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-    padding: 3px 8px !important;
-    border-radius: 4px !important;
-    font-size: 11.5px !important;
-    font-weight: 500 !important;
-    color: #94A3B8 !important;
-    white-space: nowrap !important;
-    background: transparent !important;
-    border: none !important;
-}
-
-.sapStageNode .sapUiIcon,
-.sapStageNodeIcon {
-    font-size: 10px !important;
-    color: #CBD5E1 !important;
-}
-
-/* Active stage */
-.sapStageNode.active {
-    background: #EBF5FF !important;
-    color: #0A6ED1 !important;
-    font-weight: 700 !important;
-}
-
-.sapStageNode.active .sapUiIcon,
-.sapStageNode.active .sapStageNodeIcon {
-    color: #0A6ED1 !important;
-}
-
-/* Passed/completed stage */
-.sapStageNode.passed {
-    color: #107E3E !important;
-    font-weight: 600 !important;
-    background: transparent !important;
-}
-
-.sapStageNode.passed .sapUiIcon,
-.sapStageNode.passed .sapStageNodeIcon {
-    color: #107E3E !important;
-}
-
-/* Arrow between stages */
-.sapStageArrow {
-    font-size: 8px !important;
-    color: #E2E8F0 !important;
-    flex-shrink: 0 !important;
-}
+/* [old stage node block removed - see workflow stepper section at bottom] */
 
 /* ---- Fiori Object Page Header ---- */
 .sapFioriObjectHeader {
@@ -6147,7 +6038,8 @@ body {
 .sapFioriObjectHeader,
 .sapFioriSection,
 .sapAnalyticsCard,
-.quadsDetailCard {
+.quadsDetailCard,
+.quadsStepperCard {
     background: #FFFFFF !important;
     border: 1px solid rgba(10, 110, 209, 0.25) !important;
     box-shadow: 0 0 0 3px rgba(10, 110, 209, 0.04), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
@@ -6157,10 +6049,378 @@ body {
 
 
 /* Re-apply top borders for KPI cards so they are not fully overridden */
-.sapKpiCard.infoBorder { border-top: 3px solid #0070F2 !important; }
-.sapKpiCard.criticalBorder { border-top: 3px solid #DC2626 !important; }
 .sapKpiCard.warningBorder { border-top: 3px solid #D97706 !important; }
+
+/* ====================================================================
+   WORKFLOW STEPPER — Button-based card tabs
+   ==================================================================== */
+.quadsStepperCard {
+    padding: 14px 18px !important;
+    background: #FFFFFF !important;
+    border: 1px solid rgba(10, 110, 209, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba(10, 110, 209, 0.04), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    border-radius: 8px !important;
+    /* STABLE HEIGHT — never shrinks or grows during navigation */
+    min-height: 72px !important;
+    box-sizing: border-box !important;
+}
+
+/* ── STEPPER ROW ──────────────────────────────────────────────────── */
+.quadsStepperRow {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;  /* SPACING between tabs and arrows */
+    scrollbar-width: none !important;
+    min-height: 44px !important;  /* stable row height */
+}
+.quadsStepperRow::-webkit-scrollbar { display: none !important; }
+
+/* ── SHARED TAB BASE ──────────────────────────────────────────────── */
+.quadsWfTab,
+.quadsWfTab.sapMBtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.quadsWfTab .sapMBtnInner,
+.quadsWfTab.sapMBtn .sapMBtnInner {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 14px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+    border: 1px solid #D1D5DB !important;
+    background: #F8FAFC !important;
+    color: #64748B !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+    transition: border-color 0.15s, background 0.15s !important;
+}
+
+.quadsWfTab .sapMBtnContent,
+.quadsWfTab.sapMBtn .sapMBtnContent {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #64748B !important;  /* explicit, not inherit */
+    text-decoration: none !important;
+    letter-spacing: 0 !important;
+}
+
+.quadsWfTab:hover .sapMBtnInner,
+.quadsWfTab.sapMBtn:hover .sapMBtnInner {
+    border-color: #9CA3AF !important;
+    background: #F1F5F9 !important;
+}
+
+/* ── ACTIVE (BLUE) ────────────────────────────────────────────────── */
+.quadsWfActive.sapMBtn .sapMBtnInner,
+.quadsWfActive .sapMBtnInner {
+    background: #EFF6FF !important;
+    border-color: #3B82F6 !important;
+    color: #1D4ED8 !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.18) !important;
+    border-top: 2px solid #3B82F6 !important;
+}
+
+/* Force blue on ALL text children inside active button */
+.quadsWfActive .sapMBtnContent,
+.quadsWfActive.sapMBtn .sapMBtnContent,
+.quadsWfActive .sapMBtnInner .sapMBtnContent,
+.quadsWfActive .sapMBtnInner * {
+    color: #1D4ED8 !important;
+    font-weight: 600 !important;
+}
+
+/* ── PASSED / COMPLETED (GREEN) ───────────────────────────────────── */
+.quadsWfPassed.sapMBtn .sapMBtnInner,
+.quadsWfPassed .sapMBtnInner {
+    background: #F0FDF4 !important;
+    border-color: #16A34A !important;
+    color: #15803D !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 0 2px rgba(22,163,74,0.15) !important;
+    border-top: 2px solid #16A34A !important;
+}
+
+/* Force green on ALL text children inside passed button */
+.quadsWfPassed .sapMBtnContent,
+.quadsWfPassed.sapMBtn .sapMBtnContent,
+.quadsWfPassed .sapMBtnInner .sapMBtnContent,
+.quadsWfPassed .sapMBtnInner * {
+    color: #15803D !important;
+    font-weight: 600 !important;
+}
+
+/* ── LOCKED / FUTURE (GRAY) — already handled by base ────────────── */
+.quadsWfLocked.sapMBtn .sapMBtnInner,
+.quadsWfLocked .sapMBtnInner {
+    background: #F8FAFC !important;
+    border-color: #D1D5DB !important;
+    color: #94A3B8 !important;
+    font-weight: 400 !important;
+    box-shadow: none !important;
+}
+
+.quadsWfLocked .sapMBtnContent,
+.quadsWfLocked.sapMBtn .sapMBtnContent {
+    color: #94A3B8 !important;
+}
+
+/* ── CONNECTOR ARROW ──────────────────────────────────────────────── */
+.quadsWfArrow {
+    font-size: 10px !important;
+    color: #D1D5DB !important;
+    margin: 0 6px !important;
+    flex-shrink: 0 !important;
+}
+
+.quadsWfArrowDone {
+    color: #4ADE80 !important;
+}
+
+/* ── SPACER ───────────────────────────────────────────────────────── */
+.quadsWfSpacer {
+    flex-grow: 1 !important;
+    min-width: 16px !important;
+}
+
+/* ── AUDIT TRAIL (neutral white) ──────────────────────────────────── */
+.quadsWfAudit.sapMBtn .sapMBtnInner,
+.quadsWfAudit .sapMBtnInner {
+    background: #FFFFFF !important;
+    border-color: #CBD5E1 !important;
+    color: #475569 !important;
+    font-weight: 500 !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+}
+
+.quadsWfAudit .sapMBtnContent,
+.quadsWfAudit.sapMBtn .sapMBtnContent {
+    color: #475569 !important;
+}
+
+.quadsWfAudit:hover .sapMBtnInner,
+.quadsWfAudit.sapMBtn:hover .sapMBtnInner {
+    border-color: #94A3B8 !important;
+    background: #F8FAFC !important;
+}
+
+
+
+.sapCaseStageIndicatorRow {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    gap: 0 !important;
+    scrollbar-width: none !important;
+}
+
+.sapCaseStageIndicatorRow::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* ── STAGE NODE BASE (LOCKED/FUTURE = GRAY) ───────────────────────── */
+.sapStageNode,
+.sapStageNode.sapMObjStatus {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 8px 14px !important;
+    min-height: 40px !important;
+    max-height: 46px !important;
+    box-sizing: border-box !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    background: #F8FAFC !important;
+    border: 1px solid #D1D5DB !important;
+    cursor: pointer !important;
+    transition: border-color 0.15s ease, background 0.15s ease !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+}
+
+/* Strip ALL underlines from inner SAP text element */
+.sapStageNode .sapMObjStatusText,
+.sapStageNode .sapMObjStatusText span {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #64748B !important;
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    -webkit-text-decoration: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    line-height: 1 !important;
+}
+
+/* SAP renders active ObjectStatus as <a> — strip link appearance */
+.sapStageNode.sapMObjStatusActive .sapMObjStatusText,
+.sapMObjStatusActive.sapStageNode .sapMObjStatusText,
+.sapStageNode a.sapMObjStatusText,
+.sapStageNode .sapMObjStatusText a {
+    text-decoration: none !important;
+    color: inherit !important;
+    border-bottom: none !important;
+}
+
+/* Icon for locked/default state */
+.sapStageNode .sapMObjStatusIcon,
+.sapStageNode .sapUiIcon {
+    font-size: 13px !important;
+    color: #9CA3AF !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+/* Hover: locked state */
+.sapStageNode:hover,
+.sapStageNode.sapMObjStatus:hover {
+    border-color: #9CA3AF !important;
+    background: #F1F5F9 !important;
+}
+
+/* ── ACTIVE / CURRENT STATE (BLUE) ────────────────────────────────── */
+.sapStageNode.active,
+.sapStageNode.active.sapMObjStatus {
+    background: #EFF6FF !important;
+    border: 1.5px solid #3B82F6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.10), 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+.sapStageNode.active .sapMObjStatusText,
+.sapStageNode.active .sapMObjStatusText span {
+    font-weight: 600 !important;
+    color: #1D4ED8 !important;
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+.sapStageNode.active .sapMObjStatusIcon,
+.sapStageNode.active .sapUiIcon {
+    color: #2563EB !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* ── COMPLETED STATE (GREEN) ──────────────────────────────────────── */
+.sapStageNode.passed,
+.sapStageNode.passed.sapMObjStatus {
+    background: #F0FDF4 !important;
+    border: 1.5px solid #22C55E !important;
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.08), 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+.sapStageNode.passed .sapMObjStatusText,
+.sapStageNode.passed .sapMObjStatusText span {
+    font-weight: 600 !important;
+    color: #15803D !important;
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+/* Green circle with white check icon */
+.sapStageNode.passed .sapMObjStatusIcon,
+.sapStageNode.passed .sapUiIcon {
+    color: #FFFFFF !important;
+    background: #16A34A !important;
+    border-radius: 50% !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+/* ── CONNECTOR ARROWS ─────────────────────────────────────────────── */
+.sapStageArrow {
+    font-size: 11px !important;
+    color: #D1D5DB !important;
+    margin: 0 6px !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+}
+
+.sapStageArrow.passed {
+    color: #4ADE80 !important;
+}
+
+/* ── FLEX SPACER ─────────────────────────────────────────────────── */
+.sapUiFlexSpacer {
+    flex-grow: 1 !important;
+    min-width: 16px !important;
+}
+
+/* ── AUDIT TRAIL ─────────────────────────────────────────────────── */
+.sapAuditTrailNode,
+.sapAuditTrailNode.sapMObjStatus {
+    background: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+}
+
+.sapAuditTrailNode .sapMObjStatusText,
+.sapAuditTrailNode .sapMObjStatusText span {
+    font-weight: 500 !important;
+    color: #475569 !important;
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+.sapAuditTrailNode .sapMObjStatusIcon,
+.sapAuditTrailNode .sapUiIcon {
+    color: #64748B !important;
+    background: transparent !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0 !important;
+}
+
+.sapAuditTrailNode:hover,
+.sapAuditTrailNode.sapMObjStatus:hover {
+    border-color: #94A3B8 !important;
+    background: #F8FAFC !important;
+}
+
+
+
 .sapKpiCard.successBorder { border-top: 3px solid #16A34A !important; }
+
+
+
+
 
 /* Dashboard Typography increases */
 .sapKpiTitle {

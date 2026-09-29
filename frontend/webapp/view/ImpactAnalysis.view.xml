@@ -9,9 +9,9 @@
         id="impactPage"
         showHeader="false"
         enableScrolling="true"
-        class="quadsPageBg">
+        class="sapCorporatePage">
         <content>
-            <VBox class="quadsPagePadding">
+            <VBox class="sapCorporatePageBody">
                 
                 <!-- BREADCRUMBS -->
                 <HBox alignItems="Center" class="quadsBreadcrumbRow sapUiSmallMarginBottom">
