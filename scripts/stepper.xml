@@ -1,0 +1,83 @@
+        <!-- Workflow Stepper Card -->
+        <VBox class="quadsStepperCard sapUiSmallMarginBottom">
+            <HBox class="quadsTimelineRow">
+                <!-- 1. CASE -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 1 ? (${app>/stageStep} >= 1 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 1 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 1 }" />
+                        <Text text="1" visible="{= ${app>/stageStep} < 1 }" />
+                    </VBox>
+                    <Text text="Case" class="{= ${app>/activeStep} === 1 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 1 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+                <VBox class="{= ${app>/stageStep} >= 1 ? 'quadsTimelineLine completed' : 'quadsTimelineLine pending' }" />
+
+                <!-- 2. IMPACT ANALYSIS -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 2 ? (${app>/stageStep} >= 2 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 2 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 2 }" />
+                        <Text text="2" visible="{= ${app>/stageStep} < 2 }" />
+                    </VBox>
+                    <Text text="Impact Analysis" class="{= ${app>/activeStep} === 2 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 2 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+                <VBox class="{= ${app>/stageStep} >= 2 ? 'quadsTimelineLine completed' : 'quadsTimelineLine pending' }" />
+
+                <!-- 3. PRIORITY -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 3 ? (${app>/stageStep} >= 3 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 3 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 3 }" />
+                        <Text text="3" visible="{= ${app>/stageStep} < 3 }" />
+                    </VBox>
+                    <Text text="Priority" class="{= ${app>/activeStep} === 3 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 3 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+                <VBox class="{= ${app>/stageStep} >= 3 ? 'quadsTimelineLine completed' : 'quadsTimelineLine pending' }" />
+
+                <!-- 4. CONSTRAINTS -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 4 ? (${app>/stageStep} >= 4 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 4 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 4 }" />
+                        <Text text="4" visible="{= ${app>/stageStep} < 4 }" />
+                    </VBox>
+                    <Text text="Constraints" class="{= ${app>/activeStep} === 4 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 4 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+                <VBox class="{= ${app>/stageStep} >= 4 ? 'quadsTimelineLine completed' : 'quadsTimelineLine pending' }" />
+
+                <!-- 5. RECOVERY PLANNING -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 5 ? (${app>/stageStep} >= 5 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 5 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 5 }" />
+                        <Text text="5" visible="{= ${app>/stageStep} < 5 }" />
+                    </VBox>
+                    <Text text="Recovery Planning" class="{= ${app>/activeStep} === 5 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 5 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+                <VBox class="{= ${app>/stageStep} >= 5 ? 'quadsTimelineLine completed' : 'quadsTimelineLine pending' }" />
+
+                <!-- 6. DECISION -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 6 ? (${app>/stageStep} >= 6 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 6 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 6 }" />
+                        <Text text="6" visible="{= ${app>/stageStep} < 6 }" />
+                    </VBox>
+                    <Text text="Decision" class="{= ${app>/activeStep} === 6 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 6 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+                <VBox class="{= ${app>/stageStep} >= 6 ? 'quadsTimelineLine completed' : 'quadsTimelineLine pending' }" />
+
+                <!-- 7. EXECUTION & MONITORING -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 7 ? (${app>/stageStep} >= 7 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 7 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 7 }" />
+                        <Text text="7" visible="{= ${app>/stageStep} < 7 }" />
+                    </VBox>
+                    <Text text="Execution & Monitoring" class="{= ${app>/activeStep} === 7 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 7 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+                <VBox class="{= ${app>/stageStep} >= 7 ? 'quadsTimelineLine completed' : 'quadsTimelineLine pending' }" />
+
+                <!-- 8. OUTCOME -->
+                <HBox class="quadsTimelineStep">
+                    <VBox class="{= ${app>/activeStep} === 8 ? (${app>/stageStep} >= 8 ? 'quadsTimelineNode current-completed' : 'quadsTimelineNode current') : (${app>/stageStep} >= 8 ? 'quadsTimelineNode completed' : 'quadsTimelineNode pending') }">
+                        <core:Icon src="sap-icon://accept" class="quadsTimelineIcon" visible="{= ${app>/stageStep} >= 8 }" />
+                        <Text text="8" visible="{= ${app>/stageStep} < 8 }" />
+                    </VBox>
+                    <Text text="Outcome" class="{= ${app>/activeStep} === 8 ? 'quadsTimelineLabel current' : (${app>/stageStep} >= 8 ? 'quadsTimelineLabel completed' : 'quadsTimelineLabel pending') }" />
+                </HBox>
+            </HBox>
+        </VBox>

@@ -402,6 +402,7 @@ sap.ui.define([
 
         onGoToOutcome: function () {
             var sCaseId = this._sCurrentCaseId || "CASE-0001";
+            WorkflowNavHelper.markStageCompleted(sCaseId, 7);
             this.getOwnerComponent().getRouter().navTo("outcome", { caseId: sCaseId });
         },
 

@@ -9,7 +9,21 @@
     "expected_delay_days": 5,
     "affected_quantity": 500,
     "detected_at": "2026-09-27T06:00:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-001",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      },
+      {
+        "poId": "PO-2026-002",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "06 Oct 2026",
+        "status": "CONFIRMED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0002",
@@ -21,7 +35,15 @@
     "expected_delay_days": 14,
     "affected_quantity": 400,
     "detected_at": "2026-09-27T06:15:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-003",
+        "quantity": "400 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0003",
@@ -33,7 +55,21 @@
     "expected_delay_days": 6,
     "affected_quantity": 300,
     "detected_at": "2026-09-27T06:30:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-005",
+        "quantity": "300 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      },
+      {
+        "poId": "PO-2026-006",
+        "quantity": "300 Units",
+        "expectedDeliveryDate": "06 Oct 2026",
+        "status": "CONFIRMED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0004",
@@ -45,7 +81,15 @@
     "expected_delay_days": 7,
     "affected_quantity": 200,
     "detected_at": "2026-09-27T06:45:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-007",
+        "quantity": "200 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0005",
@@ -57,7 +101,21 @@
     "expected_delay_days": 4,
     "affected_quantity": 500,
     "detected_at": "2026-09-27T07:00:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-009",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      },
+      {
+        "poId": "PO-2026-010",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "06 Oct 2026",
+        "status": "CONFIRMED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0006",
@@ -69,7 +127,15 @@
     "expected_delay_days": 8,
     "affected_quantity": 350,
     "detected_at": "2026-09-27T07:15:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-011",
+        "quantity": "350 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0007",
@@ -81,7 +147,21 @@
     "expected_delay_days": 2,
     "affected_quantity": 2000,
     "detected_at": "2026-09-27T07:30:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-013",
+        "quantity": "2000 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      },
+      {
+        "poId": "PO-2026-014",
+        "quantity": "2000 Units",
+        "expectedDeliveryDate": "06 Oct 2026",
+        "status": "CONFIRMED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0008",
@@ -93,7 +173,15 @@
     "expected_delay_days": 3,
     "affected_quantity": 1000,
     "detected_at": "2026-09-27T07:45:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-015",
+        "quantity": "1000 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      }
+    ]
   },
   {
     "case_id": "CASE-0009",
@@ -105,6 +193,228 @@
     "expected_delay_days": 5,
     "affected_quantity": 500,
     "detected_at": "2026-09-27T08:00:00Z",
-    "status": "TRIAGED"
+    "status": "TRIAGED",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-017",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      },
+      {
+        "poId": "PO-2026-018",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "06 Oct 2026",
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-0101",
+    "disruption_type": "FACTORY_INCIDENT",
+    "description": "Factory fire halted battery cell production line.",
+    "supplier_id": "SUP-101",
+    "material_id": "MAT-101",
+    "plant_id": "PLANT-101",
+    "expected_delay_days": 14,
+    "affected_quantity": 400,
+    "detected_at": "2026-09-27T08:00:00Z",
+    "status": "CASE_OVERVIEW",
+    "completed_stages": [],
+    "supplier_reliability": "88%",
+    "otd": "85%",
+    "open_po": "PO-101",
+    "supplier_capacity": "90%",
+    "supplier_risk": "HIGH",
+    "recent_performance": "Declining due to capacity constraints",
+    "transit_time": "3 Days",
+    "logistics_risk": "MEDIUM",
+    "alternate_logistics": "Available",
+    "production_rate": "40 units/day",
+    "production_orders_affected": "3 lines",
+    "material_requirement": "40 units/day",
+    "production_interruption_risk": "CRITICAL",
+    "financial_exposure": "$120,000",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-019",
+        "quantity": "400 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-0102",
+    "disruption_type": "PORT_CONGESTION",
+    "description": "Port congestion holding container release.",
+    "supplier_id": "SUP-102",
+    "material_id": "MAT-102",
+    "plant_id": "PLANT-102",
+    "expected_delay_days": 7,
+    "affected_quantity": 500,
+    "detected_at": "2026-09-27T08:00:00Z",
+    "status": "IMPACT_ANALYSIS",
+    "completed_stages": [
+      "Case"
+    ],
+    "supplier_reliability": "92%",
+    "otd": "90%",
+    "open_po": "PO-102",
+    "supplier_capacity": "85%",
+    "supplier_risk": "MEDIUM",
+    "recent_performance": "Stable",
+    "transit_time": "14 Days",
+    "logistics_risk": "HIGH",
+    "alternate_logistics": "None (Port Congestion)",
+    "production_rate": "40 units/day",
+    "production_orders_affected": "2 lines",
+    "material_requirement": "40 units/day",
+    "production_interruption_risk": "HIGH",
+    "financial_exposure": "$95,000",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-021",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      },
+      {
+        "poId": "PO-2026-022",
+        "quantity": "500 Units",
+        "expectedDeliveryDate": "06 Oct 2026",
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-0103",
+    "disruption_type": "SUPPLIER_DELAY",
+    "description": "Supplier raw material shortage delaying dispatch.",
+    "supplier_id": "SUP-103",
+    "material_id": "MAT-103",
+    "plant_id": "PLANT-103",
+    "expected_delay_days": 5,
+    "affected_quantity": 600,
+    "detected_at": "2026-09-27T08:00:00Z",
+    "status": "PRIORITY_SAVED",
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority"
+    ],
+    "supplier_reliability": "95%",
+    "otd": "94%",
+    "open_po": "PO-103",
+    "supplier_capacity": "88%",
+    "supplier_risk": "LOW",
+    "recent_performance": "Improving",
+    "transit_time": "6 Days",
+    "logistics_risk": "LOW",
+    "alternate_logistics": "Available",
+    "production_rate": "50 units/day",
+    "production_orders_affected": "1 line",
+    "material_requirement": "50 units/day",
+    "production_interruption_risk": "MEDIUM",
+    "financial_exposure": "$45,000",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-023",
+        "quantity": "600 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-0104",
+    "disruption_type": "WEATHER_EVENT",
+    "description": "Severe storm grounded cargo flights.",
+    "supplier_id": "SUP-104",
+    "material_id": "MAT-104",
+    "plant_id": "PLANT-104",
+    "expected_delay_days": 3,
+    "affected_quantity": 300,
+    "detected_at": "2026-09-27T08:00:00Z",
+    "status": "AGENT2_COMPLETED",
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority",
+      "Constraints",
+      "Recovery Planning"
+    ],
+    "supplier_reliability": "85%",
+    "otd": "82%",
+    "open_po": "PO-104",
+    "supplier_capacity": "92%",
+    "supplier_risk": "HIGH",
+    "recent_performance": "Volatile due to weather",
+    "transit_time": "2 Days",
+    "logistics_risk": "HIGH",
+    "alternate_logistics": "Grounded",
+    "production_rate": "30 units/day",
+    "production_orders_affected": "2 lines",
+    "material_requirement": "30 units/day",
+    "production_interruption_risk": "HIGH",
+    "financial_exposure": "$80,000",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-025",
+        "quantity": "300 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      },
+      {
+        "poId": "PO-2026-026",
+        "quantity": "300 Units",
+        "expectedDeliveryDate": "06 Oct 2026",
+        "status": "CONFIRMED"
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-0105",
+    "disruption_type": "EQUIPMENT_BREAKDOWN",
+    "description": "Machining equipment breakdown reducing output.",
+    "supplier_id": "SUP-105",
+    "material_id": "MAT-105",
+    "plant_id": "PLANT-105",
+    "expected_delay_days": 2,
+    "affected_quantity": 800,
+    "detected_at": "2026-09-27T08:00:00Z",
+    "status": "RESOLVED",
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority",
+      "Constraints",
+      "Recovery Planning",
+      "Decision",
+      "Exec & Monitoring",
+      "Outcome"
+    ],
+    "supplier_reliability": "98%",
+    "otd": "98%",
+    "open_po": "PO-105",
+    "supplier_capacity": "80%",
+    "supplier_risk": "LOW",
+    "recent_performance": "Excellent",
+    "transit_time": "5 Days",
+    "logistics_risk": "LOW",
+    "alternate_logistics": "Multiple Options",
+    "production_rate": "50 units/day",
+    "production_orders_affected": "Minimal",
+    "material_requirement": "50 units/day",
+    "production_interruption_risk": "LOW",
+    "financial_exposure": "$15,000",
+    "purchaseOrders": [
+      {
+        "poId": "PO-2026-027",
+        "quantity": "800 Units",
+        "expectedDeliveryDate": "29 Sep 2026",
+        "status": "DELAYED"
+      }
+    ]
   }
 ]

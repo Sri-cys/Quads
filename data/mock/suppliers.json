@@ -4,7 +4,10 @@
     "name": "Hyundai Mobis Supplier",
     "location": "Chennai, India",
     "reliability_score": 0.82,
-    "materials_supplied": ["MAT-001", "MAT-006"],
+    "materials_supplied": [
+      "MAT-001",
+      "MAT-006"
+    ],
     "available_capacity": 500,
     "standard_lead_time_days": 10,
     "expedited_lead_time_days": 4,
@@ -15,7 +18,10 @@
     "name": "ABC Components",
     "location": "Tamil Nadu, India",
     "reliability_score": 0.78,
-    "materials_supplied": ["MAT-001", "MAT-002"],
+    "materials_supplied": [
+      "MAT-001",
+      "MAT-002"
+    ],
     "available_capacity": 300,
     "standard_lead_time_days": 8,
     "expedited_lead_time_days": 6,
@@ -26,18 +32,24 @@
     "name": "XYZ Auto Parts",
     "location": "Pune, India",
     "reliability_score": 0.91,
-    "materials_supplied": ["MAT-001", "MAT-003"],
+    "materials_supplied": [
+      "MAT-001",
+      "MAT-003"
+    ],
     "available_capacity": 600,
     "standard_lead_time_days": 5,
     "expedited_lead_time_days": 3,
-    "unit_cost_modifier": 1.10
+    "unit_cost_modifier": 1.1
   },
   {
     "supplier_id": "SUP-004",
     "name": "Nordic Hydraulic Systems",
     "location": "Gothenburg, Sweden",
     "reliability_score": 0.88,
-    "materials_supplied": ["MAT-004", "MAT-008"],
+    "materials_supplied": [
+      "MAT-004",
+      "MAT-008"
+    ],
     "available_capacity": 400,
     "standard_lead_time_days": 7,
     "expedited_lead_time_days": 3,
@@ -48,7 +60,10 @@
     "name": "Pacific Harness Technologies",
     "location": "Yokohama, Japan",
     "reliability_score": 0.95,
-    "materials_supplied": ["MAT-002", "MAT-005"],
+    "materials_supplied": [
+      "MAT-002",
+      "MAT-005"
+    ],
     "available_capacity": 800,
     "standard_lead_time_days": 6,
     "expedited_lead_time_days": 2,
@@ -59,10 +74,63 @@
     "name": "Bavaria Fasteners GmbH",
     "location": "Nuremberg, Germany",
     "reliability_score": 0.97,
-    "materials_supplied": ["MAT-001", "MAT-007"],
+    "materials_supplied": [
+      "MAT-001",
+      "MAT-007"
+    ],
     "available_capacity": 2500,
     "standard_lead_time_days": 2,
     "expedited_lead_time_days": 1,
     "unit_cost_modifier": 1.18
+  },
+  {
+    "supplier_id": "SUP-101",
+    "name": "Alpha Cells GmbH",
+    "location": "Hamburg, Germany",
+    "reliability_score": 0.88,
+    "on_time_delivery_rate": 0.85,
+    "average_lead_time_days": 10,
+    "risk_level": "HIGH",
+    "recent_performance_trend": "Declining due to capacity constraints"
+  },
+  {
+    "supplier_id": "SUP-102",
+    "name": "Nordic Steel AB",
+    "location": "Rotterdam, Netherlands",
+    "reliability_score": 0.92,
+    "on_time_delivery_rate": 0.9,
+    "average_lead_time_days": 14,
+    "risk_level": "MEDIUM",
+    "recent_performance_trend": "Stable"
+  },
+  {
+    "supplier_id": "SUP-103",
+    "name": "Baltic Wiring Ltd",
+    "location": "Gdansk, Poland",
+    "reliability_score": 0.95,
+    "on_time_delivery_rate": 0.94,
+    "average_lead_time_days": 7,
+    "risk_level": "LOW",
+    "recent_performance_trend": "Improving"
+  },
+  {
+    "supplier_id": "SUP-104",
+    "name": "Shanghai Electronics Co",
+    "location": "Shanghai, China",
+    "reliability_score": 0.85,
+    "on_time_delivery_rate": 0.82,
+    "average_lead_time_days": 21,
+    "risk_level": "HIGH",
+    "recent_performance_trend": "Volatile due to weather"
+  },
+  {
+    "supplier_id": "SUP-105",
+    "name": "Rhein Precision",
+    "location": "Stuttgart, Germany",
+    "reliability_score": 0.98,
+    "on_time_delivery_rate": 0.98,
+    "average_lead_time_days": 3,
+    "risk_level": "LOW",
+    "recent_performance_trend": "Excellent"
   }
 ]

@@ -65,93 +65,90 @@
                     </HBox>
                 </VBox>
 
-                <!-- ===== SECTION 1: Disruption Details ===== -->
-                <VBox class="sapFioriSection">
-                    <HBox alignItems="Center" class="sapFioriSectionHeader">
-                        <Text text="1" class="sapSectionNum" />
-                        <Title text="Disruption Details" level="H2" class="sapFioriSectionTitle" />
-                    </HBox>
-                    <VBox class="sapFioriSectionBody">
-                        <!-- Two-column form layout -->
-                        <layout:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="2" vSpacing="0">
-                            <VBox>
-                                <!-- Left column rows -->
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Disruption Type" class="sapFormLabel" />
-                                    <Text text="{case>/disruption_type_display}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Disruption Reason" class="sapFormLabel" />
-                                    <Text text="{case>/reason}" class="sapFormVal textWarning" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Expected Delivery" class="sapFormLabel" />
-                                    <Text text="{case>/expected_delivery_date}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Current ETA (Delayed)" class="sapFormLabel" />
-                                    <Text text="{case>/current_eta}" class="sapFormVal textCritical" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow sapFormRowLast">
-                                    <Text text="Delay Duration" class="sapFormLabel" />
-                                    <Text text="{case>/expected_delay_days} days" class="sapFormVal textCritical bold" />
-                                </HBox>
-                            </VBox>
-                            <VBox>
-                                <!-- Right column rows -->
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Origin" class="sapFormLabel" />
-                                    <Text text="{case>/origin}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Carrier" class="sapFormLabel" />
-                                    <Text text="{case>/carrier}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Transport Mode" class="sapFormLabel" />
-                                    <Text text="{case>/transport_mode}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow">
-                                    <Text text="Destination" class="sapFormLabel" />
-                                    <Text text="{case>/destination}" class="sapFormVal" />
-                                </HBox>
-                                <HBox alignItems="Start" class="sapFormRow sapFormRowLast">
-                                    <Text text="Affected Quantity" class="sapFormLabel" />
-                                    <Text text="{case>/affected_quantity_display}" class="sapFormVal textCritical bold" />
-                                </HBox>
-                            </VBox>
-                        </layout:Grid>
-                    </VBox>
-                </VBox>
-
-                <!-- ===== SECTION 2: Supplier Details ===== -->
-                <core:Fragment fragmentName="com.quads.supplychain.view.SupplierDetailsCard" type="XML" />
-
-                <!-- ===== SECTION 3: Inventory Details ===== -->
-                <core:Fragment fragmentName="com.quads.supplychain.view.InventoryDetailsCard" type="XML" />
-
-                <!-- ===== SECTION 4: Logistics & Transport Details ===== -->
-                <core:Fragment fragmentName="com.quads.supplychain.view.LogisticsDetailsCard" type="XML" />
-
-                <!-- Workflow Progression Guidance Card -->
-                <VBox class="sapVisualChainCard sapUiSmallMarginTop">
-                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapChainHeaderBar">
-                        <VBox>
-                            <Title text="WORKFLOW PROGRESSION" level="H3" class="sapSectionTitleSmall" />
-                            <Text text="This is Stage 1 of the strict 8-stage disruption resolution workflow." class="sapSectionSubSmall" />
+                <!-- 2x2 Grid for the 4 Detail Cards -->
+                <VBox class="quadsCaseOverviewGrid sapUiSmallMarginBottom">
+                    <!-- ===== SECTION 1: Disruption Details ===== -->
+                    <VBox class="sapFioriSection quadsStretchCard">
+                        <HBox alignItems="Center" class="sapFioriSectionHeader">
+                            <Text text="1" class="sapSectionNum" />
+                            <Title text="Disruption Details" level="H2" class="sapFioriSectionTitle" />
+                        </HBox>
+                        <VBox class="sapFioriSectionBody">
+                            <!-- Two-column form layout -->
+                            <layout:Grid defaultSpan="XL6 L6 M12 S12" hSpacing="2" vSpacing="0">
+                                <VBox>
+                                    <!-- Left column rows -->
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Disruption Type" class="sapFormLabel" />
+                                        <Text text="{case>/disruption_type_display}" class="sapFormVal" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Disruption Reason" class="sapFormLabel" />
+                                        <Text text="{case>/reason}" class="sapFormVal textWarning" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Expected Delivery" class="sapFormLabel" />
+                                        <Text text="{case>/expected_delivery_date}" class="sapFormVal" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Current ETA (Delayed)" class="sapFormLabel" />
+                                        <Text text="{case>/current_eta}" class="sapFormVal textCritical" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow sapFormRowLast">
+                                        <Text text="Delay Duration" class="sapFormLabel" />
+                                        <Text text="{case>/expected_delay_days} days" class="sapFormVal textCritical bold" />
+                                    </HBox>
+                                </VBox>
+                                <VBox>
+                                    <!-- Right column rows -->
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Origin" class="sapFormLabel" />
+                                        <Text text="{case>/origin}" class="sapFormVal" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Carrier" class="sapFormLabel" />
+                                        <Text text="{case>/carrier}" class="sapFormVal" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Transport Mode" class="sapFormLabel" />
+                                        <Text text="{case>/transport_mode}" class="sapFormVal" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow">
+                                        <Text text="Destination" class="sapFormLabel" />
+                                        <Text text="{case>/destination}" class="sapFormVal" />
+                                    </HBox>
+                                    <HBox alignItems="Start" class="sapFormRow sapFormRowLast">
+                                        <Text text="Affected Quantity" class="sapFormLabel" />
+                                        <Text text="{case>/affected_quantity_display}" class="sapFormVal textCritical bold" />
+                                    </HBox>
+                                </VBox>
+                            </layout:Grid>
                         </VBox>
-                        <Text text="Strict Sequential Flow" class="sapTagNeutral" />
-                    </HBox>
-                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginTop">
-                        <Text text="To assess downstream inventory buffer breach, plant assembly hazards, and financial exposure, launch Agent 1." class="textDark bold" />
-                        <Button
-                            text="START IMPACT ANALYSIS &#x2192;"
-                            type="Emphasized"
-                            icon="sap-icon://play"
-                            press=".onStartImpactAnalysis"
-                            class="sapBtnPrimary" />
-                    </HBox>
+                    </VBox>
+
+                    <!-- ===== SECTION 2: Supplier Details ===== -->
+                    <core:Fragment fragmentName="com.quads.supplychain.view.SupplierDetailsCard" type="XML" />
+
+                    <!-- ===== SECTION 3: Inventory Details ===== -->
+                    <core:Fragment fragmentName="com.quads.supplychain.view.InventoryDetailsCard" type="XML" />
+
+                    <!-- ===== SECTION 4: Logistics & Transport Details ===== -->
+                    <core:Fragment fragmentName="com.quads.supplychain.view.LogisticsDetailsCard" type="XML" />
                 </VBox>
+
+                <!-- ===== SECTION 5: Purchase Order / Supply Reference ===== -->
+                <VBox class="sapUiSmallMarginBottom">
+                    <core:Fragment fragmentName="com.quads.supplychain.view.PurchaseOrderDetailsCard" type="XML" />
+                </VBox>
+
+                <HBox justifyContent="End" class="sapUiMediumMarginBottom">
+                    <Button
+                        text="START IMPACT ANALYSIS &#x2192;"
+                        type="Emphasized"
+                        icon="sap-icon://play"
+                        press=".onStartImpactAnalysis"
+                        class="sapBtnPrimary" />
+                </HBox>
 
             </VBox>
         </content>

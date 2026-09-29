@@ -36,6 +36,7 @@ class Case(BaseModel):
     active_step: Optional[str] = Field(default=None, description="Active fine-grained step within the current stage")
     steps_progress: dict[str, Any] = Field(default_factory=dict, description="Fine-grained step completion statuses")
     run_id: Optional[str] = Field(default=None, description="Unique run identifier for concurrency/idempotency")
+    completed_stages: list[str] = Field(default_factory=list, description="List of completed stage names")
 
     @computed_field
     @property

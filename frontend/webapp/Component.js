@@ -1,8 +1,9 @@
 sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/Device",
-    "com/quads/supplychain/model/models"
-], function (UIComponent, Device, models) {
+    "com/quads/supplychain/model/models",
+    "com/quads/supplychain/controller/WorkflowNavHelper"
+], function (UIComponent, Device, models, WorkflowNavHelper) {
     "use strict";
 
     return UIComponent.extend("com.quads.supplychain.Component", {
@@ -19,6 +20,9 @@ sap.ui.define([
 
             // set the app model
             this.setModel(models.createAppModel(), "app");
+
+            // attach workflow route guard
+            WorkflowNavHelper.initRouteGuard(this.getRouter());
 
             // enable routing
             this.getRouter().initialize();

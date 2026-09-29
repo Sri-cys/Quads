@@ -63,5 +63,30 @@
     "material_id": "MAT-008",
     "plant_id": "PLANT-003",
     "daily_demand": 50
+  },
+  {
+    "material_id": "MAT-101",
+    "plant_id": "PLANT-101",
+    "daily_demand": 40
+  },
+  {
+    "material_id": "MAT-102",
+    "plant_id": "PLANT-102",
+    "daily_demand": 40
+  },
+  {
+    "material_id": "MAT-103",
+    "plant_id": "PLANT-103",
+    "daily_demand": 50
+  },
+  {
+    "material_id": "MAT-104",
+    "plant_id": "PLANT-104",
+    "daily_demand": 30
+  },
+  {
+    "material_id": "MAT-105",
+    "plant_id": "PLANT-105",
+    "daily_demand": 50
   }
 ]

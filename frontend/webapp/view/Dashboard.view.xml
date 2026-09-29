@@ -222,7 +222,7 @@
                                 <Column demandPopin="true" minScreenWidth="Tablet"><Text text="Status" class="bold textMuted" /></Column>
                             </columns>
                             <items>
-                                <ColumnListItem type="Navigation" press=".onNavCases">
+                                <ColumnListItem type="Navigation" press=".onCaseSelect">
                                     <cells>
                                         <VBox class="sapUiTinyMarginTopBottom">
                                             <Text text="{dashboard>case_id}" class="bold textDark" />

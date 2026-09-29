@@ -1,0 +1,46 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:t="sap.ui.table">
+    <VBox class="sapFioriSection quadsStretchCard">
+        <HBox alignItems="Center" class="sapFioriSectionHeader">
+            <VBox alignItems="Center" justifyContent="Center" class="sapUiTinyMarginEnd" style="background-color: #E0F2FE; border-radius: 8px; width: 36px; height: 36px;">
+                <core:Icon src="sap-icon://document" color="#0369A1" size="1.25rem" />
+            </VBox>
+            <Text text="5" class="sapSectionNum" />
+            <Title text="Purchase Order / Supply Reference" level="H2" class="sapFioriSectionTitle" />
+        </HBox>
+        <VBox class="sapFioriSectionBody" height="100%">
+            <ScrollContainer width="100%" horizontal="true" vertical="false">
+                <Table
+                    items="{case>/purchaseOrders}"
+                    noDataText="No purchase orders linked to this case."
+                    class="sapUiSmallMarginTop">
+                    <columns>
+                        <Column width="6rem">
+                            <Text text="PO ID" class="quadsDetailLabel" />
+                        </Column>
+                        <Column width="7rem">
+                            <Text text="Quantity" class="quadsDetailLabel" />
+                        </Column>
+                        <Column>
+                            <Text text="Expected Delivery Date" class="quadsDetailLabel" />
+                        </Column>
+                        <Column width="8rem" hAlign="Right">
+                            <Text text="Status" class="quadsDetailLabel" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{case>poId}" class="quadsDetailValue" />
+                                <Text text="{case>quantity}" class="quadsDetailValue" />
+                                <Text text="{case>expectedDeliveryDate}" class="quadsDetailValue" />
+                                <ObjectStatus
+                                    text="{case>status}"
+                                    class="{= ${case>status} === 'DELAYED' ? 'quadsBadgeCritical' : (${case>status} === 'CONFIRMED' ? 'quadsBadgeSuccess' : (${case>status} === 'IN TRANSIT' ? 'quadsBadgeInfo' : (${case>status} === 'PENDING' ? 'quadsBadgeWarning' : 'quadsBadgeNeutral'))) }" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </ScrollContainer>
+        </VBox>
+    </VBox>
+</core:FragmentDefinition>

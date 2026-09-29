@@ -163,6 +163,32 @@ sap.ui.define([
                     oAppModel.setProperty("/caseStatusText", sStatusText);
                     oAppModel.setProperty("/stageStep", nMaxStep);
                     oAppModel.setProperty("/activeStep", nCurrentStep);
+
+                    // Sync completed_stages from backend to localStorage to support stage gating logic
+                    if (caseData.completed_stages && Array.isArray(caseData.completed_stages)) {
+                        var maxCompleted = 0;
+                        caseData.completed_stages.forEach(function(stageName) {
+                            var n = 0;
+                            var sLower = stageName.toLowerCase();
+                            if (sLower.indexOf("case") !== -1) n = 1;
+                            if (sLower.indexOf("impact") !== -1) n = 2;
+                            if (sLower.indexOf("priority") !== -1) n = 3;
+                            if (sLower.indexOf("constraints") !== -1) n = 4;
+                            if (sLower.indexOf("recovery") !== -1) n = 5;
+                            if (sLower.indexOf("decision") !== -1) n = 6;
+                            if (sLower.indexOf("exec") !== -1 || sLower.indexOf("monitoring") !== -1) n = 7;
+                            if (sLower.indexOf("outcome") !== -1) n = 8;
+                            if (n > maxCompleted) maxCompleted = n;
+                        });
+                        
+                        // Overwrite localStorage with backend truth
+                        window.localStorage.setItem("quads_completed_stage_" + sCaseId, maxCompleted.toString());
+                        oAppModel.setProperty("/completedStage", maxCompleted);
+                    } else {
+                        // If empty, null, or undefined, treat as 0 (no stages completed)
+                        window.localStorage.setItem("quads_completed_stage_" + sCaseId, "0");
+                        oAppModel.setProperty("/completedStage", 0);
+                    }
                 })
                 .catch(function (e) {
                     console.warn("Could not sync case state: " + e.message);

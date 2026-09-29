@@ -13,5 +13,40 @@
     "plant_id": "PLANT-003",
     "name": "Curitiba Assembly Facility",
     "location": "Curitiba, Brazil"
+  },
+  {
+    "plant_id": "PLANT-101",
+    "name": "Leipzig Battery Plant",
+    "location": "Leipzig, Germany",
+    "capacity_utilization": 0.9,
+    "production_rate_per_day": 40
+  },
+  {
+    "plant_id": "PLANT-102",
+    "name": "Munich Assembly Plant",
+    "location": "Munich, Germany",
+    "capacity_utilization": 0.85,
+    "production_rate_per_day": 40
+  },
+  {
+    "plant_id": "PLANT-103",
+    "name": "Berlin Plant",
+    "location": "Berlin, Germany",
+    "capacity_utilization": 0.88,
+    "production_rate_per_day": 50
+  },
+  {
+    "plant_id": "PLANT-104",
+    "name": "Frankfurt Plant",
+    "location": "Frankfurt, Germany",
+    "capacity_utilization": 0.92,
+    "production_rate_per_day": 30
+  },
+  {
+    "plant_id": "PLANT-105",
+    "name": "Stuttgart Plant",
+    "location": "Stuttgart, Germany",
+    "capacity_utilization": 0.8,
+    "production_rate_per_day": 50
   }
 ]

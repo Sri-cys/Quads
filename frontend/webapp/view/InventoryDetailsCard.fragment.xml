@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-    <VBox class="sapFioriSection">
+    <VBox class="sapFioriSection quadsStretchCard">
         <HBox alignItems="Center" class="sapFioriSectionHeader">
             <Text text="3" class="sapSectionNum" />
             <Title text="Inventory Details" level="H2" class="sapFioriSectionTitle" />

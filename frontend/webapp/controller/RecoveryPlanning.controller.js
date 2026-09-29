@@ -211,6 +211,7 @@ sap.ui.define([
         },
 
         onProceedToDecision: function () {
+            WorkflowNavHelper.markStageCompleted(this._sCurrentCaseId, 5);
             this.getOwnerComponent().getRouter().navTo("decision", { caseId: this._sCurrentCaseId });
         },
 

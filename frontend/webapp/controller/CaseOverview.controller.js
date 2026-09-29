@@ -96,10 +96,10 @@ sap.ui.define([
 
                     data.expected_delivery_date = dExpDelivery.toLocaleDateString();
                     data.current_eta = dCurrentEta.toLocaleDateString();
-                    data.origin = data.supplier_id === "SUP-001" ? "Seoul, South Korea" : (data.supplier_id === "SUP-003" ? "Rotterdam, Netherlands" : "Hamburg, Germany");
-                    data.destination = data.plant_name + ", Germany";
-                    data.carrier = data.supplier_id === "SUP-001" ? "DHL Global Forwarding" : (data.supplier_id === "SUP-003" ? "Hapag-Lloyd Ocean" : "DB Schenker Logistics");
-                    data.transport_mode = data.supplier_id === "SUP-001" ? "Air Cargo Express" : (data.supplier_id === "SUP-003" ? "Ocean Container Freight" : "Road Freight");
+                    data.origin = data.origin || (data.supplier_id === "SUP-001" ? "Seoul, South Korea" : (data.supplier_id === "SUP-003" ? "Rotterdam, Netherlands" : "Hamburg, Germany"));
+                    data.destination = data.destination || (data.plant_name + ", Germany");
+                    data.carrier = data.carrier || (data.supplier_id === "SUP-001" ? "DHL Global Forwarding" : (data.supplier_id === "SUP-003" ? "Hapag-Lloyd Ocean" : "DB Schenker Logistics"));
+                    data.transport_mode = data.transport_mode || (data.supplier_id === "SUP-001" ? "Air Cargo Express" : (data.supplier_id === "SUP-003" ? "Ocean Container Freight" : "Road Freight"));
                     data.reason = data.description || "Supply chain schedule exception";
 
                     // ---- Inventory Risk panel ----
@@ -165,6 +165,7 @@ sap.ui.define([
             .then(function (caseData) {
                 that.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
+                WorkflowNavHelper.markStageCompleted(sCaseId, 1);
                 that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
             })
             .catch(function (err) {

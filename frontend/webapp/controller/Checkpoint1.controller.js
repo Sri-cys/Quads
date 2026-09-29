@@ -204,8 +204,9 @@ sap.ui.define([
             })
             .then(function (caseData) {
                 that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
+                WorkflowNavHelper.markStageCompleted(sCaseId, 3);
                 MessageToast.show("Priority '" + sPriority + "' confirmed. Launching Agent 2...");
-                that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
+                that.getOwnerComponent().getRouter().navTo("constraints", { caseId: sCaseId });
             })
             .catch(function (err) {
                 if (oBtn) oBtn.setEnabled(true);

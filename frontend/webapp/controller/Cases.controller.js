@@ -396,10 +396,7 @@ sap.ui.define([
 
             var sCaseId = oContext.getProperty("case_id");
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
-            
-            var sLastStage = window.localStorage.getItem("quads_case_stage_" + sCaseId) || "caseOverview";
-            
-            this.getOwnerComponent().getRouter().navTo(sLastStage, { caseId: sCaseId });
+            this.getOwnerComponent().getRouter().navTo("caseOverview", { caseId: sCaseId });
         }
     });
 });

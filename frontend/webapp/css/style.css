@@ -4500,6 +4500,24 @@ body {
 }
 
 /* ---- Fiori Sections ---- */
+.quadsCaseOverviewGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    .quadsCaseOverviewGrid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.quadsStretchCard {
+    height: 100% !important;
+    margin-bottom: 0 !important;
+}
+
 .sapFioriSection {
     background: #FFFFFF !important;
     border: 1px solid #E2E8F0 !important;
@@ -5804,6 +5822,33 @@ body {
     font-weight: 600;
 }
 
+.quadsBadgeSuccess {
+    background: #DCFCE7;
+    color: #16A34A;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.quadsBadgeInfo {
+    background: #DBEAFE;
+    color: #0070F2;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.quadsBadgeNeutral {
+    background: #F1F5F9;
+    color: #64748B;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
 .quadsBadgeCriticalBox {
     background: #FEF2F2;
     border: 1px solid #FECACA;
@@ -5894,53 +5939,7 @@ body {
     font-size: 14px !important;
 }
 
-/* Propagation */
-.quadsPropagationContainer {
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    padding: 16px;
-    justify-content: space-between;
-}
-
-.quadsPropNode {
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
-
-.quadsPropIconBox {
-    width: 32px;
-    height: 32px;
-    background: #FFF;
-    border-radius: 6px;
-    border: 1px solid #E2E8F0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.quadsPropIconBox .sapUiIcon {
-    color: #2563EB !important;
-    font-size: 16px !important;
-}
-
-.quadsPropLabel {
-    font-size: 11px;
-    color: #6B7280;
-}
-
-.quadsPropValue {
-    font-size: 13px;
-    font-weight: 700;
-    color: #111827;
-}
-
-.quadsPropArrow {
-    color: #94A3B8 !important;
-    font-size: 14px !important;
-    margin: 0 16px;
-}
+/* Propagation (Removed) */
 
 /* Buttons */
 .quadsProceedBtn {
@@ -6581,4 +6580,141 @@ body {
 
 .quadsSevDot {
     margin-right: 10px !important;
+}
+
+/* Horizontal Stepper Timeline Styles */
+.quadsStepperCard .quadsStepperRow {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 0.5rem !important;
+    width: 100% !important;
+}
+
+/* NEW HORIZONTAL TIMELINE STEPPER */
+.quadsTimelineScroll {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+}
+
+.quadsTimelineFlexRow {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    min-width: 720px !important;
+    padding: 6px 0 !important;
+}
+
+.quadsTimelineItem {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
+.quadsTimelineCircleBox {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    z-index: 1 !important;
+    background: #E5E7EB !important;
+    color: #4B5563 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 8px !important;
+}
+
+.quadsTimelineLabel {
+    margin-top: 8px !important;
+    font-size: 13px !important;
+    color: #6B7280 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+}
+
+/* Connector Line */
+.quadsTimelineItem:not(.quadsTimelineItemLast)::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 21px !important;
+    left: calc(50% + 16px) !important;
+    right: calc(-50% + 16px) !important;
+    height: 2px !important;
+    background: #D1D5DB !important;
+    z-index: 0 !important;
+}
+
+/* State: Current */
+.quadsTimelineItem[data-state="current"] .quadsTimelineCircleBox {
+    background: #0070F2 !important;
+}
+.quadsTimelineItem[data-state="current"] .quadsTimelineText {
+    color: #FFFFFF !important;
+}
+.quadsTimelineItem[data-state="current"] .quadsTimelineLabel {
+    color: #0070F2 !important;
+    font-weight: bold !important;
+}
+
+/* State: Completed */
+.quadsTimelineItem[data-state="completed"] .quadsTimelineCircleBox {
+    background: #16A34A !important;
+}
+.quadsTimelineItem[data-state="completed"] .quadsTimelineIcon {
+    color: #FFFFFF !important;
+}
+.quadsTimelineItem[data-state="completed"] .quadsTimelineLabel {
+    color: #16A34A !important;
+    font-weight: bold !important;
+}
+.quadsTimelineItem[data-state="completed"]::after {
+    background: #16A34A !important;
+}
+
+/* State: Current-Completed */
+.quadsTimelineItem[data-state="current-completed"] .quadsTimelineCircleBox {
+    background: #16A34A !important;
+    box-shadow: 0 0 0 3px #0070F2 !important;
+}
+.quadsTimelineItem[data-state="current-completed"] .quadsTimelineIcon {
+    color: #FFFFFF !important;
+}
+.quadsTimelineItem[data-state="current-completed"] .quadsTimelineLabel {
+    color: #0070F2 !important;
+    font-weight: bold !important;
+}
+.quadsTimelineItem[data-state="current-completed"]::after {
+    background: #16A34A !important;
+}
+
+/* State: Pending */
+.quadsTimelineItem[data-state="pending"] .quadsTimelineCircleBox {
+    background: #E5E7EB !important;
+    color: #4B5563 !important;
+}
+.quadsTimelineItem[data-state="pending"] .quadsTimelineText {
+    color: #4B5563 !important;
+}
+.quadsTimelineItem[data-state="pending"] .quadsTimelineLabel {
+    color: #6B7280 !important;
+    font-weight: normal !important;
+}
+
+/* Base styles for text and icon */
+.quadsTimelineText {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+.quadsTimelineIcon {
+    font-size: 14px !important;
 }

@@ -53,7 +53,8 @@ sap.ui.define([
                     critical: 0,
                     high: 0,
                     medium: 0,
-                    low: 0
+                    low: 0,
+                    totalCases: 0
                 }
             });
             this.getView().setModel(oViewModel, "dashboard");
@@ -97,53 +98,57 @@ sap.ui.define([
                     var nLow = 0;
 
                     items.forEach(function (c) {
-                        var sStatus = (c.status || "CREATED").toUpperCase();
-                        var sSev = (c.severity || "LOW").toUpperCase();
-                        var sExec = (c.execution_status || "").toUpperCase();
+                        try {
+                            var sStatus = (c.status || "CREATED").toUpperCase();
+                            var sSev = (c.severity || "LOW").toUpperCase();
+                            var sExec = (c.execution_status || "").toUpperCase();
 
-                        // Severity counts
-                        if (sSev === "CRITICAL") nCritical++;
-                        else if (sSev === "HIGH") nHigh++;
-                        else if (sSev === "MEDIUM") nMedium++;
-                        else nLow++;
+                            // Severity counts
+                            if (sSev === "CRITICAL") nCritical++;
+                            else if (sSev === "HIGH") nHigh++;
+                            else if (sSev === "MEDIUM") nMedium++;
+                            else nLow++;
 
-                        // Lifecycle counts
-                        if (sStatus === "RESOLVED") {
-                            nResolved++;
-                        } else {
-                            nActive++;
-                        }
+                            // Lifecycle counts
+                            if (sStatus === "RESOLVED") {
+                                nResolved++;
+                            } else {
+                                nActive++;
+                            }
 
-                        // Recoveries in progress
-                        var aRecoveryStatuses = [
-                            "CHECKPOINT_APPROVED",
-                            "RECOVERY_PLANNING",
-                            "AWAITING_CHECKPOINT_2",
-                            "RECOVERY_APPROVED",
-                            "EXECUTION_IN_PROGRESS",
-                            "MONITORING"
-                        ];
-                        if (aRecoveryStatuses.indexOf(sStatus) !== -1) {
-                            nActiveRecoveries++;
-                        }
+                            // Recoveries in progress
+                            var aRecoveryStatuses = [
+                                "CHECKPOINT_APPROVED",
+                                "RECOVERY_PLANNING",
+                                "AWAITING_CHECKPOINT_2",
+                                "RECOVERY_APPROVED",
+                                "EXECUTION_IN_PROGRESS",
+                                "MONITORING"
+                            ];
+                            if (aRecoveryStatuses.indexOf(sStatus) !== -1) {
+                                nActiveRecoveries++;
+                            }
 
-                        // Cases in execution
-                        if (sStatus === "EXECUTION_IN_PROGRESS" || sStatus === "MONITORING") {
-                            nInExecution++;
-                        }
+                            // Cases in execution
+                            if (sStatus === "EXECUTION_IN_PROGRESS" || sStatus === "MONITORING") {
+                                nInExecution++;
+                            }
 
-                        // At risk
-                        if (sSev === "CRITICAL" || sSev === "HIGH" || sExec === "AT_RISK") {
-                            nAtRisk++;
-                        }
+                            // At risk
+                            if (sSev === "CRITICAL" || sSev === "HIGH" || sExec === "AT_RISK") {
+                                nAtRisk++;
+                            }
 
-                        // Action required (awaiting human decision or execution deviation)
-                        if (sStatus === "ANALYZED" || sStatus === "AWAITING_CHECKPOINT_2" || sExec === "ACTION_REQUIRED" || sExec === "FAILED") {
-                            nActionRequired++;
-                        }
+                            // Action required (awaiting human decision or execution deviation)
+                            if (sStatus === "ANALYZED" || sStatus === "AWAITING_CHECKPOINT_2" || sExec === "ACTION_REQUIRED" || sExec === "FAILED") {
+                                nActionRequired++;
+                            }
 
-                        if (sExec === "FAILED") {
-                            nFailed++;
+                            if (sExec === "FAILED") {
+                                nFailed++;
+                            }
+                        } catch (e) {
+                            console.warn("Skipping malformed case stats for:", c && c.case_id ? c.case_id : "unknown", e);
                         }
                     });
 
@@ -174,72 +179,76 @@ sap.ui.define([
                     // Format items for top cases UI
                     var activeItems = [];
                     items.forEach(function (c) {
-                        if (c.status === "RESOLVED") return;
-                        
-                        c.disruption_name = DISRUPTION_NAMES[c.disruption_type] || c.disruption_type.replace(/_/g, " ");
-                        var sSup = SUPPLIER_NAMES[c.supplier_id];
-                        c.supplier_display = sSup ? sSup + " (" + c.supplier_id + ")" : c.supplier_id;
+                        try {
+                            if (c.status === "RESOLVED") return;
+                            
+                            c.disruption_name = DISRUPTION_NAMES[c.disruption_type] || (c.disruption_type ? c.disruption_type.replace(/_/g, " ") : "Unknown Disruption");
+                            var sSup = SUPPLIER_NAMES[c.supplier_id];
+                            c.supplier_display = sSup ? sSup + " (" + c.supplier_id + ")" : (c.supplier_id || "Unknown Supplier");
 
-                        var lookup = DOC_LOOKUP[c.case_id] || {
-                            doc: c.expected_delay_days ? c.expected_delay_days + ".0 d" : "—",
-                            stockout: "None"
-                        };
-                        c.doc_display = lookup.doc;
+                            var lookup = DOC_LOOKUP[c.case_id] || {
+                                doc: c.expected_delay_days ? c.expected_delay_days + ".0 d" : "—",
+                                stockout: "None"
+                            };
+                            c.doc_display = lookup.doc;
 
-                        var sSev = (c.severity || "").toUpperCase();
-                        if (!sSev) {
-                            if (c.case_id === "CASE-0001" || c.case_id === "CASE-0002") sSev = "CRITICAL";
-                            else if (c.case_id === "CASE-0003" || c.case_id === "CASE-0004") sSev = "HIGH";
-                            else if (c.case_id === "CASE-0005" || c.case_id === "CASE-0006") sSev = "MEDIUM";
-                            else sSev = "LOW";
+                            var sSev = (c.severity || "").toUpperCase();
+                            if (!sSev) {
+                                if (c.case_id === "CASE-0001" || c.case_id === "CASE-0002") sSev = "CRITICAL";
+                                else if (c.case_id === "CASE-0003" || c.case_id === "CASE-0004") sSev = "HIGH";
+                                else if (c.case_id === "CASE-0005" || c.case_id === "CASE-0006") sSev = "MEDIUM";
+                                else sSev = "LOW";
+                            }
+                            
+                            c.severity = sSev;
+
+                            if (sSev === "CRITICAL") {
+                                c.severity_text = "Critical";
+                                c.severity_css = "quadsTextCritical";
+                            } else if (sSev === "HIGH") {
+                                c.severity_text = "High";
+                                c.severity_css = "quadsTextHigh";
+                            } else if (sSev === "MEDIUM") {
+                                c.severity_text = "Medium";
+                                c.severity_css = "quadsTextMedium";
+                            } else {
+                                c.severity_text = "Low";
+                                c.severity_css = "quadsTextLow";
+                            }
+
+                            if (c.status === "EXECUTION_IN_PROGRESS") {
+                                c.status_text = "Execution In Progress";
+                                c.status_css = "quadsTextHigh";
+                            } else if (c.status === "MONITORING") {
+                                c.status_text = "Monitoring";
+                                c.status_css = "quadsTextHigh";
+                            } else if (c.status === "RECOVERY_APPROVED") {
+                                c.status_text = "Recovery Approved";
+                                c.status_css = "quadsTextHigh";
+                            } else if (c.status === "AWAITING_CHECKPOINT_2") {
+                                c.status_text = "Action Required: Cp2";
+                                c.status_css = "quadsTextCritical";
+                            } else if (c.status === "RECOVERY_PLANNING") {
+                                c.status_text = "Agent 2: Planning";
+                                c.status_css = "quadsTextHigh";
+                            } else if (c.status === "CHECKPOINT_APPROVED") {
+                                c.status_text = "Cp1 Approved";
+                                c.status_css = "quadsTextHigh";
+                            } else if (c.status === "ANALYZED") {
+                                c.status_text = "Action Required: Cp1";
+                                c.status_css = "quadsTextCritical";
+                            } else if (c.status === "ANALYSIS_IN_PROGRESS" || c.status === "RUNNING") {
+                                c.status_text = "Agent 1: Running";
+                                c.status_css = "quadsTextHigh";
+                            } else {
+                                c.status_text = "New Disruption";
+                                c.status_css = "quadsTextHigh";
+                            }
+
+                            activeItems.push(c);
+                        } catch (e) {
+                            console.warn("Skipping malformed case formatting for:", c && c.case_id ? c.case_id : "unknown", e);
                         }
-                        
-                        c.severity = sSev;
-
-                        if (sSev === "CRITICAL") {
-                            c.severity_text = "Critical";
-                            c.severity_css = "quadsTextCritical";
-                        } else if (sSev === "HIGH") {
-                            c.severity_text = "High";
-                            c.severity_css = "quadsTextHigh";
-                        } else if (sSev === "MEDIUM") {
-                            c.severity_text = "Medium";
-                            c.severity_css = "quadsTextMedium";
-                        } else {
-                            c.severity_text = "Low";
-                            c.severity_css = "quadsTextLow";
-                        }
-
-                        if (c.status === "EXECUTION_IN_PROGRESS") {
-                            c.status_text = "Execution In Progress";
-                            c.status_css = "quadsTextHigh";
-                        } else if (c.status === "MONITORING") {
-                            c.status_text = "Monitoring";
-                            c.status_css = "quadsTextHigh";
-                        } else if (c.status === "RECOVERY_APPROVED") {
-                            c.status_text = "Recovery Approved";
-                            c.status_css = "quadsTextHigh";
-                        } else if (c.status === "AWAITING_CHECKPOINT_2") {
-                            c.status_text = "Action Required: Cp2";
-                            c.status_css = "quadsTextCritical";
-                        } else if (c.status === "RECOVERY_PLANNING") {
-                            c.status_text = "Agent 2: Planning";
-                            c.status_css = "quadsTextHigh";
-                        } else if (c.status === "CHECKPOINT_APPROVED") {
-                            c.status_text = "Cp1 Approved";
-                            c.status_css = "quadsTextHigh";
-                        } else if (c.status === "ANALYZED") {
-                            c.status_text = "Action Required: Cp1";
-                            c.status_css = "quadsTextCritical";
-                        } else if (c.status === "ANALYSIS_IN_PROGRESS" || c.status === "RUNNING") {
-                            c.status_text = "Agent 1: Running";
-                            c.status_css = "quadsTextHigh";
-                        } else {
-                            c.status_text = "New Disruption";
-                            c.status_css = "quadsTextHigh";
-                        }
-
-                        activeItems.push(c);
                     });
 
                     // Sort: Severity then DOC
@@ -266,8 +275,16 @@ sap.ui.define([
 
         formatDonutChart: function (stats) {
             if (!stats) return "";
+            var displayTotal = stats.totalCases !== undefined ? stats.totalCases : 0;
             var total = stats.critical + stats.high + stats.medium + stats.low;
-            if (total === 0) total = 1;
+            if (total === 0) {
+                // Return an empty/gray chart if there's no data
+                return "<div style='width: 260px; height: 260px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 4px; margin-right: 20px; background: #E2E8F0;'>" +
+                       "<div style='width: 185px; height: 185px; background: #FFFFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column;'>" +
+                       "<span style='font-size: 38px; font-weight: 800; color: #1D2D3E; margin: 0; line-height: 1.1;'>" + displayTotal + "</span>" +
+                       "<span style='font-size: 12px; color: #94A3B8; margin-top: 2px; font-weight: 700; text-transform: uppercase;'>Cases</span>" +
+                       "</div></div>";
+            }
             
             var pCrit = (stats.critical / total) * 100;
             var pHigh = (stats.high / total) * 100;
@@ -287,7 +304,7 @@ sap.ui.define([
 
             return "<div style='width: 260px; height: 260px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 4px; margin-right: 20px; background: " + gradient + ";'>" +
                    "<div style='width: 185px; height: 185px; background: #FFFFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column;'>" +
-                   "<span style='font-size: 38px; font-weight: 800; color: #1D2D3E; margin: 0; line-height: 1.1;'>" + stats.totalCases + "</span>" +
+                   "<span style='font-size: 38px; font-weight: 800; color: #1D2D3E; margin: 0; line-height: 1.1;'>" + displayTotal + "</span>" +
                    "<span style='font-size: 12px; color: #94A3B8; margin-top: 2px; font-weight: 700; text-transform: uppercase;'>Cases</span>" +
                    "</div></div>";
         },
@@ -313,6 +330,14 @@ sap.ui.define([
             } else {
                 this.onNavCases();
             }
+        },
+
+        onCaseSelect: function (oEvent) {
+            var oCtx = oEvent.getSource().getBindingContext("dashboard");
+            if (!oCtx) return;
+            var sCaseId = oCtx.getProperty("case_id");
+            this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
+            this.getOwnerComponent().getRouter().navTo("caseOverview", { caseId: sCaseId });
         }
     });
 });

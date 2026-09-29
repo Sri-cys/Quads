@@ -393,66 +393,6 @@
                     </VBox>
                 </HBox>
 
-                <!-- END TO END PROPAGATION -->
-                <VBox class="quadsWhiteCard sapUiMediumMarginBottom">
-                    <HBox alignItems="Center" class="sapUiMediumMarginBottom">
-                        <core:Icon src="sap-icon://chain-link" class="quadsSectionIcon blue sapUiSmallMarginEnd" />
-                        <VBox>
-                            <Title text="End-to-End Impact Propagation" class="quadsSectionTitle" />
-                            <Text text="How the disruption propagates across the supply chain." class="quadsSectionSub" />
-                        </VBox>
-                    </HBox>
-                    
-                    <HBox class="quadsPropagationContainer" alignItems="Center">
-                        <HBox class="quadsPropNode" alignItems="Center">
-                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://shipping-status" /></VBox>
-                            <VBox class="sapUiSmallMarginBegin">
-                                <Text text="Supplier Delay" class="quadsPropLabel" />
-                                <Text text="+{impact>/case/expected_delay_days} days" class="quadsPropValue" />
-                            </VBox>
-                        </HBox>
-                        
-                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
-                        
-                        <HBox class="quadsPropNode" alignItems="Center">
-                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://product" /></VBox>
-                            <VBox class="sapUiSmallMarginBegin">
-                                <Text text="Reduced Inbound Supply" class="quadsPropLabel" />
-                                <Text text="{impact>/inventory/supplyGap_formatted}" class="quadsPropValue" />
-                            </VBox>
-                        </HBox>
-                        
-                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
-                        
-                        <HBox class="quadsPropNode" alignItems="Center">
-                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://factory" /></VBox>
-                            <VBox class="sapUiSmallMarginBegin">
-                                <Text text="Production Impact" class="quadsPropLabel" />
-                                <Text text="3 orders delayed" class="quadsPropValue" />
-                            </VBox>
-                        </HBox>
-                        
-                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
-                        
-                        <HBox class="quadsPropNode" alignItems="Center">
-                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://money-bills" /></VBox>
-                            <VBox class="sapUiSmallMarginBegin">
-                                <Text text="Revenue at Risk" class="quadsPropLabel" />
-                                <Text text="{impact>/financial/potential_display}" class="quadsPropValue" />
-                            </VBox>
-                        </HBox>
-                        
-                        <core:Icon src="sap-icon://slim-arrow-right" class="quadsPropArrow" />
-                        
-                        <HBox class="quadsPropNode" alignItems="Center">
-                            <VBox class="quadsPropIconBox"><core:Icon src="sap-icon://document-text" /></VBox>
-                            <VBox class="sapUiSmallMarginBegin">
-                                <Text text="Penalty Risk" class="quadsPropLabel" />
-                                <Text text="{impact>/financial/confirmed_display}" class="quadsPropValue" />
-                            </VBox>
-                        </HBox>
-                    </HBox>
-                </VBox>
 
                 <!-- PROCEED TO RECOVERY -->
                 <HBox justifyContent="End" class="sapUiMediumMarginBottom">

@@ -278,30 +278,30 @@ sap.ui.define([
             var supplierFormatted = {
                 id: ds.affected_supplier_id || caseData.supplier_id || "SUP-001",
                 name: ds.affected_supplier_name || SUPPLIER_NAMES[caseData.supplier_id] || "Supplier " + caseData.supplier_id,
-                reliabilityScore: "96%",
-                otdScore: "94.2%",
-                openPos: (ds.affected_purchase_orders && ds.affected_purchase_orders.length) ? ds.affected_purchase_orders.join(", ") : "PO-2026-001, PO-2026-003",
-                riskTier: "MEDIUM RISK",
+                reliabilityScore: caseData.supplier_reliability || "96%",
+                otdScore: caseData.otd || "94.2%",
+                openPos: caseData.open_po || ((ds.affected_purchase_orders && ds.affected_purchase_orders.length) ? ds.affected_purchase_orders.join(", ") : "PO-2026-001, PO-2026-003"),
+                riskTier: caseData.supplier_risk || "MEDIUM RISK",
                 delayReason: caseData.description || "Supply schedule bottleneck"
             };
 
             // 3. Logistics Data
             var logisticsFormatted = {
-                origin: caseData.supplier_id === "SUP-001" ? "Seoul, South Korea" : "Rotterdam, Netherlands",
-                destination: (PLANT_NAMES[caseData.plant_id] || "Munich Plant") + ", Germany",
-                carrier: caseData.supplier_id === "SUP-001" ? "DHL Global Forwarding" : "Hapag-Lloyd Ocean",
-                mode: caseData.supplier_id === "SUP-001" ? "Air Cargo Express" : "Ocean Freight",
-                eta: new Date(Date.now() + (caseData.expected_delay_days || 5) * 86400000).toLocaleDateString()
+                origin: caseData.origin || (caseData.supplier_id === "SUP-001" ? "Seoul, South Korea" : (caseData.supplier_id === "SUP-003" ? "Rotterdam, Netherlands" : "Hamburg, Germany")),
+                destination: caseData.destination || ((PLANT_NAMES[caseData.plant_id] || "Munich Plant") + ", Germany"),
+                carrier: caseData.carrier || (caseData.supplier_id === "SUP-001" ? "DHL Global Forwarding" : (caseData.supplier_id === "SUP-003" ? "Hapag-Lloyd Ocean" : "DB Schenker Logistics")),
+                mode: caseData.transport_mode || (caseData.supplier_id === "SUP-001" ? "Air Cargo Express" : (caseData.supplier_id === "SUP-003" ? "Ocean Container Freight" : "Road Freight")),
+                eta: caseData.current_eta || new Date(Date.now() + (caseData.expected_delay_days || 5) * 86400000).toLocaleDateString()
             };
 
             // 4. Plant / Production Data
             var productionFormatted = {
                 plantId: ds.affected_plant_id || caseData.plant_id || "PLANT-001",
                 plantName: ds.affected_plant_name || PLANT_NAMES[caseData.plant_id] || "Munich Assembly Hub",
-                dailyRequirement: impactData.daily_demand || 25,
-                stoppageHazard: (impactData.days_of_cover !== null && impactData.days_of_cover <= 3) ? "CRITICAL (Line stoppage hazard within " + daysOfCoverStr + ")" : "MODERATE BUFFER",
-                stoppageRisk: (impactData.days_of_cover !== null && impactData.days_of_cover <= 3) ? "IMMEDIATE STOPPAGE RISK" : "NOMINAL",
-                affectedOrders: "PO-ASSY-4401, PO-ASSY-4402"
+                dailyRequirement: caseData.material_requirement || impactData.daily_demand || 25,
+                stoppageHazard: caseData.production_interruption_risk || ((impactData.days_of_cover !== null && impactData.days_of_cover <= 3) ? "CRITICAL (Line stoppage hazard within " + daysOfCoverStr + ")" : "MODERATE BUFFER"),
+                stoppageRisk: caseData.production_interruption_risk || ((impactData.days_of_cover !== null && impactData.days_of_cover <= 3) ? "IMMEDIATE STOPPAGE RISK" : "NOMINAL"),
+                affectedOrders: caseData.production_orders_affected || "PO-ASSY-4401, PO-ASSY-4402"
             };
 
             // 5. Customer Data
@@ -342,9 +342,11 @@ sap.ui.define([
             fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/proceed", { method: "POST" })
                 .then(function () {
                     that.getOwnerComponent().getModel("app").setProperty("/caseStatus", "PRIORITY_PENDING");
+                    WorkflowNavHelper.markStageCompleted(sCaseId, 2);
                     that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
                 })
                 .catch(function () {
+                    WorkflowNavHelper.markStageCompleted(sCaseId, 2);
                     that.getOwnerComponent().getRouter().navTo("checkpoint1", { caseId: sCaseId });
                 });
         },

@@ -129,6 +129,7 @@ sap.ui.define([
         },
 
         onProceedToRecoveryPlanning: function () {
+            WorkflowNavHelper.markStageCompleted(this._sCurrentCaseId, 4);
             this.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: this._sCurrentCaseId });
         },
 
