@@ -1,0 +1,285 @@
+[
+  {
+    "case_id": "CASE-11002",
+    "ai_status": "SUCCESS",
+    "ai_explanation": "Analyzed successfully",
+    "supply_gap_quantity": 320,
+    "days_of_cover": 3.0,
+    "severity": "HIGH",
+    "available_inventory": 180,
+    "production_orders": [
+      "PO-ASSY-11021",
+      "PO-ASSY-11022",
+      "PO-ASSY-11023"
+    ],
+    "sales_orders": [
+      "SO-2026-11201",
+      "SO-2026-11202"
+    ],
+    "customer_impact": "CUST-11002: Coromandel Auto Ltd, Tier-1 Assembly OEM",
+    "production_loss": 32400,
+    "revenue_at_risk": 60000,
+    "customer_penalty": 1800.0,
+    "financial_exposure": 34200.0,
+    "downstream_impact": {
+      "affected_material_id": "MAT-11001",
+      "affected_material_name": "Mocked",
+      "affected_plant_id": "PLANT-11001",
+      "affected_plant_name": "Mocked Plant",
+      "affected_supplier_id": "SUP-11001",
+      "affected_supplier_name": "Mocked Supplier",
+      "production_impact_days": 6,
+      "customer_delay_days": 6,
+      "sla_breach_risk": true,
+      "penalty_percentage": 3,
+      "expected_delivery": "2026-10-05T00:00:00Z",
+      "revised_delivery": "2026-10-11T00:00:00Z",
+      "penalty_basis": "3% contract penalty on delayed orders",
+      "affected_customers": [
+        "CUST-11002: Coromandel Auto Ltd, Tier-1 Assembly OEM"
+      ],
+      "financial_exposure": 34200.0
+    }
+  },
+  {
+    "case_id": "CASE-11003",
+    "ai_status": "SUCCESS",
+    "ai_explanation": "Analyzed successfully",
+    "supply_gap_quantity": 720,
+    "days_of_cover": 1.0,
+    "severity": "CRITICAL",
+    "available_inventory": 80,
+    "production_orders": [
+      "PO-ASSY-11031",
+      "PO-ASSY-11032"
+    ],
+    "sales_orders": [
+      "SO-2026-11301",
+      "SO-2026-11302",
+      "SO-2026-11303"
+    ],
+    "customer_impact": "CUST-11003: Volta Mobility GmbH, EV Assembly OEM",
+    "production_loss": 56000,
+    "revenue_at_risk": 160000,
+    "customer_penalty": 8000.0,
+    "financial_exposure": 64000.0,
+    "downstream_impact": {
+      "affected_material_id": "MAT-11001",
+      "affected_material_name": "Mocked",
+      "affected_plant_id": "PLANT-11001",
+      "affected_plant_name": "Mocked Plant",
+      "affected_supplier_id": "SUP-11001",
+      "affected_supplier_name": "Mocked Supplier",
+      "production_impact_days": 5,
+      "customer_delay_days": 5,
+      "sla_breach_risk": true,
+      "penalty_percentage": 5,
+      "expected_delivery": "2026-10-01T00:00:00Z",
+      "revised_delivery": "2026-10-06T00:00:00Z",
+      "penalty_basis": "5% contract penalty on delayed orders",
+      "affected_customers": [
+        "CUST-11003: Volta Mobility GmbH, EV Assembly OEM"
+      ],
+      "financial_exposure": 64000.0
+    }
+  },
+  {
+    "case_id": "CASE-11004",
+    "ai_status": "SUCCESS",
+    "ai_explanation": "Analyzed successfully",
+    "supply_gap_quantity": 270,
+    "days_of_cover": 4.0,
+    "severity": "HIGH",
+    "available_inventory": 180,
+    "production_orders": [
+      "PO-ASSY-11041",
+      "PO-ASSY-11042"
+    ],
+    "sales_orders": [
+      "SO-2026-11401",
+      "SO-2026-11402"
+    ],
+    "customer_impact": "CUST-11004: Nordwind Automotive AG",
+    "production_loss": 29925,
+    "revenue_at_risk": 58500,
+    "customer_penalty": 2340.0,
+    "financial_exposure": 32265.0,
+    "downstream_impact": {
+      "affected_material_id": "MAT-11001",
+      "affected_material_name": "Mocked",
+      "affected_plant_id": "PLANT-11001",
+      "affected_plant_name": "Mocked Plant",
+      "affected_supplier_id": "SUP-11001",
+      "affected_supplier_name": "Mocked Supplier",
+      "production_impact_days": 7,
+      "customer_delay_days": 7,
+      "sla_breach_risk": true,
+      "penalty_percentage": 4,
+      "expected_delivery": "2026-10-04T00:00:00Z",
+      "revised_delivery": "2026-10-11T00:00:00Z",
+      "penalty_basis": "4% contract penalty on delayed orders",
+      "affected_customers": [
+        "CUST-11004: Nordwind Automotive AG"
+      ],
+      "financial_exposure": 32265.0
+    }
+  },
+  {
+    "case_id": "CASE-11005",
+    "ai_status": "SUCCESS",
+    "ai_explanation": "Analyzed successfully",
+    "supply_gap_quantity": 60,
+    "days_of_cover": 8.0,
+    "severity": "MEDIUM",
+    "available_inventory": 240,
+    "production_orders": [
+      "PO-ASSY-11051"
+    ],
+    "sales_orders": [
+      "SO-2026-11501"
+    ],
+    "customer_impact": "CUST-11005: Baltica Electric Vehicles",
+    "production_loss": 7650,
+    "revenue_at_risk": 33000,
+    "customer_penalty": 990.0,
+    "financial_exposure": 8640.0,
+    "downstream_impact": {
+      "affected_material_id": "MAT-11001",
+      "affected_material_name": "Mocked",
+      "affected_plant_id": "PLANT-11001",
+      "affected_plant_name": "Mocked Plant",
+      "affected_supplier_id": "SUP-11001",
+      "affected_supplier_name": "Mocked Supplier",
+      "production_impact_days": 3,
+      "customer_delay_days": 3,
+      "sla_breach_risk": true,
+      "penalty_percentage": 3,
+      "expected_delivery": "2026-10-03T00:00:00Z",
+      "revised_delivery": "2026-10-06T00:00:00Z",
+      "penalty_basis": "3% contract penalty on delayed orders",
+      "affected_customers": [
+        "CUST-11005: Baltica Electric Vehicles"
+      ],
+      "financial_exposure": 8640.0
+    }
+  },
+  {
+    "case_id": "CASE-11006",
+    "ai_status": "SUCCESS",
+    "ai_explanation": "Analyzed successfully",
+    "supply_gap_quantity": 25,
+    "days_of_cover": 9.0,
+    "severity": "MEDIUM",
+    "available_inventory": 225,
+    "production_orders": [
+      "PO-ASSY-11061"
+    ],
+    "sales_orders": [
+      "SO-2026-11601"
+    ],
+    "customer_impact": "CUST-11006: Deccan Hydraulics Pvt Ltd",
+    "production_loss": 10000,
+    "revenue_at_risk": 35000,
+    "customer_penalty": 1050.0,
+    "financial_exposure": 11050.0,
+    "downstream_impact": {
+      "affected_material_id": "MAT-11001",
+      "affected_material_name": "Mocked",
+      "affected_plant_id": "PLANT-11001",
+      "affected_plant_name": "Mocked Plant",
+      "affected_supplier_id": "SUP-11001",
+      "affected_supplier_name": "Mocked Supplier",
+      "production_impact_days": 4,
+      "customer_delay_days": 4,
+      "sla_breach_risk": true,
+      "penalty_percentage": 3,
+      "expected_delivery": "2026-10-02T00:00:00Z",
+      "revised_delivery": "2026-10-06T00:00:00Z",
+      "penalty_basis": "3% contract penalty on delayed orders",
+      "affected_customers": [
+        "CUST-11006: Deccan Hydraulics Pvt Ltd"
+      ],
+      "financial_exposure": 11050.0
+    }
+  },
+  {
+    "case_id": "CASE-11007",
+    "ai_status": "SUCCESS",
+    "ai_explanation": "Analyzed successfully",
+    "supply_gap_quantity": 300,
+    "days_of_cover": 5.0,
+    "severity": "HIGH",
+    "available_inventory": 200,
+    "production_orders": [
+      "PO-ASSY-11071",
+      "PO-ASSY-11072"
+    ],
+    "sales_orders": [
+      "SO-2026-11701",
+      "SO-2026-11702"
+    ],
+    "customer_impact": "CUST-11007: Lone Star Appliances Inc",
+    "production_loss": 24000,
+    "revenue_at_risk": 84000,
+    "customer_penalty": 3360.0,
+    "financial_exposure": 27360.0,
+    "downstream_impact": {
+      "affected_material_id": "MAT-11001",
+      "affected_material_name": "Mocked",
+      "affected_plant_id": "PLANT-11001",
+      "affected_plant_name": "Mocked Plant",
+      "affected_supplier_id": "SUP-11001",
+      "affected_supplier_name": "Mocked Supplier",
+      "production_impact_days": 5,
+      "customer_delay_days": 5,
+      "sla_breach_risk": true,
+      "penalty_percentage": 4,
+      "expected_delivery": "2026-10-01T00:00:00Z",
+      "revised_delivery": "2026-10-06T00:00:00Z",
+      "penalty_basis": "4% contract penalty on delayed orders",
+      "affected_customers": [
+        "CUST-11007: Lone Star Appliances Inc"
+      ],
+      "financial_exposure": 27360.0
+    }
+  },
+  {
+    "case_id": "CASE-11008",
+    "ai_status": "SUCCESS",
+    "ai_explanation": "Analyzed successfully",
+    "supply_gap_quantity": 30,
+    "days_of_cover": 16.0,
+    "severity": "LOW",
+    "available_inventory": 320,
+    "production_orders": [
+      "PO-ASSY-11081"
+    ],
+    "sales_orders": [
+      "SO-2026-11801"
+    ],
+    "customer_impact": "CUST-11008: Alpenrail Systems GmbH",
+    "production_loss": 3200,
+    "revenue_at_risk": 35000,
+    "customer_penalty": 0.0,
+    "financial_exposure": 3200.0,
+    "downstream_impact": {
+      "affected_material_id": "MAT-11001",
+      "affected_material_name": "Mocked",
+      "affected_plant_id": "PLANT-11001",
+      "affected_plant_name": "Mocked Plant",
+      "affected_supplier_id": "SUP-11001",
+      "affected_supplier_name": "Mocked Supplier",
+      "production_impact_days": 2,
+      "customer_delay_days": 0,
+      "sla_breach_risk": false,
+      "penalty_percentage": 0,
+      "expected_delivery": "2026-09-28T00:00:00Z",
+      "revised_delivery": "2026-09-30T00:00:00Z",
+      "penalty_basis": "No contractual penalty applies (delay within 3-day grace)",
+      "affected_customers": [
+        "CUST-11008: Alpenrail Systems GmbH"
+      ],
+      "financial_exposure": 3200.0
+    }
+  }
+]

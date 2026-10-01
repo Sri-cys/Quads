@@ -11,7 +11,7 @@
         <HBox id="unifiedNavHeader" alignItems="Center" class="sapUnifiedNavHeader">
 
             <!-- 1. Brand Section: [ SAP | Quads | Supply Chain Control Tower ] -->
-            <HBox alignItems="Center" class="sapBrandGroup" press=".onTopNavDashboard">
+            <HBox alignItems="Center" class="sapBrandGroup">
                 <Image src="img/sap-logo.svg" height="22px" class="sapLogoHeaderImg" tooltip="SAP" />
                 <Text text="Quads" class="sapBrandQuadsText" />
                 <Text text="|" class="sapBrandSeparator" />

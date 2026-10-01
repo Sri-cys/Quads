@@ -1,0 +1,38 @@
+[
+  {
+    "case_id": "CASE-11006",
+    "status": "AWAITING_EXECUTION",
+    "action_type": "PO_CREATION",
+    "system_ref": "PENDING",
+    "created_at": "2026-09-29T10:00:00Z",
+    "executed_at": "2026-09-29T10:05:00Z",
+    "success": false,
+    "logs": [
+      "Execution started"
+    ]
+  },
+  {
+    "case_id": "CASE-11007",
+    "status": "IN_TRANSIT",
+    "action_type": "PO_CREATION",
+    "system_ref": "SAP-TRK-SAP-SPLIT-711007",
+    "created_at": "2026-09-29T10:00:00Z",
+    "executed_at": "2026-09-29T10:05:00Z",
+    "success": true,
+    "logs": [
+      "Execution started"
+    ]
+  },
+  {
+    "case_id": "CASE-11008",
+    "status": "DELIVERED",
+    "action_type": "PO_CREATION",
+    "system_ref": "SAP-TRK-SAP-ALTSUP-811008",
+    "created_at": "2026-09-29T10:00:00Z",
+    "executed_at": "2026-09-29T10:05:00Z",
+    "success": true,
+    "logs": [
+      "Execution started"
+    ]
+  }
+]

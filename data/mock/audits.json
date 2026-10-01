@@ -1,0 +1,562 @@
+[
+  {
+    "case_id": "CASE-11002",
+    "timestamp": "2026-09-30T08:50:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_USER",
+    "details": "CASE_OVERVIEW -> IMPACT_ANALYSIS_RUNNING"
+  },
+  {
+    "case_id": "CASE-11002",
+    "timestamp": "2026-09-30T08:50:01Z",
+    "event": "IMPACT_ANALYSIS_STARTED",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "IMPACT_ANALYSIS_STARTED"
+  },
+  {
+    "case_id": "CASE-11002",
+    "timestamp": "2026-09-30T08:50:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_1_IMPACT",
+    "details": "IMPACT_ANALYSIS_RUNNING -> IMPACT_ANALYSIS_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11002",
+    "timestamp": "2026-09-30T08:50:03Z",
+    "event": "TRIAGE_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 triage completed. Severity: HIGH"
+  },
+  {
+    "case_id": "CASE-11002",
+    "timestamp": "2026-09-30T08:50:04Z",
+    "event": "IMPACT_ANALYSIS_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 analysis persisted. Days of cover: 3.0"
+  },
+  {
+    "case_id": "CASE-11003",
+    "timestamp": "2026-09-29T16:30:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_USER",
+    "details": "CASE_OVERVIEW -> IMPACT_ANALYSIS_RUNNING"
+  },
+  {
+    "case_id": "CASE-11003",
+    "timestamp": "2026-09-29T16:30:01Z",
+    "event": "IMPACT_ANALYSIS_STARTED",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "IMPACT_ANALYSIS_STARTED"
+  },
+  {
+    "case_id": "CASE-11003",
+    "timestamp": "2026-09-29T16:30:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_1_IMPACT",
+    "details": "IMPACT_ANALYSIS_RUNNING -> IMPACT_ANALYSIS_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11003",
+    "timestamp": "2026-09-29T16:30:03Z",
+    "event": "TRIAGE_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 triage completed. Severity: CRITICAL"
+  },
+  {
+    "case_id": "CASE-11003",
+    "timestamp": "2026-09-29T16:30:04Z",
+    "event": "IMPACT_ANALYSIS_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 analysis persisted. Days of cover: 1.0"
+  },
+  {
+    "case_id": "CASE-11003",
+    "timestamp": "2026-09-29T17:05:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "IMPACT_ANALYSIS_COMPLETED -> PRIORITY_PENDING"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T11:15:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_USER",
+    "details": "CASE_OVERVIEW -> IMPACT_ANALYSIS_RUNNING"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T11:15:01Z",
+    "event": "IMPACT_ANALYSIS_STARTED",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "IMPACT_ANALYSIS_STARTED"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T11:15:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_1_IMPACT",
+    "details": "IMPACT_ANALYSIS_RUNNING -> IMPACT_ANALYSIS_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T11:15:03Z",
+    "event": "TRIAGE_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 triage completed. Severity: HIGH"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T11:15:04Z",
+    "event": "IMPACT_ANALYSIS_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 analysis persisted. Days of cover: 4.0"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T11:50:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "IMPACT_ANALYSIS_COMPLETED -> PRIORITY_PENDING"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T13:05:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "PRIORITY_PENDING -> AGENT2_RUNNING"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T13:05:01Z",
+    "event": "CHECKPOINT_1_APPROVED",
+    "actor": "HUMAN_PLANNER",
+    "details": "Checkpoint 1 priority COST confirmed and Agent 2 launched"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T13:05:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_2_PLANNER",
+    "details": "AGENT2_RUNNING -> AGENT2_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T13:05:03Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "AGENT2_COMPLETED -> AGENT3_RUNNING"
+  },
+  {
+    "case_id": "CASE-11004",
+    "timestamp": "2026-09-29T13:05:04Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_3_EVALUATOR",
+    "details": "AGENT3_RUNNING -> DECISION_PENDING"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T14:40:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_USER",
+    "details": "CASE_OVERVIEW -> IMPACT_ANALYSIS_RUNNING"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T14:40:01Z",
+    "event": "IMPACT_ANALYSIS_STARTED",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "IMPACT_ANALYSIS_STARTED"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T14:40:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_1_IMPACT",
+    "details": "IMPACT_ANALYSIS_RUNNING -> IMPACT_ANALYSIS_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T14:40:03Z",
+    "event": "TRIAGE_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 triage completed. Severity: MEDIUM"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T14:40:04Z",
+    "event": "IMPACT_ANALYSIS_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 analysis persisted. Days of cover: 8.0"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T15:15:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "IMPACT_ANALYSIS_COMPLETED -> PRIORITY_PENDING"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T16:30:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "PRIORITY_PENDING -> AGENT2_RUNNING"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T16:30:01Z",
+    "event": "CHECKPOINT_1_APPROVED",
+    "actor": "HUMAN_PLANNER",
+    "details": "Checkpoint 1 priority BALANCED confirmed and Agent 2 launched"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T16:30:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_2_PLANNER",
+    "details": "AGENT2_RUNNING -> AGENT2_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T16:30:03Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "AGENT2_COMPLETED -> AGENT3_RUNNING"
+  },
+  {
+    "case_id": "CASE-11005",
+    "timestamp": "2026-09-28T16:30:04Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_3_EVALUATOR",
+    "details": "AGENT3_RUNNING -> DECISION_PENDING"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T10:20:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_USER",
+    "details": "CASE_OVERVIEW -> IMPACT_ANALYSIS_RUNNING"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T10:20:01Z",
+    "event": "IMPACT_ANALYSIS_STARTED",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "IMPACT_ANALYSIS_STARTED"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T10:20:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_1_IMPACT",
+    "details": "IMPACT_ANALYSIS_RUNNING -> IMPACT_ANALYSIS_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T10:20:03Z",
+    "event": "TRIAGE_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 triage completed. Severity: MEDIUM"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T10:20:04Z",
+    "event": "IMPACT_ANALYSIS_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 analysis persisted. Days of cover: 9.0"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T10:55:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "IMPACT_ANALYSIS_COMPLETED -> PRIORITY_PENDING"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T12:10:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "PRIORITY_PENDING -> AGENT2_RUNNING"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T12:10:01Z",
+    "event": "CHECKPOINT_1_APPROVED",
+    "actor": "HUMAN_PLANNER",
+    "details": "Checkpoint 1 priority CUSTOMER confirmed and Agent 2 launched"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T12:10:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_2_PLANNER",
+    "details": "AGENT2_RUNNING -> AGENT2_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T12:10:03Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "AGENT2_COMPLETED -> AGENT3_RUNNING"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-27T12:10:04Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_3_EVALUATOR",
+    "details": "AGENT3_RUNNING -> DECISION_PENDING"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-30T07:30:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "DECISION_PENDING -> RECOVERY_APPROVED"
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-30T07:30:01Z",
+    "event": "CHECKPOINT_2_APPROVED",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "Checkpoint 2 approved for plan PLAN-01 (v1). Comment: Approved after verifying supplier capacity and logistics transit timeline."
+  },
+  {
+    "case_id": "CASE-11006",
+    "timestamp": "2026-09-30T07:30:02Z",
+    "event": "PLAN_APPROVED",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "Plan PLAN-01 (v1) marked as approved."
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T13:55:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_USER",
+    "details": "CASE_OVERVIEW -> IMPACT_ANALYSIS_RUNNING"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T13:55:01Z",
+    "event": "IMPACT_ANALYSIS_STARTED",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "IMPACT_ANALYSIS_STARTED"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T13:55:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_1_IMPACT",
+    "details": "IMPACT_ANALYSIS_RUNNING -> IMPACT_ANALYSIS_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T13:55:03Z",
+    "event": "TRIAGE_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 triage completed. Severity: HIGH"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T13:55:04Z",
+    "event": "IMPACT_ANALYSIS_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 analysis persisted. Days of cover: 5.0"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T14:30:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "IMPACT_ANALYSIS_COMPLETED -> PRIORITY_PENDING"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T15:45:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "PRIORITY_PENDING -> AGENT2_RUNNING"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T15:45:01Z",
+    "event": "CHECKPOINT_1_APPROVED",
+    "actor": "HUMAN_PLANNER",
+    "details": "Checkpoint 1 priority TIME confirmed and Agent 2 launched"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T15:45:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_2_PLANNER",
+    "details": "AGENT2_RUNNING -> AGENT2_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T15:45:03Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "AGENT2_COMPLETED -> AGENT3_RUNNING"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-26T15:45:04Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_3_EVALUATOR",
+    "details": "AGENT3_RUNNING -> DECISION_PENDING"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-28T06:00:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "DECISION_PENDING -> RECOVERY_APPROVED"
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-28T06:00:01Z",
+    "event": "CHECKPOINT_2_APPROVED",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "Checkpoint 2 approved for plan PLAN-04 (v1). Comment: Approved; split sourcing keeps the line running while the Houston lane recovers."
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-28T06:00:02Z",
+    "event": "PLAN_APPROVED",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "Plan PLAN-04 (v1) marked as approved."
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-28T06:00:15Z",
+    "event": "EXECUTION_STARTED",
+    "actor": "AGENT_3_EXECUTION",
+    "details": "Autonomous execution initiated for approved plan PLAN-04 (Version: v1)."
+  },
+  {
+    "case_id": "CASE-11007",
+    "timestamp": "2026-09-28T06:00:16Z",
+    "event": "EXECUTION_ACTION_CREATED",
+    "actor": "SAP_ADAPTER",
+    "details": "Created SPLIT_SOURCING_ORDER 'SAP-SPLIT-711007' via SAP S/4HANA & TM Multi-Leg Execution. Tracking: TRK-SAP-SPLIT-711007."
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T09:10:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_USER",
+    "details": "CASE_OVERVIEW -> IMPACT_ANALYSIS_RUNNING"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T09:10:01Z",
+    "event": "IMPACT_ANALYSIS_STARTED",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "IMPACT_ANALYSIS_STARTED"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T09:10:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_1_IMPACT",
+    "details": "IMPACT_ANALYSIS_RUNNING -> IMPACT_ANALYSIS_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T09:10:03Z",
+    "event": "TRIAGE_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 triage completed. Severity: LOW"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T09:10:04Z",
+    "event": "IMPACT_ANALYSIS_COMPLETED",
+    "actor": "AGENT_1_IMPACT",
+    "details": "Agent 1 analysis persisted. Days of cover: 16.0"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T09:45:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "IMPACT_ANALYSIS_COMPLETED -> PRIORITY_PENDING"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T11:00:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "HUMAN_PLANNER",
+    "details": "PRIORITY_PENDING -> AGENT2_RUNNING"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T11:00:01Z",
+    "event": "CHECKPOINT_1_APPROVED",
+    "actor": "HUMAN_PLANNER",
+    "details": "Checkpoint 1 priority STOCK confirmed and Agent 2 launched"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T11:00:02Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_2_PLANNER",
+    "details": "AGENT2_RUNNING -> AGENT2_COMPLETED"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T11:00:03Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SYSTEM_ORCHESTRATOR",
+    "details": "AGENT2_COMPLETED -> AGENT3_RUNNING"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-24T11:00:04Z",
+    "event": "STATE_TRANSITION",
+    "actor": "AGENT_3_EVALUATOR",
+    "details": "AGENT3_RUNNING -> DECISION_PENDING"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-25T09:30:00Z",
+    "event": "STATE_TRANSITION",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "DECISION_PENDING -> RECOVERY_APPROVED"
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-25T09:30:01Z",
+    "event": "CHECKPOINT_2_APPROVED",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "Checkpoint 2 approved for plan PLAN-01 (v1). Comment: Approved; alternate supplier lead time is acceptable."
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-25T09:30:02Z",
+    "event": "PLAN_APPROVED",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "Plan PLAN-01 (v1) marked as approved."
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-25T09:30:15Z",
+    "event": "EXECUTION_STARTED",
+    "actor": "AGENT_3_EXECUTION",
+    "details": "Autonomous execution initiated for approved plan PLAN-01 (Version: v1)."
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-25T09:30:16Z",
+    "event": "EXECUTION_ACTION_CREATED",
+    "actor": "SAP_ADAPTER",
+    "details": "Created ALTERNATE_SUPPLIER_ORDER 'SAP-ALTSUP-811008' via SAP S/4HANA & TM Multi-Leg Execution. Tracking: TRK-SAP-ALTSUP-811008."
+  },
+  {
+    "case_id": "CASE-11008",
+    "timestamp": "2026-09-30T05:20:00Z",
+    "event": "CASE_MANUALLY_RESOLVED",
+    "actor": "SUPPLY_CHAIN_PLANNER",
+    "details": "Planner confirmed recovery completed. Case marked RESOLVED."
+  }
+]

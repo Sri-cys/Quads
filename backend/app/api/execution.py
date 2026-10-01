@@ -247,3 +247,66 @@ def get_audit_trail(
 ):
     """Retrieve immutable audit event trail for a case."""
     return repo.get_audit_events(case_id=case_id)
+
+
+@router.post(
+    "/cases/{case_id}/resolve",
+)
+def resolve_case_manually(
+    case_id: str,
+    repo=Depends(get_repository),
+    case_service=Depends(get_case_service),
+):
+    """
+    Planner-confirmed manual resolution: forcibly marks the case as RESOLVED
+    and records a DELIVERED execution event if execution is in progress.
+    Called from the Execution Monitoring page when the planner clicks
+    'Recovery Completed — Proceed to Outcome'.
+    """
+    case = repo.get_case(case_id)
+    if not case:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": "CASE_NOT_FOUND", "message": f"Case {case_id} not found"},
+        )
+
+    from datetime import datetime, timezone
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    # Try to record a DELIVERED event on the execution record (best-effort)
+    try:
+        exec_record = repo.get_execution_record(case_id)
+        if exec_record:
+            from app.models.execution import SimulateEventRequest
+            sim_req = SimulateEventRequest(
+                status="DELIVERED",
+                confirmed_quantity=exec_record.baseline.planned_quantity if exec_record.baseline else None,
+                description="Planner confirmed: recovery completed successfully.",
+                timestamp=now_iso,
+            )
+            execution_service = case_service  # repo has exec record
+            repo.record_tracking_event(case_id, sim_req)
+    except Exception:
+        pass  # non-fatal; case will still be resolved below
+
+    # Directly set case to RESOLVED
+    case.status = CaseState.RESOLVED.value
+    case.resolved_at = now_iso
+    repo.update_case(case)
+
+    # Write audit event
+    try:
+        from app.services.audit_service import AuditService
+        audit_svc = AuditService(repo)
+        audit_svc.log(
+            case_id=case_id,
+            event="CASE_MANUALLY_RESOLVED",
+            actor="SUPPLY_CHAIN_PLANNER",
+            details="Planner confirmed recovery completed. Case marked RESOLVED.",
+        )
+    except Exception:
+        pass
+
+    logger.info(f"Case {case_id} manually resolved by planner.")
+    return {"case_id": case_id, "status": "RESOLVED", "resolved_at": now_iso}
+

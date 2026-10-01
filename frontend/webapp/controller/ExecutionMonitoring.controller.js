@@ -54,7 +54,17 @@ sap.ui.define([
             var sCaseId = oEvent.getParameter("arguments").caseId || this.getOwnerComponent().getModel("app").getProperty("/selectedCaseId") || "CASE-0001";
             this._sCurrentCaseId = sCaseId;
             sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
-                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 7);
+                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 6);
+                
+                var nCompleted = WorkflowNavHelper.getCompletedStage(this._sCurrentCaseId);
+                var oAppModel = this.getOwnerComponent().getModel("app");
+                var sStored = window.localStorage.getItem("quads_completed_stage_" + this._sCurrentCaseId);
+                console.log("[EXEC-LAYOUT] STEPPER VALUES:");
+                console.log("[EXEC-LAYOUT] Stored string list/value:", sStored, typeof sStored);
+                console.log("[EXEC-LAYOUT] computed completedStage:", nCompleted, typeof nCompleted);
+                console.log("[EXEC-LAYOUT] app>/activeStep:", oAppModel.getProperty("/activeStep"), typeof oAppModel.getProperty("/activeStep"));
+                console.log("[EXEC-LAYOUT] app>/completedStage:", oAppModel.getProperty("/completedStage"), typeof oAppModel.getProperty("/completedStage"));
+                console.log("[EXEC-LAYOUT] Header status text:", oAppModel.getProperty("/caseStatusText"));
             }.bind(this));
             this.loadExecutionData(sCaseId);
         },
@@ -72,6 +82,9 @@ sap.ui.define([
                         return res.json().then(function (progress) {
                             var oModel = that.getView().getModel("exec");
                             oModel.setData(Object.assign({}, oModel.getData(), progress, { pending_execution: false }));
+                            console.log("[EXEC-LAYOUT] EXECUTING STATE:", progress);
+                            console.log("[EXEC-LAYOUT] pending_execution (Awaiting flag) = ", oModel.getProperty("/pending_execution"));
+                            console.log("[EXEC-LAYOUT] execution_status = ", oModel.getProperty("/execution_status"));
                             that._loadAuditHistory(sBackendUrl, sCaseId);
                             if (progress.is_success) {
                                 that._loadOutcomes(sBackendUrl, sCaseId);
@@ -90,7 +103,9 @@ sap.ui.define([
                     MessageBox.error("Execution & Monitoring error: " + err.message);
                 })
                 .finally(function () {
-                    if (oPage) oPage.setBusy(false);
+                    setTimeout(function() {
+                        if (oPage) oPage.setBusy(false);
+                    }, 1000);
                 });
         },
 
@@ -103,14 +118,10 @@ sap.ui.define([
                 })
                 .then(function (caseData) {
                     if (!caseData.approved_plan_id) {
-                        MessageBox.warning(
-                            "Case " + sCaseId + " has no approved recovery plan.\n\nPlease complete Checkpoint 2 recovery plan approval first.",
-                            {
-                                onClose: function () {
-                                    that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
-                                }
-                            }
-                        );
+                        // No approved plan yet — silently redirect to Decision page
+                        // (Route guard already notified the user via MessageToast)
+                        MessageToast.show("No approved recovery plan for " + sCaseId + ". Please complete Checkpoint 2 first.");
+                        that.getOwnerComponent().getRouter().navTo("decision", { caseId: sCaseId });
                         return;
                     }
 
@@ -149,6 +160,9 @@ sap.ui.define([
                             oModel.setProperty("/case_id", sCaseId);
                             oModel.setProperty("/pending_execution", true);
                             oModel.setProperty("/approved_plan", matchedPlan);
+                            console.log("[EXEC-LAYOUT] AWAITING STATE:");
+                            console.log("[EXEC-LAYOUT] pending_execution (Awaiting flag) = ", oModel.getProperty("/pending_execution"));
+                            console.log("[EXEC-LAYOUT] approved_plan = ", matchedPlan);
                             oModel.setProperty("/checkpoint2_manager_id", "SUPPLY_CHAIN_PLANNER");
                             oModel.setProperty("/checkpoint2_timestamp", new Date().toLocaleString());
                             oModel.setProperty("/execution_status", "AWAITING_EXECUTION");
@@ -175,7 +189,9 @@ sap.ui.define([
                     MessageBox.error("Execution initialization failed: " + err.message);
                 })
                 .finally(function () {
-                    if (oPage) oPage.setBusy(false);
+                    setTimeout(function() {
+                        if (oPage) oPage.setBusy(false);
+                    }, 1000);
                 });
         },
 
@@ -316,7 +332,9 @@ sap.ui.define([
                 MessageBox.error("Telematics simulation error: " + err.message);
             })
             .finally(function () {
-                if (oPage) oPage.setBusy(false);
+                setTimeout(function() {
+                    if (oPage) oPage.setBusy(false);
+                }, 1000);
             });
         },
 
@@ -405,8 +423,139 @@ sap.ui.define([
 
         onGoToOutcome: function () {
             var sCaseId = this._sCurrentCaseId || "CASE-0001";
-            WorkflowNavHelper.completeStage(sCaseId, 7, 7);
+            WorkflowNavHelper.completeStage(sCaseId, 6, 6);
             this.getOwnerComponent().getRouter().navTo("outcome", { caseId: sCaseId });
+        },
+
+        /**
+         * Planner confirms recovery was successful.
+         * Calls /resolve to mark case RESOLVED on backend, then navigates to Outcome page.
+         */
+        onRecoveryCompleted: function () {
+            var sCaseId = this._sCurrentCaseId || "CASE-0001";
+            var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
+            var that = this;
+
+            var oPage = this.byId("executionMonitoringPage");
+            if (oPage) oPage.setBusy(true);
+
+            // Call the backend /resolve endpoint — sets case status = RESOLVED
+            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/resolve", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    // Non-fatal: still navigate even if resolve fails
+                    console.warn("QUADS: /resolve returned " + res.status + " — navigating anyway");
+                }
+                return res.json().catch(function () { return {}; });
+            })
+            .catch(function () {
+                // Network error — still navigate
+            })
+            .finally(function () {
+                if (oPage) oPage.setBusy(false);
+                // Mark stage 6 done, set completedStage=7 in localStorage
+                WorkflowNavHelper.completeStage(sCaseId, 6, 7);
+                // Update app model so header badge shows Resolved
+                var oAppModel = that.getOwnerComponent().getModel("app");
+                oAppModel.setProperty("/caseStatus", "RESOLVED");
+                oAppModel.setProperty("/caseStatusText", "Resolved & Archived");
+                oAppModel.setProperty("/caseStatusState", "Success");
+
+                MessageToast.show("Recovery confirmed. Case resolved — navigating to Outcome.");
+                setTimeout(function () {
+                    that.getOwnerComponent().getRouter().navTo("outcome", { caseId: sCaseId });
+                }, 600);
+            });
+        },
+
+        /**
+         * Planner marks recovery as NOT completed — shows reason dialog.
+         */
+        onRecoveryNotCompleted: function () {
+            this._showReopenReasonDialog();
+        },
+
+        _showReopenReasonDialog: function () {
+            var that = this;
+            var sCaseId = this._sCurrentCaseId || "CASE-0001";
+
+            // Build inline dialog
+            sap.ui.require(["sap/m/Dialog", "sap/m/TextArea", "sap/m/Button", "sap/m/VBox", "sap/m/Text", "sap/m/Label"], function (Dialog, TextArea, Button, VBox, Text, Label) {
+                var oTextArea = new TextArea({
+                    id: "quadsReopenReasonArea",
+                    width: "100%",
+                    rows: 4,
+                    placeholder: "Describe why recovery was not completed (e.g. insufficient quantity received, logistics failure, etc.)",
+                    maxLength: 500
+                });
+
+                var oDialog = new Dialog({
+                    title: "Restart Planning Cycle — Reason Required",
+                    titleAlignment: "Center",
+                    content: [
+                        new VBox({
+                            items: [
+                                new Text({ text: "Please provide a reason before restarting the recovery planning cycle. The case will be reset to Impact Analysis and all previous plans will be cleared.", class: "sapUiSmallMarginBottom" }),
+                                new Label({ text: "Reason for Restart", design: "Bold", class: "sapUiTinyMarginBottom" }),
+                                oTextArea
+                            ]
+                        }).addStyleClass("sapUiSmallMargin")
+                    ],
+                    beginButton: new Button({
+                        text: "Confirm Restart",
+                        type: "Reject",
+                        icon: "sap-icon://journey-change",
+                        press: function () {
+                            var sReason = oTextArea.getValue().trim();
+                            if (!sReason || sReason.length < 10) {
+                                MessageToast.show("Please enter a reason (minimum 10 characters).");
+                                return;
+                            }
+                            oDialog.setBusy(true);
+                            var sBackendUrl = that.getOwnerComponent().getModel("app").getProperty("/backendUrl");
+
+                            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/reopen", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ reason: sReason })
+                            })
+                            .then(function (res) {
+                                if (!res.ok) throw new Error("Server error: " + res.status);
+                                return res.json();
+                            })
+                            .then(function (caseData) {
+                                oDialog.close();
+                                // Clear localStorage for this case so the route guard re-syncs from backend
+                                window.localStorage.removeItem("quads_completed_stage_" + sCaseId);
+                                window.localStorage.removeItem("quads_completed_stage_" + sCaseId + "_migrated");
+                                window.localStorage.removeItem("quads_priority_" + sCaseId);
+                                window.localStorage.removeItem("quads_selected_plan_" + sCaseId);
+
+                                MessageToast.show("Planning cycle restarted (Cycle " + (caseData.planning_cycle || 2) + "). Returning to Impact Analysis.");
+
+                                setTimeout(function () {
+                                    that.getOwnerComponent().getRouter().navTo("impactAnalysis", { caseId: sCaseId });
+                                }, 800);
+                            })
+                            .catch(function (err) {
+                                oDialog.setBusy(false);
+                                MessageBox.error("Failed to restart planning cycle: " + err.message);
+                            });
+                        }
+                    }),
+                    endButton: new Button({
+                        text: "Cancel",
+                        type: "Transparent",
+                        press: function () { oDialog.close(); }
+                    }),
+                    afterClose: function () { oDialog.destroy(); }
+                });
+
+                oDialog.open();
+            });
         },
 
         onReturnToPlanning: function () {
@@ -420,7 +569,107 @@ sap.ui.define([
 
         onWorkflowStagePress: function (oEvent) {
             WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
-        }
+        },
 
+        // --- Formatters for New Design ---
+        // --- Formatters for New Design ---
+        formatMissing: function(val) {
+            if (val === undefined || val === null || val === "") return "—";
+            return val;
+        },
+        formatStrategy: function(val) {
+            if (!val) return "—";
+            if (val === "INTER_PLANT_TRANSFER") return "INTER-PLANT TRANSFER";
+            return val.replace(/_/g, " ");
+        },
+        formatDate: function(sDate) {
+            if (!sDate) return "—";
+            var oDate = new Date(sDate);
+            if (isNaN(oDate.getTime())) return sDate;
+            var aMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var day = String(oDate.getDate()).padStart(2, '0');
+            var hours = String(oDate.getHours()).padStart(2, '0');
+            var minutes = String(oDate.getMinutes()).padStart(2, '0');
+            return day + " " + aMonths[oDate.getMonth()] + " " + oDate.getFullYear() + ", " + hours + ":" + minutes;
+        },
+        formatDateOnly: function(sDate) {
+            if (!sDate) return "—";
+            var oDate = new Date(sDate);
+            if (isNaN(oDate.getTime())) return sDate;
+            var aMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var day = String(oDate.getDate()).padStart(2, '0');
+            return day + " " + aMonths[oDate.getMonth()] + " " + oDate.getFullYear();
+        },
+        formatCurrency: function(val) {
+            if (val === undefined || val === null || val === "") return "—";
+            return "$" + Number(val).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        },
+        formatStatusColor: function(sStatus) {
+            if (!sStatus) return "None";
+            var s = sStatus.toUpperCase();
+            if (s.indexOf("ON TRACK") !== -1 || s.indexOf("ON_TRACK") !== -1 || s.indexOf("IN TRANSIT") !== -1 || s.indexOf("IN_TRANSIT") !== -1 || s.indexOf("DELIVERED") !== -1 || s.indexOf("SUCCESS") !== -1 || s.indexOf("ACCEPTED") !== -1) {
+                return "Success";
+            }
+            if (s.indexOf("DELAY") !== -1 || s.indexOf("AT RISK") !== -1 || s.indexOf("AT_RISK") !== -1 || s.indexOf("WARNING") !== -1) {
+                return "Warning";
+            }
+            if (s.indexOf("FAIL") !== -1 || s.indexOf("ERROR") !== -1 || s.indexOf("CRITICAL") !== -1) {
+                return "Error";
+            }
+            return "None";
+        },
+        formatStatusText: function(sStatus) {
+            if (!sStatus) return "—";
+            return sStatus.replace(/_/g, " ").toUpperCase();
+        },
+        formatDelayDaysToMin: function(delayDays) {
+            if (delayDays === undefined || delayDays === null) return "—";
+            var mins = Number(delayDays) * 1440;
+            return mins + " min";
+        },
+        formatDelayState: function(delayDays) {
+            if (delayDays === undefined || delayDays === null) return "None";
+            var mins = Number(delayDays) * 1440;
+            return mins === 0 ? "Success" : "Error";
+        },
+        formatCurrentLocation: function(events) {
+            if (!events || events.length === 0) return "—";
+            return events[events.length - 1].location || "—";
+        },
+        formatTrackerStepState: function(events, stepName) {
+            if (!events) return "upcoming";
+            var mapping = {
+                "Plan Confirmed": "ACCEPTED",
+                "Execution Initiated": "ACCEPTED",
+                "Inventory Allocated": "SUPPLIER_CONFIRMED",
+                "Dispatch Ready": "SHIPMENT_CREATED",
+                "Picked Up": "SHIPMENT_DISPATCHED",
+                "In Transit": "IN_TRANSIT",
+                "Arrived at Destination": "DELIVERED",
+                "Inventory Received": "DELIVERED"
+            };
+            var targetStatus = mapping[stepName];
+            var hasStatus = false;
+            if (events && events.length > 0) {
+                for (var i = 0; i < events.length; i++) {
+                    if (events[i].status === targetStatus) hasStatus = true;
+                }
+            }
+            if (!hasStatus) return "upcoming";
+            var lastEventStatus = events[events.length - 1].status;
+            var isCurrent = (targetStatus === lastEventStatus);
+            if (isCurrent) {
+                if (stepName === "Plan Confirmed" && lastEventStatus === "ACCEPTED") return "completed";
+                if (stepName === "Arrived at Destination" && lastEventStatus === "DELIVERED") return "completed";
+                return "current";
+            }
+            return "completed";
+        },
+        formatTrackerIconSrc: function(events, stepName) {
+            var state = this.formatTrackerStepState(events, stepName);
+            if (state === "completed") return "sap-icon://accept";
+            if (state === "current") return "sap-icon://circle-task-2";
+            return "";
+        }
     });
 });

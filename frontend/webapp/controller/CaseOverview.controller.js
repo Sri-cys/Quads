@@ -141,7 +141,9 @@ sap.ui.define([
                     MessageBox.error("Failed to load case overview for " + sCaseId + ": " + err.message);
                 })
                 .finally(function () {
-                    if (oPage) oPage.setBusy(false);
+                    setTimeout(function() {
+                        if (oPage) oPage.setBusy(false);
+                    }, 1000);
                 });
         },
 

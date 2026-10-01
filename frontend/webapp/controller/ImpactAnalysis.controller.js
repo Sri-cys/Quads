@@ -210,6 +210,7 @@ sap.ui.define([
                 WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 2);
             }.bind(this));
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
+            this.getView().getModel("impact").setProperty("/analysisState", "RUNNING");
             this.loadImpactData(sCaseId);
         },
 
@@ -241,6 +242,22 @@ sap.ui.define([
                         oModel.setProperty("/errorMessage", statusData.last_error || "Impact analysis failed.");
                     } else {
                         oModel.setProperty("/analysisState", "PENDING");
+                        // If it hasn't even started, auto-start it now
+                        if (sStatus === "CREATED" || sStatus === "CASE_OVERVIEW" || sStatus === "TRIAGED") {
+                            oModel.setProperty("/analysisState", "RUNNING");
+                            fetch(sBackendUrl + "/api/v1/cases/" + sCaseId + "/impact/start", { method: "POST" })
+                                .then(function (res) {
+                                    if (!res.ok) throw new Error("Auto-start failed");
+                                    return res.json();
+                                })
+                                .then(function () {
+                                    that._startProgressPolling(sCaseId);
+                                })
+                                .catch(function (err) {
+                                    oModel.setProperty("/analysisState", "FAILED");
+                                    oModel.setProperty("/errorMessage", err.message);
+                                });
+                        }
                     }
                 })
                 .catch(function (err) {
@@ -310,8 +327,11 @@ sap.ui.define([
                 var impactData = results[1];
                 oModel.setProperty("/case", caseData);
                 that._populateImpactData(caseData, impactData);
-                oModel.setProperty("/analysisState", "COMPLETED");
-                that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
+                
+                setTimeout(function() {
+                    oModel.setProperty("/analysisState", "COMPLETED");
+                    that.getOwnerComponent().getModel("app").setProperty("/caseStatus", caseData.status);
+                }, 2500);
             })
             .catch(function (err) {
                 oModel.setProperty("/analysisState", "FAILED");

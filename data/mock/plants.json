@@ -48,5 +48,53 @@
     "location": "Stuttgart, Germany",
     "capacity_utilization": 0.8,
     "production_rate_per_day": 50
+  },
+  {
+    "plant_id": "PLANT-11001",
+    "name": "Stuttgart Assembly Plant",
+    "location": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "plant_id": "PLANT-11002",
+    "name": "Chennai Assembly Plant",
+    "location": "India",
+    "region": "APAC"
+  },
+  {
+    "plant_id": "PLANT-11003",
+    "name": "Leipzig Battery Plant",
+    "location": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "plant_id": "PLANT-11004",
+    "name": "Wolfsburg Stamping Plant",
+    "location": "Germany",
+    "region": "EMEA"
+  },
+  {
+    "plant_id": "PLANT-11005",
+    "name": "Gdansk Assembly Plant",
+    "location": "Poland",
+    "region": "EMEA"
+  },
+  {
+    "plant_id": "PLANT-11006",
+    "name": "Coimbatore Machining Plant",
+    "location": "India",
+    "region": "APAC"
+  },
+  {
+    "plant_id": "PLANT-11007",
+    "name": "Austin Assembly Plant",
+    "location": "USA",
+    "region": "AMER"
+  },
+  {
+    "plant_id": "PLANT-11008",
+    "name": "Vienna Assembly Plant",
+    "location": "Austria",
+    "region": "EMEA"
   }
 ]

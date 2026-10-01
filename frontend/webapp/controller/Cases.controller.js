@@ -42,11 +42,10 @@ sap.ui.define([
         {no: 1, name: "Case"},
         {no: 2, name: "Impact Analysis"},
         {no: 3, name: "Priority"},
-        {no: 4, name: "Constraints"},
-        {no: 5, name: "Recovery Planning"},
-        {no: 6, name: "Decision"},
-        {no: 7, name: "Exec & Monitoring"},
-        {no: 8, name: "Outcome"}
+        {no: 4, name: "Recovery Planning"},
+        {no: 5, name: "Decision"},
+        {no: 6, name: "Exec & Monitoring"},
+        {no: 7, name: "Outcome"}
     ];
 
     return Controller.extend("com.quads.supplychain.controller.Cases", {
@@ -94,7 +93,7 @@ sap.ui.define([
                 var sStored = window.localStorage.getItem(sKey);
                 var nCompleted = sStored ? parseInt(sStored, 10) : 0;
                 var nStage = nCompleted + 1;
-                if (nStage > 8) nStage = 8;
+                if (nStage > 7) nStage = 7;
                 var oStage = WORKFLOW_STAGES[nStage - 1];
                 return oStage.no + ". " + oStage.name;
             }
@@ -149,7 +148,7 @@ sap.ui.define([
         },
 
         loadCases: function () {
-            var oTable = this.byId("casesTable");
+            var oTable = this.byId("casesTableWrapper");
             if (oTable) oTable.setBusy(true);
 
             var sBackendUrl = this.getOwnerComponent().getModel("app").getProperty("/backendUrl");
@@ -189,21 +188,21 @@ sap.ui.define([
                                         if (sLower.indexOf("case") !== -1) n = 1;
                                         if (sLower.indexOf("impact") !== -1) n = 2;
                                         if (sLower.indexOf("priority") !== -1) n = 3;
-                                        if (sLower.indexOf("constraints") !== -1) n = 4;
-                                        if (sLower.indexOf("recovery") !== -1) n = 5;
-                                        if (sLower.indexOf("decision") !== -1) n = 6;
-                                        if (sLower.indexOf("exec") !== -1 || sLower.indexOf("monitoring") !== -1) n = 7;
-                                        if (sLower.indexOf("outcome") !== -1) n = 8;
+                                        if (sLower.indexOf("constraints") !== -1) n = 3;
+                                        if (sLower.indexOf("recovery") !== -1) n = 4;
+                                        if (sLower.indexOf("decision") !== -1) n = 5;
+                                        if (sLower.indexOf("exec") !== -1 || sLower.indexOf("monitoring") !== -1) n = 6;
+                                        if (sLower.indexOf("outcome") !== -1) n = 7;
                                         if (n > maxCompleted) maxCompleted = n;
                                     });
                                 } else {
                                     // Fallback if completed_stages is not provided
                                     var sStat = c.status || "";
-                                    if (sStat === "RESOLVED") maxCompleted = 8;
-                                    else if (["EXECUTION_IN_PROGRESS", "MONITORING"].indexOf(sStat) !== -1) maxCompleted = 7;
-                                    else if (sStat === "RECOVERY_APPROVED") maxCompleted = 6;
-                                    else if (sStat === "AWAITING_CHECKPOINT_2") maxCompleted = 5;
-                                    else if (sStat === "CONSTRAINTS_ANALYZED") maxCompleted = 4;
+                                    if (sStat === "RESOLVED") maxCompleted = 7;
+                                    else if (["EXECUTION_IN_PROGRESS", "MONITORING"].indexOf(sStat) !== -1) maxCompleted = 6;
+                                    else if (sStat === "RECOVERY_APPROVED") maxCompleted = 5;
+                                    else if (sStat === "AWAITING_CHECKPOINT_2") maxCompleted = 4;
+                                    else if (sStat === "CONSTRAINTS_ANALYZED") maxCompleted = 3;
                                     else if (sStat === "CHECKPOINT_APPROVED") maxCompleted = 3;
                                     else if (["ANALYZED", "AWAITING_CHECKPOINT_1"].indexOf(sStat) !== -1) maxCompleted = 2;
                                     else if (sStat !== "CREATED") maxCompleted = 1;
@@ -277,12 +276,12 @@ sap.ui.define([
                             "ANALYZED":             "2. Impact Analysis",
                             "AWAITING_CHECKPOINT_1": "3. Checkpoint 1",
                             "CHECKPOINT_APPROVED":  "3. Checkpoint 1 ✓",
-                            "CONSTRAINTS_ANALYZED": "4. Constraints",
-                            "AWAITING_CHECKPOINT_2": "5. Recovery Planning",
-                            "RECOVERY_APPROVED":    "6. Final Decision",
-                            "EXECUTION_IN_PROGRESS": "7. Execution",
-                            "MONITORING":           "7. Monitoring",
-                            "RESOLVED":             "8. Outcome ✓"
+                            "CONSTRAINTS_ANALYZED": "4. Recovery Planning",
+                            "AWAITING_CHECKPOINT_2": "4. Recovery Planning",
+                            "RECOVERY_APPROVED":    "5. Final Decision",
+                            "EXECUTION_IN_PROGRESS": "6. Execution",
+                            "MONITORING":           "6. Monitoring",
+                            "RESOLVED":             "7. Outcome ✓"
                         };
                         c.current_stage_display = stageMap[c.status] || c.current_stage || "1. Case Overview";
 
@@ -357,7 +356,9 @@ sap.ui.define([
                     MessageBox.error("Failed to load cases: " + err.message);
                 })
                 .finally(function () {
-                    if (oTable) oTable.setBusy(false);
+                    setTimeout(function() {
+                        if (oTable) oTable.setBusy(false);
+                    }, 1000);
                 });
         },
 
@@ -454,7 +455,16 @@ sap.ui.define([
                 return 0; // Days of Cover removed
             });
 
+            var itemsCritical = filtered.filter(function(item) { return (item.severity || "LOW").toUpperCase() === "CRITICAL"; });
+            var itemsHigh = filtered.filter(function(item) { return (item.severity || "LOW").toUpperCase() === "HIGH"; });
+            var itemsMedium = filtered.filter(function(item) { return (item.severity || "LOW").toUpperCase() === "MEDIUM"; });
+            var itemsLow = filtered.filter(function(item) { return (item.severity || "LOW").toUpperCase() === "LOW"; });
+
             oModel.setProperty("/items", filtered);
+            oModel.setProperty("/itemsCritical", itemsCritical);
+            oModel.setProperty("/itemsHigh", itemsHigh);
+            oModel.setProperty("/itemsMedium", itemsMedium);
+            oModel.setProperty("/itemsLow", itemsLow);
             oModel.setProperty("/totalFiltered", filtered.length);
 
             var sTitle = "ALL CASES";

@@ -9,7 +9,16 @@
     "expected_delay_days": 5,
     "affected_quantity": 500,
     "detected_at": "2026-09-27T06:00:00Z",
-    "status": "TRIAGED",
+    "status": "PRIORITY_SAVED",
+    "checkpoint1_decision": "BALANCED",
+    "checkpoint1_timestamp": "2026-09-27T09:00:00Z",
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority",
+      "Recovery Planning",
+      "Decision"
+    ],
     "purchaseOrders": [
       {
         "poId": "PO-2026-001",
@@ -43,7 +52,8 @@
         "expectedDeliveryDate": "29 Sep 2026",
         "status": "DELAYED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0003",
@@ -69,7 +79,8 @@
         "expectedDeliveryDate": "06 Oct 2026",
         "status": "CONFIRMED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0004",
@@ -89,7 +100,8 @@
         "expectedDeliveryDate": "29 Sep 2026",
         "status": "DELAYED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0005",
@@ -115,7 +127,8 @@
         "expectedDeliveryDate": "06 Oct 2026",
         "status": "CONFIRMED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0006",
@@ -135,7 +148,8 @@
         "expectedDeliveryDate": "29 Sep 2026",
         "status": "DELAYED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0007",
@@ -161,7 +175,8 @@
         "expectedDeliveryDate": "06 Oct 2026",
         "status": "CONFIRMED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0008",
@@ -181,7 +196,8 @@
         "expectedDeliveryDate": "29 Sep 2026",
         "status": "DELAYED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0009",
@@ -207,7 +223,8 @@
         "expectedDeliveryDate": "06 Oct 2026",
         "status": "CONFIRMED"
       }
-    ]
+    ],
+    "completed_stages": []
   },
   {
     "case_id": "CASE-0101",
@@ -324,7 +341,8 @@
         "expectedDeliveryDate": "29 Sep 2026",
         "status": "DELAYED"
       }
-    ]
+    ],
+    "checkpoint1_decision": "TIME"
   },
   {
     "case_id": "CASE-0104",
@@ -341,7 +359,6 @@
       "Case",
       "Impact Analysis",
       "Priority",
-      "Constraints",
       "Recovery Planning"
     ],
     "supplier_reliability": "85%",
@@ -371,7 +388,8 @@
         "expectedDeliveryDate": "06 Oct 2026",
         "status": "CONFIRMED"
       }
-    ]
+    ],
+    "checkpoint1_decision": "TIME"
   },
   {
     "case_id": "CASE-0105",
@@ -388,7 +406,6 @@
       "Case",
       "Impact Analysis",
       "Priority",
-      "Constraints",
       "Recovery Planning",
       "Decision",
       "Exec & Monitoring",
@@ -415,6 +432,155 @@
         "expectedDeliveryDate": "29 Sep 2026",
         "status": "DELAYED"
       }
+    ],
+    "checkpoint1_decision": "TIME"
+  },
+  {
+    "case_id": "CASE-11001",
+    "status": "CASE_OVERVIEW",
+    "disruption_type": "SUPPLIER_DELAY",
+    "description": "Supplier shipment delayed by 4 days due to customs clearance backlog.",
+    "supplier_id": "SUP-11001",
+    "material_id": "MAT-11001",
+    "plant_id": "PLANT-11001",
+    "detected_at": "2026-09-30T09:15:00Z",
+    "expected_delay_days": 4,
+    "affected_quantity": 400,
+    "completed_stages": []
+  },
+  {
+    "case_id": "CASE-11002",
+    "status": "IMPACT_ANALYSIS_COMPLETED",
+    "disruption_type": "PORT_CONGESTION",
+    "description": "Container release held at Chennai port due to berth congestion.",
+    "supplier_id": "SUP-11002",
+    "material_id": "MAT-11002",
+    "plant_id": "PLANT-11002",
+    "detected_at": "2026-09-30T08:40:00Z",
+    "expected_delay_days": 6,
+    "affected_quantity": 500,
+    "completed_stages": [
+      "Case"
     ]
+  },
+  {
+    "case_id": "CASE-11003",
+    "status": "PRIORITY_PENDING",
+    "disruption_type": "FACTORY_INCIDENT",
+    "description": "Fire halted lithium battery cell production at the supplier factory.",
+    "supplier_id": "SUP-11003",
+    "material_id": "MAT-11003",
+    "plant_id": "PLANT-11003",
+    "detected_at": "2026-09-29T16:20:00Z",
+    "expected_delay_days": 5,
+    "affected_quantity": 800,
+    "completed_stages": [
+      "Case",
+      "Impact Analysis"
+    ]
+  },
+  {
+    "case_id": "CASE-11004",
+    "status": "DECISION_PENDING",
+    "disruption_type": "RAW_MATERIAL_SHORTAGE",
+    "description": "Cold rolled steel shortage at the supplier mill delayed coil dispatch by 7 days.",
+    "supplier_id": "SUP-11004",
+    "material_id": "MAT-11004",
+    "plant_id": "PLANT-11004",
+    "detected_at": "2026-09-29T11:05:00Z",
+    "expected_delay_days": 7,
+    "affected_quantity": 450,
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority"
+    ],
+    "checkpoint1_decision": "COST",
+    "checkpoint1_timestamp": "2026-09-29T13:05:00Z"
+  },
+  {
+    "case_id": "CASE-11005",
+    "status": "DECISION_PENDING",
+    "disruption_type": "LOGISTICS_ROUTE_DELAY",
+    "description": "Carrier route congestion added 3 days to the Baltic road corridor.",
+    "supplier_id": "SUP-11005",
+    "material_id": "MAT-11005",
+    "plant_id": "PLANT-11005",
+    "detected_at": "2026-09-28T14:30:00Z",
+    "expected_delay_days": 3,
+    "affected_quantity": 300,
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority",
+      "Recovery Planning"
+    ],
+    "checkpoint1_decision": "BALANCED",
+    "checkpoint1_timestamp": "2026-09-28T16:30:00Z"
+  },
+  {
+    "case_id": "CASE-11006",
+    "status": "RECOVERY_APPROVED",
+    "disruption_type": "MACHINING_EQUIPMENT_BREAKDOWN",
+    "description": "CNC machining line breakdown at the supplier reduced valve body output.",
+    "supplier_id": "SUP-11006",
+    "material_id": "MAT-11006",
+    "plant_id": "PLANT-11006",
+    "detected_at": "2026-09-27T10:10:00Z",
+    "expected_delay_days": 4,
+    "affected_quantity": 250,
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority",
+      "Recovery Planning",
+      "Decision"
+    ],
+    "checkpoint1_decision": "CUSTOMER",
+    "checkpoint1_timestamp": "2026-09-27T12:10:00Z"
+  },
+  {
+    "case_id": "CASE-11007",
+    "status": "IN_TRANSIT",
+    "disruption_type": "SEVERE_WEATHER",
+    "description": "Tropical storm closed the highway corridor between Houston and Austin.",
+    "supplier_id": "SUP-11007",
+    "material_id": "MAT-11007",
+    "plant_id": "PLANT-11007",
+    "detected_at": "2026-09-26T13:45:00Z",
+    "expected_delay_days": 5,
+    "affected_quantity": 500,
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority",
+      "Recovery Planning",
+      "Decision"
+    ],
+    "checkpoint1_decision": "TIME",
+    "checkpoint1_timestamp": "2026-09-26T15:45:00Z"
+  },
+  {
+    "case_id": "CASE-11008",
+    "status": "RESOLVED",
+    "disruption_type": "CARRIER_SCHEDULE_CHANGE",
+    "description": "Rail carrier rescheduled the Linz to Vienna service, delaying arrival by 2 days.",
+    "supplier_id": "SUP-11008",
+    "material_id": "MAT-11008",
+    "plant_id": "PLANT-11008",
+    "detected_at": "2026-09-24T09:00:00Z",
+    "expected_delay_days": 2,
+    "affected_quantity": 350,
+    "completed_stages": [
+      "Case",
+      "Impact Analysis",
+      "Priority",
+      "Recovery Planning",
+      "Decision",
+      "Exec & Monitoring",
+      "Outcome"
+    ],
+    "checkpoint1_decision": "STOCK",
+    "checkpoint1_timestamp": "2026-09-24T11:00:00Z"
   }
 ]

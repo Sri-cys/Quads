@@ -139,7 +139,9 @@ sap.ui.define([
                 MessageBox.error("Failed to load Checkpoint 1: " + err.message);
             })
             .finally(function () {
-                if (oPage) oPage.setBusy(false);
+                setTimeout(function() {
+                    if (oPage) oPage.setBusy(false);
+                }, 1000);
             });
         },
 
@@ -179,7 +181,7 @@ sap.ui.define([
 
             // Stage 3 already done → pure navigation
             if (WorkflowNavHelper.getCompletedStage(sCaseId) >= 3) {
-                that.getOwnerComponent().getRouter().navTo("constraints", { caseId: sCaseId });
+                that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
                 return;
             }
 
@@ -203,7 +205,7 @@ sap.ui.define([
                 WorkflowNavHelper.savePriority(sCaseId, sPriority);
                 WorkflowNavHelper.completeStage(sCaseId, 3, 3);
                 MessageToast.show("Priority '" + sPriority + "' confirmed. Launching Agent 2...");
-                that.getOwnerComponent().getRouter().navTo("constraints", { caseId: sCaseId });
+                that.getOwnerComponent().getRouter().navTo("recoveryPlanning", { caseId: sCaseId });
             })
             .catch(function (err) {
                 if (oBtn) oBtn.setEnabled(true);

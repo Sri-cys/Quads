@@ -1,0 +1,667 @@
+[
+  {
+    "case_id": "CASE-11004",
+    "version": "v1",
+    "generated_at": "2026-09-30T10:00:00Z",
+    "priority": "COST",
+    "plans": [
+      {
+        "plan_id": "PLAN-05",
+        "strategy": "EXISTING_SUPPLIER_EXPEDITED",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 1750.0,
+        "time_variance_days": 2,
+        "risk_assessment": "LOW",
+        "recovery_days": 5,
+        "total_cost": 36750.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 450,
+        "available_quantity": 450,
+        "score": 87.0,
+        "source_location": "the case's supplier",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-01",
+        "strategy": "ALTERNATE_SUPPLIER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 6300.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 3,
+        "total_cost": 41300.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 450,
+        "available_quantity": 562,
+        "score": 83.2,
+        "source_location": "Salzgitter Flachstahl",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-04",
+        "strategy": "SPLIT_SOURCING",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 12250.0,
+        "time_variance_days": 1,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 4,
+        "total_cost": 47250.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 450,
+        "available_quantity": 450,
+        "score": 67.0,
+        "source_location": "60% Salzgitter Flachstahl + 40% Hannover Stamping Hub",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-02",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": false,
+        "cost_variance": 3500.0,
+        "time_variance_days": 0,
+        "risk_assessment": "HIGH",
+        "recovery_days": 3,
+        "total_cost": 38500.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 2,
+        "quantity_fulfilled": 270,
+        "available_quantity": 675,
+        "score": null,
+        "source_location": "Hannover Stamping Hub",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Breached",
+            "description": "Internal transport capacity exceeded on the transfer lane (Required: 450 units, Capacity: 270 units).",
+            "severity": "CRITICAL"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-03",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": false,
+        "cost_variance": -4200.0,
+        "time_variance_days": 4,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 7,
+        "total_cost": 30800.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 1,
+        "quantity_fulfilled": 396,
+        "available_quantity": 450,
+        "score": null,
+        "source_location": "Hannover Stamping Hub",
+        "constraints": [
+          {
+            "constraint_type": "Safety Stock",
+            "status": "Breached",
+            "description": "Interplant transfer causes safety stock breach at source plant Hannover Stamping Hub (Available: 80, Safety Stock: 100).",
+            "severity": "CRITICAL"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-11005",
+    "version": "v1",
+    "generated_at": "2026-09-29T10:00:00Z",
+    "priority": "BALANCED",
+    "plans": [
+      {
+        "plan_id": "PLAN-02",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 2000.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 2,
+        "total_cost": 22000.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 300,
+        "available_quantity": 450,
+        "score": 90.0,
+        "source_location": "Poznan Assembly Plant",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-05",
+        "strategy": "EXISTING_SUPPLIER_EXPEDITED",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 1000.0,
+        "time_variance_days": 2,
+        "risk_assessment": "LOW",
+        "recovery_days": 4,
+        "total_cost": 21000.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 300,
+        "available_quantity": 300,
+        "score": 89.0,
+        "source_location": "the case's supplier",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-01",
+        "strategy": "ALTERNATE_SUPPLIER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 3600.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 2,
+        "total_cost": 23600.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 300,
+        "available_quantity": 375,
+        "score": 85.2,
+        "source_location": "Riga Cable Systems",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-04",
+        "strategy": "SPLIT_SOURCING",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 7000.0,
+        "time_variance_days": 1,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 3,
+        "total_cost": 27000.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 300,
+        "available_quantity": 300,
+        "score": 69.0,
+        "source_location": "60% Riga Cable Systems + 40% Poznan Assembly Plant",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-03",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": false,
+        "cost_variance": -2400.0,
+        "time_variance_days": 4,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 6,
+        "total_cost": 17600.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 1,
+        "quantity_fulfilled": 264,
+        "available_quantity": 300,
+        "score": null,
+        "source_location": "Poznan Assembly Plant",
+        "constraints": [
+          {
+            "constraint_type": "Safety Stock",
+            "status": "Breached",
+            "description": "Interplant transfer causes safety stock breach at source plant Poznan Assembly Plant (Available: 80, Safety Stock: 100).",
+            "severity": "CRITICAL"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-11006",
+    "version": "v1",
+    "generated_at": "2026-09-28T10:00:00Z",
+    "priority": "CUSTOMER",
+    "plans": [
+      {
+        "plan_id": "PLAN-02",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 2500.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 4,
+        "total_cost": 27500.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 250,
+        "available_quantity": 375,
+        "score": 86.0,
+        "source_location": "Bengaluru Machining Hub",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-05",
+        "strategy": "EXISTING_SUPPLIER_EXPEDITED",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 1250.0,
+        "time_variance_days": 2,
+        "risk_assessment": "LOW",
+        "recovery_days": 6,
+        "total_cost": 26250.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 250,
+        "available_quantity": 250,
+        "score": 85.0,
+        "source_location": "the case's supplier",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-01",
+        "strategy": "ALTERNATE_SUPPLIER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 4500.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 4,
+        "total_cost": 29500.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 250,
+        "available_quantity": 312,
+        "score": 81.2,
+        "source_location": "Chennai Foundry Works",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-04",
+        "strategy": "SPLIT_SOURCING",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 8750.0,
+        "time_variance_days": 1,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 5,
+        "total_cost": 33750.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 250,
+        "available_quantity": 250,
+        "score": 65.0,
+        "source_location": "60% Chennai Foundry Works + 40% Bengaluru Machining Hub",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-03",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": false,
+        "cost_variance": -3000.0,
+        "time_variance_days": 4,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 8,
+        "total_cost": 22000.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 1,
+        "quantity_fulfilled": 220,
+        "available_quantity": 250,
+        "score": null,
+        "source_location": "Bengaluru Machining Hub",
+        "constraints": [
+          {
+            "constraint_type": "Safety Stock",
+            "status": "Breached",
+            "description": "Interplant transfer causes safety stock breach at source plant Bengaluru Machining Hub (Available: 80, Safety Stock: 100).",
+            "severity": "CRITICAL"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-11007",
+    "version": "v1",
+    "generated_at": "2026-09-27T10:00:00Z",
+    "priority": "TIME",
+    "plans": [
+      {
+        "plan_id": "PLAN-05",
+        "strategy": "EXISTING_SUPPLIER_EXPEDITED",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 1600.0,
+        "time_variance_days": 2,
+        "risk_assessment": "LOW",
+        "recovery_days": 5,
+        "total_cost": 33600.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 500,
+        "available_quantity": 500,
+        "score": 87.0,
+        "source_location": "the case's supplier",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-01",
+        "strategy": "ALTERNATE_SUPPLIER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 5760.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 3,
+        "total_cost": 37760.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 500,
+        "available_quantity": 625,
+        "score": 83.2,
+        "source_location": "Houston Polymer Supply",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-04",
+        "strategy": "SPLIT_SOURCING",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 11200.0,
+        "time_variance_days": 1,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 4,
+        "total_cost": 43200.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 500,
+        "available_quantity": 500,
+        "score": 67.0,
+        "source_location": "60% Houston Polymer Supply + 40% Dallas Molding Plant",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-02",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": false,
+        "cost_variance": 3200.0,
+        "time_variance_days": 0,
+        "risk_assessment": "HIGH",
+        "recovery_days": 3,
+        "total_cost": 35200.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 2,
+        "quantity_fulfilled": 300,
+        "available_quantity": 750,
+        "score": null,
+        "source_location": "Dallas Molding Plant",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Breached",
+            "description": "Internal transport capacity exceeded on the transfer lane (Required: 500 units, Capacity: 300 units).",
+            "severity": "CRITICAL"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-03",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": false,
+        "cost_variance": -3840.0,
+        "time_variance_days": 4,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 7,
+        "total_cost": 28160.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 1,
+        "quantity_fulfilled": 440,
+        "available_quantity": 500,
+        "score": null,
+        "source_location": "Dallas Molding Plant",
+        "constraints": [
+          {
+            "constraint_type": "Safety Stock",
+            "status": "Breached",
+            "description": "Interplant transfer causes safety stock breach at source plant Dallas Molding Plant (Available: 80, Safety Stock: 100).",
+            "severity": "CRITICAL"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "CASE-11008",
+    "version": "v1",
+    "generated_at": "2026-09-25T10:00:00Z",
+    "priority": "STOCK",
+    "plans": [
+      {
+        "plan_id": "PLAN-02",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 1500.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 4,
+        "total_cost": 16500.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 350,
+        "available_quantity": 525,
+        "score": 86.0,
+        "source_location": "Graz Distribution Hub",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-05",
+        "strategy": "EXISTING_SUPPLIER_EXPEDITED",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 750.0,
+        "time_variance_days": 2,
+        "risk_assessment": "LOW",
+        "recovery_days": 6,
+        "total_cost": 15750.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 350,
+        "available_quantity": 350,
+        "score": 85.0,
+        "source_location": "the case's supplier",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-01",
+        "strategy": "ALTERNATE_SUPPLIER",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 2700.0,
+        "time_variance_days": 0,
+        "risk_assessment": "LOW",
+        "recovery_days": 4,
+        "total_cost": 17700.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 350,
+        "available_quantity": 438,
+        "score": 81.2,
+        "source_location": "Salzburg Fastener Werke",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-04",
+        "strategy": "SPLIT_SOURCING",
+        "description": "Mocked",
+        "feasible": true,
+        "cost_variance": 5250.0,
+        "time_variance_days": 1,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 5,
+        "total_cost": 20250.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 0,
+        "quantity_fulfilled": 350,
+        "available_quantity": 350,
+        "score": 65.0,
+        "source_location": "60% Salzburg Fastener Werke + 40% Graz Distribution Hub",
+        "constraints": [
+          {
+            "constraint_type": "Capacity",
+            "status": "Passed",
+            "description": "All constraints satisfied",
+            "severity": "NONE"
+          }
+        ]
+      },
+      {
+        "plan_id": "PLAN-03",
+        "strategy": "INTER_PLANT_TRANSFER",
+        "description": "Mocked",
+        "feasible": false,
+        "cost_variance": -1800.0,
+        "time_variance_days": 4,
+        "risk_assessment": "MEDIUM",
+        "recovery_days": 8,
+        "total_cost": 13200.0,
+        "production_impact_days": 0,
+        "customer_impact_days": 1,
+        "quantity_fulfilled": 308,
+        "available_quantity": 350,
+        "score": null,
+        "source_location": "Graz Distribution Hub",
+        "constraints": [
+          {
+            "constraint_type": "Safety Stock",
+            "status": "Breached",
+            "description": "Interplant transfer causes safety stock breach at source plant Graz Distribution Hub (Available: 80, Safety Stock: 100).",
+            "severity": "CRITICAL"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from app.dependencies import get_repository, get_case_service, get_audit_service
 from app.models.case import Case, CaseCreateRequest, CaseListResponse
@@ -9,6 +10,10 @@ from app.models.impact import AuditEvent, ErrorResponse
 
 logger = logging.getLogger("quads.api.cases")
 router = APIRouter(prefix="/api/v1", tags=["Case Management"])
+
+
+class ReopenRequest(BaseModel):
+    reason: str
 
 
 @router.post(
@@ -130,3 +135,59 @@ def list_materials(repo=Depends(get_repository)):
 @router.get("/plants")
 def list_plants(repo=Depends(get_repository)):
     return repo.list_plants()
+
+
+@router.post("/cases/{case_id}/reopen", response_model=Case)
+def reopen_case(
+    case_id: str,
+    body: "ReopenRequest",
+    repo=Depends(get_repository),
+    audit_service=Depends(get_audit_service),
+):
+    """
+    Reset a case back to IMPACT_ANALYSIS_COMPLETED for a fresh planning cycle.
+    Clears: checkpoint1/2 decisions, approved plan, execution records, recovery plans.
+    Preserves: impact analysis results (disruption facts don't change).
+    Called when the planner marks recovery as 'Not Completed'.
+    """
+    case = repo.get_case(case_id)
+    if not case:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": "CASE_NOT_FOUND", "message": f"Case {case_id} not found"},
+        )
+
+    # Reset case fields
+    case.checkpoint1_decision = None
+    case.checkpoint1_timestamp = None
+    case.checkpoint2_decision = None
+    case.checkpoint2_timestamp = None
+    case.approved_plan_id = None
+    case.approved_plan_version = None
+    case.execution_action_id = None
+    case.execution_status = None
+    case.resolved_at = None
+    case.status = "IMPACT_ANALYSIS_COMPLETED"
+    case.last_error = None
+
+    # Increment planning cycle counter
+    case.planning_cycle = (getattr(case, "planning_cycle", 1) or 1) + 1
+
+    # Clear recovery plans and execution records from repo
+    repo._recovery_plan_sets.pop(case_id, None)
+    repo._checkpoint2_decisions.pop(case_id, None)
+    repo._execution_records.pop(case_id, None)
+    repo._execution_baselines.pop(case_id, None)
+    repo._tracking_events.pop(case_id, None)
+
+    repo.update_case(case)
+
+    audit_service.log(
+        case_id=case_id,
+        event="CASE_REOPENED",
+        actor="SUPPLY_CHAIN_PLANNER",
+        details=f"Case reopened for planning cycle {case.planning_cycle}. Reason: {body.reason}",
+    )
+    logger.info(f"Case {case_id} reopened for cycle {case.planning_cycle}. Reason: {body.reason}")
+    return case
+

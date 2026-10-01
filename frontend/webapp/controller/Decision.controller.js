@@ -40,7 +40,7 @@ sap.ui.define([
             }
             this._sCurrentCaseId = sCaseId;
             sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
-                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 6);
+                WorkflowNavHelper.setStepperState(this._sCurrentCaseId, 5);
             }.bind(this));
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
             this.loadDecisionData(sCaseId);
@@ -76,14 +76,21 @@ sap.ui.define([
                                 caseData.status === "EXECUTION_IN_PROGRESS" ||
                                 caseData.status === "RESOLVED";
 
+                var selectedPlanId = window.localStorage.getItem("quads_selected_plan_" + sCaseId);
                 var selectedPlan = {};
                 if (bApproved && caseData.approved_plan_id) {
                     selectedPlan = feasible.concat(infeasible).find(function (p) {
                         return p.plan_id === caseData.approved_plan_id;
                     }) || {};
+                } else if (selectedPlanId) {
+                    selectedPlan = feasible.concat(infeasible).find(function (p) {
+                        return p.plan_id && p.plan_id.split(" ")[0] === selectedPlanId;
+                    }) || {};
                 }
 
+
                 oModel.setData({
+                    caseData: caseData,
                     decisionState: bApproved ? "APPROVED" : "PENDING",
                     case_id: sCaseId,
                     feasible_plans: feasible,
@@ -315,7 +322,7 @@ sap.ui.define([
 
         onProceedToExecution: function () {
             var sCaseId = this._sCurrentCaseId;
-            WorkflowNavHelper.completeStage(sCaseId, 6, 6);
+            WorkflowNavHelper.completeStage(sCaseId, 5, 5);
             this.getOwnerComponent().getRouter().navTo("executionMonitoring", { caseId: sCaseId });
         },
 
@@ -325,6 +332,105 @@ sap.ui.define([
 
         onWorkflowStagePress: function (oEvent) {
             WorkflowNavHelper.onWorkflowStagePress(oEvent, this);
+        },
+
+        // --- Formatters for New Design ---
+        formatMissing: function(val) {
+            if (val === undefined || val === null || val === "") return "—";
+            return val;
+        },
+        formatStrategy: function(val) {
+            if (!val) return "—";
+            if (val === "INTER_PLANT_TRANSFER") return "INTER-PLANT TRANSFER";
+            return val.replace(/_/g, " ");
+        },
+        formatDate: function(sDate) {
+            if (!sDate) return "—";
+            var oDate = new Date(sDate);
+            if (isNaN(oDate.getTime())) return sDate;
+            var aMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var day = String(oDate.getDate()).padStart(2, '0');
+            return day + " " + aMonths[oDate.getMonth()] + " " + oDate.getFullYear();
+        },
+        
+        formatConstraintIcon_SOURCE_INVENTORY_AVAILABLE: function(constraints) { return this._getConstraintIcon(constraints, "SOURCE_INVENTORY_AVAILABLE"); },
+        formatConstraintColor_SOURCE_INVENTORY_AVAILABLE: function(constraints) { return this._getConstraintColor(constraints, "SOURCE_INVENTORY_AVAILABLE"); },
+        formatConstraintTextClass_SOURCE_INVENTORY_AVAILABLE: function(constraints) { return this._getConstraintTextClass(constraints, "SOURCE_INVENTORY_AVAILABLE"); },
+
+        formatConstraintIcon_SOURCE_SAFETY_STOCK: function(constraints) { return this._getConstraintIcon(constraints, "SOURCE_SAFETY_STOCK"); },
+        formatConstraintColor_SOURCE_SAFETY_STOCK: function(constraints) { return this._getConstraintColor(constraints, "SOURCE_SAFETY_STOCK"); },
+        formatConstraintTextClass_SOURCE_SAFETY_STOCK: function(constraints) { return this._getConstraintTextClass(constraints, "SOURCE_SAFETY_STOCK"); },
+
+        formatConstraintIcon_DESTINATION_CAPACITY_LIMIT: function(constraints) { return this._getConstraintIcon(constraints, "DESTINATION_CAPACITY_LIMIT"); },
+        formatConstraintColor_DESTINATION_CAPACITY_LIMIT: function(constraints) { return this._getConstraintColor(constraints, "DESTINATION_CAPACITY_LIMIT"); },
+        formatConstraintTextClass_DESTINATION_CAPACITY_LIMIT: function(constraints) { return this._getConstraintTextClass(constraints, "DESTINATION_CAPACITY_LIMIT"); },
+
+        formatConstraintIcon_TRANSPORT_CAPACITY_LIMIT: function(constraints) { return this._getConstraintIcon(constraints, "TRANSPORT_CAPACITY_LIMIT"); },
+        formatConstraintColor_TRANSPORT_CAPACITY_LIMIT: function(constraints) { return this._getConstraintColor(constraints, "TRANSPORT_CAPACITY_LIMIT"); },
+        formatConstraintTextClass_TRANSPORT_CAPACITY_LIMIT: function(constraints) { return this._getConstraintTextClass(constraints, "TRANSPORT_CAPACITY_LIMIT"); },
+
+        formatConstraintIcon_RECOVERY_QTY_TARGET: function(constraints) { return this._getConstraintIcon(constraints, "RECOVERY_QTY_TARGET"); },
+        formatConstraintColor_RECOVERY_QTY_TARGET: function(constraints) { return this._getConstraintColor(constraints, "RECOVERY_QTY_TARGET"); },
+        formatConstraintTextClass_RECOVERY_QTY_TARGET: function(constraints) { return this._getConstraintTextClass(constraints, "RECOVERY_QTY_TARGET"); },
+
+        formatConstraintIcon_STOCKOUT_ARRIVAL_LIMIT: function(constraints) { return this._getConstraintIcon(constraints, "STOCKOUT_ARRIVAL_LIMIT"); },
+        formatConstraintColor_STOCKOUT_ARRIVAL_LIMIT: function(constraints) { return this._getConstraintColor(constraints, "STOCKOUT_ARRIVAL_LIMIT"); },
+        formatConstraintTextClass_STOCKOUT_ARRIVAL_LIMIT: function(constraints) { return this._getConstraintTextClass(constraints, "STOCKOUT_ARRIVAL_LIMIT"); },
+
+        formatConstraintIcon_GOVERNING_RULE_BREACHED: function(constraints) { return this._getConstraintIcon(constraints, "GOVERNING_RULE_BREACHED"); },
+        formatConstraintColor_GOVERNING_RULE_BREACHED: function(constraints) { return this._getConstraintColor(constraints, "GOVERNING_RULE_BREACHED"); },
+        formatConstraintTextClass_GOVERNING_RULE_BREACHED: function(constraints) { return this._getConstraintTextClass(constraints, "GOVERNING_RULE_BREACHED"); },
+
+        _getConstraint: function(constraints, name) {
+            if (!constraints) return null;
+            for (var i = 0; i < constraints.length; i++) {
+                if (constraints[i].constraint_name === name) return constraints[i];
+            }
+            return null;
+        },
+        _getConstraintIcon: function(constraints, name) {
+            var c = this._getConstraint(constraints, name);
+            if (!c) return "sap-icon://minuend";
+            return c.satisfied ? "sap-icon://accept" : "sap-icon://decline";
+        },
+        _getConstraintColor: function(constraints, name) {
+            var c = this._getConstraint(constraints, name);
+            if (!c) return "#8f9ea8";
+            return c.satisfied ? "#2b7d2b" : "#bb0000";
+        },
+        _getConstraintTextClass: function(constraints, name) {
+            var c = this._getConstraint(constraints, name);
+            if (!c) return "textMuted";
+            return c.satisfied ? "textDark" : "textCritical";
+        },
+
+        formatCurrency: function(val) {
+            if (val === undefined || val === null || val === "") return "—";
+            return "$" + Number(val).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        },
+        formatDelayState: function(delay) {
+            if (delay === undefined || delay === null) return "None";
+            return delay === 0 ? "Success" : "Error";
+        },
+        formatProductionState: function(fulfilled, target) {
+            if (fulfilled === undefined || target === undefined || fulfilled === null || target === null) return "None";
+            return fulfilled >= target ? "Success" : "Warning";
+        },
+        formatProductionText: function(fulfilled, target) {
+            if (fulfilled === undefined || target === undefined || fulfilled === null || target === null) return "—";
+            return fulfilled >= target ? "FULFILLED" : "PARTIAL";
+        },
+        formatCustomerState: function(fulfilled, target) {
+            if (fulfilled === undefined || target === undefined || fulfilled === null || target === null) return "None";
+            return fulfilled >= target ? "Success" : (fulfilled > 0 ? "Warning" : "Error");
+        },
+        formatCustomerText: function(fulfilled, target) {
+            if (fulfilled === undefined || target === undefined || fulfilled === null || target === null) return "—";
+            return fulfilled >= target ? "FULFILLED" : "IMPACTED";
+        },
+        formatQtyColor: function(fulfilled, target) {
+            if (fulfilled === undefined || target === undefined || fulfilled === null || target === null) return "None";
+            return fulfilled >= target ? "Success" : "Error";
         }
     });
 });

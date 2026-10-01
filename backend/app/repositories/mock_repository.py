@@ -311,6 +311,9 @@ class MockRepository(BaseRepository):
             disruption = Disruption(
                 disruption_type=case.disruption_type,
                 description=case.description,
+                supplier_id=case.supplier_id,
+                material_id=case.material_id,
+                plant_id=case.plant_id,
                 detected_at=case.detected_at,
                 expected_delay_days=case.expected_delay_days,
                 affected_quantity=case.affected_quantity,

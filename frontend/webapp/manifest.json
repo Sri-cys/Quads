@@ -140,12 +140,12 @@
         {
           "name": "constraints",
           "pattern": "constraints/:caseId:",
-          "target": "constraints"
+          "target": "recoveryPlanning"
         },
         {
           "name": "constraintsAlt",
           "pattern": "cases/:caseId:/constraints",
-          "target": "constraints"
+          "target": "recoveryPlanning"
         },
         {
           "name": "recoveryPlanning",

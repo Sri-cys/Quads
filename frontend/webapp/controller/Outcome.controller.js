@@ -56,7 +56,7 @@ sap.ui.define([
             }
             this._sCaseId = sCaseId;
             this.getOwnerComponent().getModel("app").setProperty("/selectedCaseId", sCaseId);
-            WorkflowNavHelper.setStepperState(sCaseId, 8);
+            WorkflowNavHelper.setStepperState(sCaseId, 7);
             this._loadCaseList();
             this.loadOutcomeData(sCaseId);
         },
@@ -124,17 +124,22 @@ sap.ui.define([
 
                 // Determine state from backend
                 var sState = "PENDING";
+                var sNormalizedStatus = (caseData.status || "").toUpperCase();
+                var bResolved = (sNormalizedStatus === "RESOLVED" || sNormalizedStatus === "DELIVERED");
+
                 if (progress) {
-                    if (progress.is_success || caseData.status === "RESOLVED") {
+                    if (progress.is_success || bResolved) {
                         sState = "SUCCESS";
                     } else if (progress.is_failed) {
                         sState = "FAILED";
                     } else {
                         sState = "PENDING";
                     }
-                } else if (caseData.status === "RESOLVED") {
+                } else if (bResolved) {
+                    // Execution progress record may not exist (manual planner confirm path)
                     sState = "SUCCESS";
                 }
+
 
                 var baseline   = (progress && progress.baseline) ? progress.baseline : {};
                 var deviation  = (progress && progress.deviation) ? progress.deviation : {};
@@ -199,7 +204,9 @@ sap.ui.define([
                 MessageBox.error("Failed to load outcome: " + err.message);
             })
             .finally(function () {
-                if (oPage) oPage.setBusy(false);
+                setTimeout(function() {
+                    if (oPage) oPage.setBusy(false);
+                }, 1000);
             });
         },
 

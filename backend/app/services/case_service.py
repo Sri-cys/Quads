@@ -202,15 +202,15 @@ class CaseService:
                 plant_id=case.plant_id,
             )
 
-            # Simulate real step progress transitions
+            # Simulate real step progress transitions (fast: 8ms total per step)
             steps = ["inventory", "supplier", "logistics", "production", "customer", "financial", "overall"]
             for step in steps:
-                time.sleep(0.04)  # Micro-delay for realistic telemetry
+                time.sleep(0.005)  # Minimal delay for telemetry realism
                 with self._lock:
                     case.active_step = step
                     case.steps_progress[step] = "RUNNING"
                     self.repository.update_case(case)
-                time.sleep(0.03)
+                time.sleep(0.003)
                 with self._lock:
                     case.steps_progress[step] = "COMPLETED"
                     self.repository.update_case(case)
@@ -228,15 +228,10 @@ class CaseService:
                 purchase_orders=pos,
             )
 
-            # AI Executive Explanation
-            explanation, ai_status = self.gemini_service.generate_explanation(
-                disruption=disruption,
-                impact=impact,
-            )
-            impact.ai_explanation = explanation
-            impact.ai_status = ai_status
+            # Mark COMPLETED immediately — AI explanation runs off the critical path
+            impact.ai_explanation = None
+            impact.ai_status = "PENDING"
 
-            # Mark COMPLETED
             with self._lock:
                 target_state = validate_and_transition(
                     case=case,
@@ -249,7 +244,7 @@ class CaseService:
                 case.active_step = None
                 self.repository.update_case(case)
 
-            # Persist analysis
+            # Persist analysis so the UI can display results immediately
             self.repository.save_impact_analysis(impact)
 
             self.audit_service.log(
@@ -267,6 +262,13 @@ class CaseService:
 
             logger.info(f"Agent 1 analysis completed successfully for case {case_id}")
 
+            # Fire AI explanation in a background thread — does NOT block the UI
+            threading.Thread(
+                target=self._backfill_ai_explanation,
+                args=(case_id, disruption, impact),
+                daemon=True,
+            ).start()
+
         except Exception as e:
             logger.error(f"Error in Agent 1 worker for case {case_id}: {e}", exc_info=True)
             with self._lock:
@@ -281,6 +283,23 @@ class CaseService:
                 actor="AGENT_1_IMPACT",
                 details=f"Agent 1 execution failed: {str(e)}",
             )
+
+    def _backfill_ai_explanation(self, case_id: str, disruption, impact) -> None:
+        """
+        Run Gemini explanation off the critical path and patch the persisted
+        impact record when it completes.  Never blocks the UI.
+        """
+        try:
+            explanation, ai_status = self.gemini_service.generate_explanation(
+                disruption=disruption,
+                impact=impact,
+            )
+            impact.ai_explanation = explanation
+            impact.ai_status = ai_status
+            self.repository.save_impact_analysis(impact)
+            logger.info(f"AI explanation backfilled for {case_id}: {ai_status}")
+        except Exception as e:
+            logger.warning(f"AI backfill failed for {case_id}: {e}")
 
     def retry_impact_analysis(self, case_id: str) -> Case:
         """Retry Agent 1 after failure."""

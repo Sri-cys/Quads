@@ -1,0 +1,28 @@
+[
+  {
+    "tracking_id": "TRK-SAP-SPLIT-711007",
+    "case_id": "CASE-11007",
+    "carrier_id": "TX-7711",
+    "status": "In Transit",
+    "current_location": "Hybrid: 60% Houston Polymer Supply + 40% Dallas Molding Plant",
+    "timestamp": "2026-09-30T08:42:00Z",
+    "estimated_arrival": "2026-10-01T00:00:00Z",
+    "delay_minutes": 90,
+    "telemetry_status": "AT_RISK",
+    "active_alerts": [
+      "Weather advisory on route: potential 90-minute delay."
+    ]
+  },
+  {
+    "tracking_id": "TRK-SAP-ALTSUP-811008",
+    "case_id": "CASE-11008",
+    "carrier_id": "RC-8811",
+    "status": "Delivered",
+    "current_location": "Vienna Assembly Plant (delivered)",
+    "timestamp": "2026-09-29T14:10:00Z",
+    "estimated_arrival": "2026-09-29T00:00:00Z",
+    "delay_minutes": 0,
+    "telemetry_status": "ON_TRACK",
+    "active_alerts": []
+  }
+]

@@ -115,5 +115,77 @@
     "quantity": 800,
     "status": "DELAYED",
     "expected_delivery_date": "2026-10-08T00:00:00Z"
+  },
+  {
+    "po_id": "PO-11001",
+    "supplier_id": "SUP-11001",
+    "material_id": "MAT-11001",
+    "plant_id": "PLANT-11001",
+    "quantity": 400,
+    "expected_delivery_date": "2026-10-06T00:00:00Z",
+    "status": "DELAYED"
+  },
+  {
+    "po_id": "PO-11002",
+    "supplier_id": "SUP-11002",
+    "material_id": "MAT-11002",
+    "plant_id": "PLANT-11002",
+    "quantity": 500,
+    "expected_delivery_date": "2026-10-11T00:00:00Z",
+    "status": "DELAYED"
+  },
+  {
+    "po_id": "PO-11003",
+    "supplier_id": "SUP-11003",
+    "material_id": "MAT-11003",
+    "plant_id": "PLANT-11003",
+    "quantity": 800,
+    "expected_delivery_date": "2026-10-06T00:00:00Z",
+    "status": "DELAYED"
+  },
+  {
+    "po_id": "PO-11004",
+    "supplier_id": "SUP-11004",
+    "material_id": "MAT-11004",
+    "plant_id": "PLANT-11004",
+    "quantity": 450,
+    "expected_delivery_date": "2026-10-11T00:00:00Z",
+    "status": "DELAYED"
+  },
+  {
+    "po_id": "PO-11005",
+    "supplier_id": "SUP-11005",
+    "material_id": "MAT-11005",
+    "plant_id": "PLANT-11005",
+    "quantity": 300,
+    "expected_delivery_date": "2026-10-06T00:00:00Z",
+    "status": "DELAYED"
+  },
+  {
+    "po_id": "PO-11006",
+    "supplier_id": "SUP-11006",
+    "material_id": "MAT-11006",
+    "plant_id": "PLANT-11006",
+    "quantity": 250,
+    "expected_delivery_date": "2026-10-06T00:00:00Z",
+    "status": "DELAYED"
+  },
+  {
+    "po_id": "PO-11007",
+    "supplier_id": "SUP-11007",
+    "material_id": "MAT-11007",
+    "plant_id": "PLANT-11007",
+    "quantity": 500,
+    "expected_delivery_date": "2026-10-06T00:00:00Z",
+    "status": "DELAYED"
+  },
+  {
+    "po_id": "PO-11008",
+    "supplier_id": "SUP-11008",
+    "material_id": "MAT-11008",
+    "plant_id": "PLANT-11008",
+    "quantity": 350,
+    "expected_delivery_date": "2026-09-30T00:00:00Z",
+    "status": "DELIVERED"
   }
 ]

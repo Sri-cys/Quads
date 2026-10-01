@@ -90,22 +90,24 @@ Provide:
 3. Downstream Plant & Customer Risk: Impact on production lines and customer deliveries.
 """
 
-        # Attempt call with strict 4.0s timeout budget
+        # Attempt call with strict 2.5s timeout budget (runs off the critical path)
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
         try:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(
-                    self._client.models.generate_content,
-                    model="gemini-flash-latest",
-                    contents=prompt,
-                )
-                response = future.result(timeout=4.0)
-                if response and response.text:
-                    return response.text.strip(), "AVAILABLE"
-                else:
-                    return None, "FAILED"
+            future = executor.submit(
+                self._client.models.generate_content,
+                model="gemini-flash-latest",
+                contents=prompt,
+            )
+            response = future.result(timeout=2.5)
+            if response and response.text:
+                return response.text.strip(), "AVAILABLE"
+            else:
+                return None, "FAILED"
         except Exception as e:
             logger.warning(f"Gemini call timed out or failed: {type(e).__name__}; falling back gracefully.")
             return None, "FAILED"
+        finally:
+            executor.shutdown(wait=False)
 
         return None, "UNAVAILABLE"
 
@@ -154,21 +156,23 @@ STRICT GROUNDING RULES:
 """
 
         # Attempt call with strict 4.0s timeout budget
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
         try:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(
-                    self._client.models.generate_content,
-                    model="gemini-flash-latest",
-                    contents=prompt,
-                )
-                response = future.result(timeout=4.0)
-                if response and response.text:
-                    return response.text.strip(), "AVAILABLE"
-                else:
-                    return None, "FAILED"
+            future = executor.submit(
+                self._client.models.generate_content,
+                model="gemini-flash-latest",
+                contents=prompt,
+            )
+            response = future.result(timeout=4.0)
+            if response and response.text:
+                return response.text.strip(), "AVAILABLE"
+            else:
+                return None, "FAILED"
         except Exception as e:
             logger.warning(f"Gemini recovery briefing timed out or failed: {type(e).__name__}; falling back gracefully.")
             return None, "FAILED"
+        finally:
+            executor.shutdown(wait=False)
 
         return None, "UNAVAILABLE"
 

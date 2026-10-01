@@ -155,7 +155,7 @@
                 </VBox>
 
                 <!-- Disruption Cases Table Section -->
-                <VBox class="sapTableCard">
+                <VBox id="casesTableWrapper" class="sapTableCard">
                     <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapTableCardHeader">
                         <HBox alignItems="Center">
                             <Title
@@ -181,9 +181,305 @@
                         </HBox>
                     </HBox>
 
-                    <Table
-                        id="casesTable"
-                        items="{casesModel>/items}"
+                    
+                    <HBox alignItems="Center" class="sapUiSmallMarginTop sapUiTinyMarginBottom" visible="{= ${casesModel>/itemsCritical}.length > 0 }">
+                        <Title text="Critical Cases" level="H3" class="sapSectionTitle" />
+                        <Text text=" ({=${casesModel>/itemsCritical}.length})" class="textMuted sapUiTinyMarginBegin" />
+                    </HBox>
+<Table visible="{= ${casesModel>/itemsCritical}.length > 0 }"
+                        id="casesTableCritical"
+                        items="{casesModel>/itemsCritical}"
+                        mode="MultiSelect"
+                        growing="true"
+                        growingThreshold="25"
+                        noDataText="No disruption cases found"
+                        class="sapEnterpriseTable">
+                        <columns>
+                            <Column width="9rem">
+                                <Text text="Case ID" class="sapColHeader" />
+                            </Column>
+                            <Column width="18rem">
+                                <Text text="Disruption" class="sapColHeader" />
+                            </Column>
+                            <Column width="14rem">
+                                <Text text="Supplier" class="sapColHeader" />
+                            </Column>
+                            <Column width="9rem">
+                                <Text text="Material" class="sapColHeader" />
+                            </Column>
+                            <Column width="7rem">
+                                <Text text="Plant" class="sapColHeader" />
+                            </Column>
+                            <Column width="7rem" hAlign="Center">
+                                <Text text="Severity" class="sapColHeader" />
+                            </Column>
+                            <Column width="10rem">
+                                <Text text="Status" class="sapColHeader" />
+                            </Column>
+                            <Column width="11rem">
+                                <Text text="Workflow Stage" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem">
+                                <Text text="Created On" class="sapColHeader" />
+                            </Column>
+                            <Column width="2.5rem" hAlign="Center">
+                                <Text text="" class="sapColHeader" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem
+                                vAlign="Middle"
+                                type="Navigation"
+                                press=".onSelectCase"
+                                class="sapEnterpriseRow">
+                                <cells>
+                                    <!-- Case ID -->
+                                    <Link
+                                        text="{casesModel>case_id}"
+                                        press=".onSelectCase"
+                                        class="sapCaseLink" />
+                                    <!-- Disruption: Name + description subtext -->
+                                    <VBox>
+                                        <Text text="{casesModel>disruption_name}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>description}" class="sapRowSecondary" maxLines="1" />
+                                    </VBox>
+                                    <!-- Supplier: Name -->
+                                    <VBox>
+                                        <Text text="{casesModel>supplier_display}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>supplier_id}" class="sapRowSecondary" />
+                                    </VBox>
+                                    <!-- Material -->
+                                    <Text text="{casesModel>material_id}" class="sapRowPrimary" />
+                                    <!-- Plant -->
+                                    <Text text="{casesModel>plant_id}" class="sapRowPrimary" />
+                                    <!-- Severity -->
+                                    <ObjectStatus
+                                        text="{casesModel>severity_text}"
+                                        state="{= ${casesModel>severity_text} === 'Critical' ? 'Error' : ${casesModel>severity_text} === 'High' ? 'Warning' : ${casesModel>severity_text} === 'Medium' ? 'Information' : 'Success' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Operational Status -->
+                                    <ObjectStatus
+                                        text="{ path: 'casesModel>status', formatter: '.formatter.formatStatus' }"
+                                        state="{ path: 'casesModel>status', formatter: '.formatter.formatStatusState' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Workflow Stage -->
+                                    <Text
+                                        text="{ path: 'casesModel>case_id', formatter: '.formatter.formatWorkflowStage' }"
+                                        class="sapRowPrimary" />
+                                    <!-- Created On -->
+                                    <Text
+                                        text="{casesModel>created_on}"
+                                        class="sapRowSecondary" />
+                                    <!-- Chevron Navigation -->
+                                    <core:Icon
+                                        src="sap-icon://navigation-right-arrow"
+                                        size="0.875rem"
+                                        class="sapNavChevron" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                    <HBox alignItems="Center" class="sapUiSmallMarginTop sapUiTinyMarginBottom" visible="{= ${casesModel>/itemsHigh}.length > 0 }">
+                        <Title text="High Risk Cases" level="H3" class="sapSectionTitle" />
+                        <Text text=" ({=${casesModel>/itemsHigh}.length})" class="textMuted sapUiTinyMarginBegin" />
+                    </HBox>
+<Table visible="{= ${casesModel>/itemsHigh}.length > 0 }"
+                        id="casesTableHigh"
+                        items="{casesModel>/itemsHigh}"
+                        mode="MultiSelect"
+                        growing="true"
+                        growingThreshold="25"
+                        noDataText="No disruption cases found"
+                        class="sapEnterpriseTable">
+                        <columns>
+                            <Column width="9rem">
+                                <Text text="Case ID" class="sapColHeader" />
+                            </Column>
+                            <Column width="18rem">
+                                <Text text="Disruption" class="sapColHeader" />
+                            </Column>
+                            <Column width="14rem">
+                                <Text text="Supplier" class="sapColHeader" />
+                            </Column>
+                            <Column width="9rem">
+                                <Text text="Material" class="sapColHeader" />
+                            </Column>
+                            <Column width="7rem">
+                                <Text text="Plant" class="sapColHeader" />
+                            </Column>
+                            <Column width="7rem" hAlign="Center">
+                                <Text text="Severity" class="sapColHeader" />
+                            </Column>
+                            <Column width="10rem">
+                                <Text text="Status" class="sapColHeader" />
+                            </Column>
+                            <Column width="11rem">
+                                <Text text="Workflow Stage" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem">
+                                <Text text="Created On" class="sapColHeader" />
+                            </Column>
+                            <Column width="2.5rem" hAlign="Center">
+                                <Text text="" class="sapColHeader" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem
+                                vAlign="Middle"
+                                type="Navigation"
+                                press=".onSelectCase"
+                                class="sapEnterpriseRow">
+                                <cells>
+                                    <!-- Case ID -->
+                                    <Link
+                                        text="{casesModel>case_id}"
+                                        press=".onSelectCase"
+                                        class="sapCaseLink" />
+                                    <!-- Disruption: Name + description subtext -->
+                                    <VBox>
+                                        <Text text="{casesModel>disruption_name}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>description}" class="sapRowSecondary" maxLines="1" />
+                                    </VBox>
+                                    <!-- Supplier: Name -->
+                                    <VBox>
+                                        <Text text="{casesModel>supplier_display}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>supplier_id}" class="sapRowSecondary" />
+                                    </VBox>
+                                    <!-- Material -->
+                                    <Text text="{casesModel>material_id}" class="sapRowPrimary" />
+                                    <!-- Plant -->
+                                    <Text text="{casesModel>plant_id}" class="sapRowPrimary" />
+                                    <!-- Severity -->
+                                    <ObjectStatus
+                                        text="{casesModel>severity_text}"
+                                        state="{= ${casesModel>severity_text} === 'Critical' ? 'Error' : ${casesModel>severity_text} === 'High' ? 'Warning' : ${casesModel>severity_text} === 'Medium' ? 'Information' : 'Success' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Operational Status -->
+                                    <ObjectStatus
+                                        text="{ path: 'casesModel>status', formatter: '.formatter.formatStatus' }"
+                                        state="{ path: 'casesModel>status', formatter: '.formatter.formatStatusState' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Workflow Stage -->
+                                    <Text
+                                        text="{ path: 'casesModel>case_id', formatter: '.formatter.formatWorkflowStage' }"
+                                        class="sapRowPrimary" />
+                                    <!-- Created On -->
+                                    <Text
+                                        text="{casesModel>created_on}"
+                                        class="sapRowSecondary" />
+                                    <!-- Chevron Navigation -->
+                                    <core:Icon
+                                        src="sap-icon://navigation-right-arrow"
+                                        size="0.875rem"
+                                        class="sapNavChevron" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                    <HBox alignItems="Center" class="sapUiSmallMarginTop sapUiTinyMarginBottom" visible="{= ${casesModel>/itemsMedium}.length > 0 }">
+                        <Title text="Medium Risk Cases" level="H3" class="sapSectionTitle" />
+                        <Text text=" ({=${casesModel>/itemsMedium}.length})" class="textMuted sapUiTinyMarginBegin" />
+                    </HBox>
+<Table visible="{= ${casesModel>/itemsMedium}.length > 0 }"
+                        id="casesTableMedium"
+                        items="{casesModel>/itemsMedium}"
+                        mode="MultiSelect"
+                        growing="true"
+                        growingThreshold="25"
+                        noDataText="No disruption cases found"
+                        class="sapEnterpriseTable">
+                        <columns>
+                            <Column width="9rem">
+                                <Text text="Case ID" class="sapColHeader" />
+                            </Column>
+                            <Column width="18rem">
+                                <Text text="Disruption" class="sapColHeader" />
+                            </Column>
+                            <Column width="14rem">
+                                <Text text="Supplier" class="sapColHeader" />
+                            </Column>
+                            <Column width="9rem">
+                                <Text text="Material" class="sapColHeader" />
+                            </Column>
+                            <Column width="7rem">
+                                <Text text="Plant" class="sapColHeader" />
+                            </Column>
+                            <Column width="7rem" hAlign="Center">
+                                <Text text="Severity" class="sapColHeader" />
+                            </Column>
+                            <Column width="10rem">
+                                <Text text="Status" class="sapColHeader" />
+                            </Column>
+                            <Column width="11rem">
+                                <Text text="Workflow Stage" class="sapColHeader" />
+                            </Column>
+                            <Column width="6.5rem">
+                                <Text text="Created On" class="sapColHeader" />
+                            </Column>
+                            <Column width="2.5rem" hAlign="Center">
+                                <Text text="" class="sapColHeader" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem
+                                vAlign="Middle"
+                                type="Navigation"
+                                press=".onSelectCase"
+                                class="sapEnterpriseRow">
+                                <cells>
+                                    <!-- Case ID -->
+                                    <Link
+                                        text="{casesModel>case_id}"
+                                        press=".onSelectCase"
+                                        class="sapCaseLink" />
+                                    <!-- Disruption: Name + description subtext -->
+                                    <VBox>
+                                        <Text text="{casesModel>disruption_name}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>description}" class="sapRowSecondary" maxLines="1" />
+                                    </VBox>
+                                    <!-- Supplier: Name -->
+                                    <VBox>
+                                        <Text text="{casesModel>supplier_display}" class="sapRowPrimary" />
+                                        <Text text="{casesModel>supplier_id}" class="sapRowSecondary" />
+                                    </VBox>
+                                    <!-- Material -->
+                                    <Text text="{casesModel>material_id}" class="sapRowPrimary" />
+                                    <!-- Plant -->
+                                    <Text text="{casesModel>plant_id}" class="sapRowPrimary" />
+                                    <!-- Severity -->
+                                    <ObjectStatus
+                                        text="{casesModel>severity_text}"
+                                        state="{= ${casesModel>severity_text} === 'Critical' ? 'Error' : ${casesModel>severity_text} === 'High' ? 'Warning' : ${casesModel>severity_text} === 'Medium' ? 'Information' : 'Success' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Operational Status -->
+                                    <ObjectStatus
+                                        text="{ path: 'casesModel>status', formatter: '.formatter.formatStatus' }"
+                                        state="{ path: 'casesModel>status', formatter: '.formatter.formatStatusState' }"
+                                        class="sapPlainStatus" />
+                                    <!-- Workflow Stage -->
+                                    <Text
+                                        text="{ path: 'casesModel>case_id', formatter: '.formatter.formatWorkflowStage' }"
+                                        class="sapRowPrimary" />
+                                    <!-- Created On -->
+                                    <Text
+                                        text="{casesModel>created_on}"
+                                        class="sapRowSecondary" />
+                                    <!-- Chevron Navigation -->
+                                    <core:Icon
+                                        src="sap-icon://navigation-right-arrow"
+                                        size="0.875rem"
+                                        class="sapNavChevron" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                    <HBox alignItems="Center" class="sapUiSmallMarginTop sapUiTinyMarginBottom" visible="{= ${casesModel>/itemsLow}.length > 0 }">
+                        <Title text="Low Risk Cases" level="H3" class="sapSectionTitle" />
+                        <Text text=" ({=${casesModel>/itemsLow}.length})" class="textMuted sapUiTinyMarginBegin" />
+                    </HBox>
+<Table visible="{= ${casesModel>/itemsLow}.length > 0 }"
+                        id="casesTableLow"
+                        items="{casesModel>/itemsLow}"
                         mode="MultiSelect"
                         growing="true"
                         growingThreshold="25"

@@ -132,5 +132,85 @@
     "average_lead_time_days": 3,
     "risk_level": "LOW",
     "recent_performance_trend": "Excellent"
+  },
+  {
+    "supplier_id": "SUP-11001",
+    "name": "Alpine Precision GmbH",
+    "location": "Germany",
+    "reliability_score": 0.91,
+    "on_time_delivery_rate": 0.86,
+    "risk_category": "MEDIUM",
+    "capacity_utilization": "Normal",
+    "recent_performance": "2 delays in last 6 months"
+  },
+  {
+    "supplier_id": "SUP-11002",
+    "name": "Pacific Rim Electronics",
+    "location": "China",
+    "reliability_score": 0.88,
+    "on_time_delivery_rate": 0.82,
+    "risk_category": "HIGH",
+    "capacity_utilization": "Constrained",
+    "recent_performance": "3 delays in last 6 months"
+  },
+  {
+    "supplier_id": "SUP-11003",
+    "name": "Nordic Battery Cells AB",
+    "location": "Sweden",
+    "reliability_score": 0.84,
+    "on_time_delivery_rate": 0.79,
+    "risk_category": "HIGH",
+    "capacity_utilization": "Limited",
+    "recent_performance": "1 major incident in last 6 months"
+  },
+  {
+    "supplier_id": "SUP-11004",
+    "name": "Ruhr Steelworks GmbH",
+    "location": "Germany",
+    "reliability_score": 0.9,
+    "on_time_delivery_rate": 0.85,
+    "risk_category": "MEDIUM",
+    "capacity_utilization": "Constrained",
+    "recent_performance": "2 delays in last 6 months"
+  },
+  {
+    "supplier_id": "SUP-11005",
+    "name": "Baltic Freight Components",
+    "location": "Estonia",
+    "reliability_score": 0.95,
+    "on_time_delivery_rate": 0.92,
+    "risk_category": "LOW",
+    "capacity_utilization": "Normal",
+    "recent_performance": "1 delay in last 6 months"
+  },
+  {
+    "supplier_id": "SUP-11006",
+    "name": "Kaveri Precision Castings",
+    "location": "India",
+    "reliability_score": 0.89,
+    "on_time_delivery_rate": 0.87,
+    "risk_category": "MEDIUM",
+    "capacity_utilization": "Constrained",
+    "recent_performance": "2 delays in last 6 months"
+  },
+  {
+    "supplier_id": "SUP-11007",
+    "name": "Gulf Coast Polymers Inc",
+    "location": "USA",
+    "reliability_score": 0.93,
+    "on_time_delivery_rate": 0.9,
+    "risk_category": "MEDIUM",
+    "capacity_utilization": "Normal",
+    "recent_performance": "1 delay in last 6 months"
+  },
+  {
+    "supplier_id": "SUP-11008",
+    "name": "Danube Rail Fasteners GmbH",
+    "location": "Austria",
+    "reliability_score": 0.96,
+    "on_time_delivery_rate": 0.94,
+    "risk_category": "LOW",
+    "capacity_utilization": "Normal",
+    "recent_performance": "1 delay in last 6 months"
   }
 ]

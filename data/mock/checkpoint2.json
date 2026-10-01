@@ -1,0 +1,38 @@
+[
+  {
+    "case_id": "CASE-11005",
+    "selected_plan_id": "PLAN-02",
+    "selected_plan_version": "v1",
+    "decision": "APPROVED",
+    "approved_by": "SUPPLY_CHAIN_PLANNER",
+    "approved_at": "2026-09-28T16:30:00Z",
+    "comment": ""
+  },
+  {
+    "case_id": "CASE-11006",
+    "selected_plan_id": "PLAN-01",
+    "selected_plan_version": "v1",
+    "decision": "APPROVED",
+    "approved_by": "SUPPLY_CHAIN_PLANNER",
+    "approved_at": "2026-09-30T07:30:00Z",
+    "comment": "Approved after verifying supplier capacity and logistics transit timeline."
+  },
+  {
+    "case_id": "CASE-11007",
+    "selected_plan_id": "PLAN-04",
+    "selected_plan_version": "v1",
+    "decision": "APPROVED",
+    "approved_by": "SUPPLY_CHAIN_PLANNER",
+    "approved_at": "2026-09-28T06:00:00Z",
+    "comment": "Approved; split sourcing keeps the line running while the Houston lane recovers."
+  },
+  {
+    "case_id": "CASE-11008",
+    "selected_plan_id": "PLAN-01",
+    "selected_plan_version": "v1",
+    "decision": "APPROVED",
+    "approved_by": "SUPPLY_CHAIN_PLANNER",
+    "approved_at": "2026-09-25T09:30:00Z",
+    "comment": "Approved; alternate supplier lead time is acceptable."
+  }
+]

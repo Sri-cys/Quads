@@ -1,0 +1,17 @@
+[
+  {
+    "case_id": "CASE-11008",
+    "resolved_at": "2026-09-30T05:20:00+00:00",
+    "duration_days": 4,
+    "cost_variance": 0,
+    "time_variance": "On time (0d variance)",
+    "customer_impact": "0 Delayed Orders, 100% Protected",
+    "production_impact": "Zero Line Stoppages",
+    "failure_reason": null,
+    "lessons_learned": [
+      "Alternate supplier lead time matched the plan; keep Salzburg Fastener Werke on the approved list.",
+      "Rail schedule changes need a 48-hour advance alert from the carrier.",
+      "A 16-day buffer absorbed the delay without any line impact."
+    ]
+  }
+]

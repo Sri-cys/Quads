@@ -988,7 +988,7 @@ body {
     margin-right: 6px !important;
 }
 
-.sapBtnPrimary .sapMBtnInner {
+.sapBtnPrimary:not(.sapMBtnDisabled) .sapMBtnInner {
     background: #0A6ED1 !important;
     border-color: #0A6ED1 !important;
     color: #FFFFFF !important;
@@ -996,12 +996,12 @@ body {
     padding: 0 16px !important;
 }
 
-.sapBtnPrimary .sapMBtnContent,
-.sapBtnPrimary .sapMBtnIcon {
+.sapBtnPrimary:not(.sapMBtnDisabled) .sapMBtnContent,
+.sapBtnPrimary:not(.sapMBtnDisabled) .sapMBtnIcon {
     color: #FFFFFF !important;
 }
 
-.sapBtnPrimary:hover .sapMBtnInner {
+.sapBtnPrimary:not(.sapMBtnDisabled):hover .sapMBtnInner {
     background: #085CAD !important;
     border-color: #085CAD !important;
 }
@@ -1804,7 +1804,7 @@ body {
 .quadsPlanGrid {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 18px !important;
+    gap: 16px !important;
     align-items: stretch !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -1829,47 +1829,18 @@ body {
     box-sizing: border-box !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .quadsPlanGrid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .quadsPlanGrid {
         grid-template-columns: 1fr !important;
     }
 }
 
-/* Plan cards: same width, same height, same padding, same border, same shadow */
-.quadsPlanCard {
-    background: #FFFFFF !important;
-    border: 1px solid #C5DEFF !important;
-    border-radius: 10px !important;
-    padding: 20px !important;
-    box-shadow: 0 2px 8px rgba(10, 110, 209, 0.06), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-    height: 100% !important;
-    min-height: 0 !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    width: 100% !important;
-    margin: 0 !important;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background 0.15s ease-in-out;
-}
-
-.quadsPlanCard:hover {
-    border-color: #0A6ED1 !important;
-    box-shadow: 0 4px 14px rgba(10, 110, 209, 0.12) !important;
-}
-
-.quadsPlanCard.sapChoiceSelected {
-    border: 2px solid #0A6ED1 !important;
-    padding: 19px !important;
-    background: #EBF5FF !important;
-    box-shadow: 0 2px 10px rgba(10, 110, 209, 0.14) !important;
-}
 
 .quadsCardHeaderRow {
     display: flex !important;
@@ -6870,3 +6841,877 @@ body {
     font-weight: bold !important;
     color: #B91C1C !important;
 }
+
+/* Recovery Planning UI Styles */
+.quadsPageIcon {
+    background-color: #EBF5FF;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.quadsRecoverySuccessBanner {
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 6px;
+    padding: 12px 16px;
+}
+
+.quadsBannerChip {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 4px 12px;
+    align-items: center;
+}
+.quadsBannerChipFeasible {
+    background-color: #F0FDF4;
+    border-color: #BBF7D0;
+}
+.quadsBannerChipInfeasible {
+    background-color: #FEF2F2;
+    border-color: #FECACA;
+}
+
+.quadsInfoTilesRow {
+    gap: 16px;
+}
+.quadsInfoTile {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 16px;
+    flex: 1;
+}
+.quadsInfoTileLabel {
+    font-size: 12px !important;
+    color: #6B7280 !important;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.quadsInfoTileVal {
+    font-size: 18px !important;
+}
+
+.quadsPlanBadgeBlue {
+    background-color: #3B82F6;
+    border-radius: 4px;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+.quadsPlanBadgeRed {
+    background-color: #EF4444;
+    border-radius: 4px;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+.quadsPlanBadgeClickable:hover {
+    opacity: 0.8;
+}
+
+.quadsCardBlock {
+    border-top: 1px solid #F3F4F6;
+    padding-top: 12px;
+}
+.quadsBlockCol {
+    flex: 1;
+}
+
+.quadsImpactBox {
+    background-color: #F9FAFB;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.quadsRiskBadge {
+    background-color: #F3F4F6;
+    color: #4B5563 !important;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+/* Evaluation Table styles */
+.quadsEvaluationTable .sapMListTblRow {
+    height: 52px !important;
+    min-height: 52px !important;
+    border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.quadsEvaluationTable td.sapMListTblCell {
+    padding: 12px 16px !important;
+    vertical-align: middle !important;
+}
+
+/* ---- QUADS RECOVERY CARD STYLES ---- */
+.quadsPlanGrid .quadsRecoveryCard {
+    background: #FFFFFF !important;
+    border: 1px solid #C5DEFF !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 8px rgba(10, 110, 209, 0.06), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    padding: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.quadsPlanGrid .quadsRecoveryCard[data-selected="true"] {
+    background-color: #F0F6FF !important;
+    box-shadow: 0 0 0 2px #0A6ED1 !important; /* Ring with no layout shift */
+    border-color: transparent !important;
+}
+
+.quadsRecoveryBadgeP {
+    width: 32px !important;
+    height: 32px !important;
+    background-color: #E0EFFF !important;
+    border-radius: 4px !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.quadsRecoveryBadgeText {
+    color: #0A6ED1 !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+}
+
+.quadsRecoveryTitle {
+    font-weight: bold !important;
+    font-size: 15px !important;
+    color: #1D2D3E !important;
+    line-height: 1.2 !important;
+}
+
+.quadsRecoveryStrategy {
+    font-size: 12px !important;
+    color: #64748B !important;
+    margin-top: 2px !important;
+}
+
+.quadsRecoveryTwoCol {
+    display: flex !important;
+    width: 100% !important;
+    gap: 24px !important;
+}
+
+.quadsRecoveryCol {
+    flex: 1 1 50% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.quadsRecoveryRow {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 6px !important;
+}
+
+.quadsRecoveryLabel {
+    font-size: 12px !important;
+    color: #64748B !important;
+}
+
+.quadsRecoveryVal {
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: #1D2D3E !important;
+    white-space: nowrap !important;
+}
+
+.quadsRecoveryValCritical {
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: #BB0000 !important;
+    white-space: nowrap !important;
+}
+
+.quadsPlanGrid .quadsRecoveryImpact {
+    background-color: #F5F6F7 !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.quadsRecoveryImpactCols {
+    display: flex !important;
+    width: 100% !important;
+}
+
+.quadsRecoveryImpactCol {
+    flex: 1 1 25% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+}
+
+.quadsRecoveryImpactLabel {
+    font-size: 11px !important;
+    color: #64748B !important;
+}
+
+.quadsRecoveryImpactVal {
+    font-size: 13px !important;
+    font-weight: bold !important;
+    color: #1D2D3E !important;
+}
+
+.quadsRecoveryFooter {
+    margin-top: auto !important;
+    border-top: 1px solid #E5E5E5 !important;
+    padding-top: 12px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+
+/* ---- quadsDecision New Layout ---- */
+.quadsDecisionHeaderCard {
+    background: #FFFFFF !important;
+    border-radius: 6px !important;
+    border-left: 4px solid #0B63A8 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    padding: 1.25rem !important;
+    border: 1px solid #E2E8F0;
+}
+
+.quadsDecisionSummaryCard, .quadsDecisionImpactCard, .quadsDecisionPreconditionsCard {
+    background: #FFFFFF !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    padding: 1.25rem !important;
+    border: 1px solid #E2E8F0;
+}
+
+.quadsDecisionPlanChip {
+    background-color: #e6f2f9 !important;
+    color: #0B63A8 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-family: monospace !important;
+    font-size: 0.875rem !important;
+}
+
+.quadsDecisionFeasibleChip {
+    background-color: #e8f5e9 !important;
+    color: #2b7d2b !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-size: 0.875rem !important;
+    font-weight: bold !important;
+}
+
+.quadsDecisionInfeasibleChip {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-size: 0.875rem !important;
+    font-weight: bold !important;
+}
+
+.quadsDecisionRiskChip {
+    background-color: #f5f5f5 !important;
+    color: #616161 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-size: 0.875rem !important;
+    font-weight: bold !important;
+}
+
+.quadsDecisionRouteBox {
+    background: #F8FAFC !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #E2E8F0;
+}
+
+.quadsDecisionRouteLabel {
+    font-size: 0.75rem !important;
+    color: #64748B !important;
+    letter-spacing: 0.05rem;
+    margin-bottom: 0.25rem;
+}
+
+.quadsDecisionRouteValue {
+    font-size: 1.1rem !important;
+    font-weight: bold !important;
+    color: #1D2D3E !important;
+}
+
+.quadsDecisionSummaryTile {
+    background: #F8FAFC !important;
+    border-radius: 6px !important;
+    padding: 1rem !important;
+    border: 1px solid #E2E8F0;
+}
+
+.quadsDecisionImpactLeft {
+    margin-right: 0.5rem;
+}
+
+.quadsDecisionImpactRight {
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .quadsDecisionImpactLeft { margin-right: 0; margin-bottom: 1rem; }
+    .quadsDecisionImpactRight { margin-left: 0; }
+}
+
+.quadsDecisionCheckRow {
+    background: #F8FAFC !important;
+    border-radius: 6px !important;
+    padding: 0.75rem !important;
+    border: 1px solid #E2E8F0;
+}
+
+/* =========================================================
+   Execution & Monitoring (quadsExec...)
+   ========================================================= */
+
+/* Banners */
+.quadsExecBanner {
+    border-radius: 6px;
+    padding: 12px 16px;
+    border-left: 6px solid #D9D9D9; /* Default */
+    background: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.quadsExecBannerPending {
+    border-left-color: #64748B;
+    background: #F8FAFC;
+}
+.quadsExecBannerSuccess {
+    border-left-color: #107E3E;
+    background: #F3FAF6;
+}
+.quadsExecBannerWarning {
+    border-left-color: #E9730C;
+    background: #FFF8F1;
+}
+.quadsExecBannerError {
+    border-left-color: #BB0000;
+    background: #FFF1F1;
+}
+.quadsExecBannerIcon {
+    font-size: 1.25rem !important;
+    margin-right: 12px;
+}
+.quadsExecBannerIcon.pending { color: #64748B !important; }
+.quadsExecBannerIcon.success { color: #107E3E !important; }
+.quadsExecBannerIcon.warning { color: #E9730C !important; }
+.quadsExecBannerIcon.error { color: #BB0000 !important; }
+
+.quadsExecBannerTitle {
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    color: #1F2937 !important;
+    margin-bottom: 2px !important;
+    text-transform: uppercase;
+}
+.quadsExecBannerText {
+    font-size: 13px !important;
+    color: #4B5563 !important;
+}
+
+/* Cards */
+.quadsExecCard {
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 20px;
+}
+.quadsExecCardHeader {
+    border-bottom: 1px solid #E5E7EB;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+.quadsExecCardTitle {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
+
+/* Grid & KPIs */
+.quadsExecGrid {
+    margin-top: 12px;
+}
+.quadsExecKpiLabel {
+    font-size: 12px !important;
+    color: #6B7280 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px !important;
+}
+.quadsExecKpiValue {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+}
+
+/* Pipeline Tracker */
+.quadsExecPipelineRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 20px 0;
+}
+.quadsExecPipelineRow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 4%;
+    right: 4%;
+    height: 3px;
+    background: #E5E7EB;
+    z-index: 0;
+}
+.quadsExecPipelineStep {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 12%;
+}
+.quadsExecPipelineCircle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 3px solid #D1D5DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.quadsExecPipelineCircle.completed {
+    border-color: #107E3E;
+    background: #107E3E;
+}
+.quadsExecPipelineCircle.current {
+    border-color: #0B5CFF;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(11,92,255,0.2);
+}
+.quadsExecPipelineIcon {
+    font-size: 12px !important;
+    color: #FFFFFF !important;
+}
+.quadsExecPipelineIcon.current {
+    color: #0B5CFF !important;
+}
+.quadsExecPipelineLabel {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #4B5563 !important;
+    line-height: 1.2 !important;
+}
+
+/* Split Layout */
+.quadsExecSplitRow {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.quadsExecSplitCard {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Transport Status / Alert Table */
+.quadsExecTransportRow {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+.quadsExecTransportLabel {
+    width: 140px;
+    font-size: 12px !important;
+    color: #6B7280 !important;
+    text-transform: uppercase;
+}
+.quadsExecTransportValue {
+    flex: 1;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+}
+.quadsExecAlertRow {
+    background: #FFF1F1;
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #FCA5A5;
+}
+.quadsExecAlertIcon {
+    font-size: 16px !important;
+    color: #BB0000 !important;
+    margin-right: 12px;
+    margin-top: 2px;
+}
+.quadsExecAlertText {
+    font-size: 13px !important;
+    color: #7F1D1D !important;
+    font-weight: 600 !important;
+}
+
+.quadsExecAlertSuccess {
+    background: #F3FAF6;
+    border-color: #A7F3D0;
+}
+.quadsExecAlertSuccessIcon {
+    color: #107E3E !important;
+}
+.quadsExecAlertSuccessText {
+    color: #065F46 !important;
+}
+
+.quadsExecFooter {
+    font-size: 12px !important;
+    color: #9CA3AF !important;
+    text-align: center;
+}
+
+/* ── Recovery Outcome Assessment Card ───────────────────────────── */
+.quadsExecOutcomeCard {
+    border: 2px solid #E0E7FF;
+    background: linear-gradient(135deg, #F8FAFF 0%, #EEF2FF 100%);
+    border-radius: 10px;
+}
+.quadsExecOutcomeCard .quadsExecCardHeader {
+    border-bottom: 1px solid #C7D2FE;
+}
+.quadsExecOutcomeIcon {
+    font-size: 18px !important;
+    color: #4F46E5 !important;
+}
+.quadsExecOutcomeBtnSuccess.sapMBtn > .sapMBtnInner {
+    background: #107E3E !important;
+    border-color: #107E3E !important;
+    color: #FFF !important;
+    border-radius: 6px !important;
+    padding: 0 20px !important;
+    font-weight: 600 !important;
+    min-height: 40px !important;
+}
+.quadsExecOutcomeBtnSuccess.sapMBtn > .sapMBtnInner:hover {
+    background: #0A5F2C !important;
+}
+.quadsExecOutcomeBtnRestart.sapMBtn > .sapMBtnInner {
+    border-radius: 6px !important;
+    padding: 0 20px !important;
+    font-weight: 600 !important;
+    min-height: 40px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PLAN DETAILS DIALOG  (InspectPlanDialog)
+   ══════════════════════════════════════════════════════════════ */
+
+/* Dialog chrome */
+.quadsPlanDetailDialog > .sapMDialogScrollCont { padding: 0; }
+
+/* Header bar */
+.quadsPlanDetailHeader.sapMBar {
+    background: #1E2A3B !important;
+    padding: 12px 20px !important;
+    border-bottom: none !important;
+}
+.quadsPlanDetailTitle {
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: #FFFFFF !important;
+    letter-spacing: 1px;
+}
+.quadsPlanDetailSubtitle {
+    font-size: 11px !important;
+    color: #94A3B8 !important;
+}
+.quadsPlanDetailMetaLabel {
+    font-size: 10px !important;
+    color: #94A3B8 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.quadsPlanDetailMetaValue {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #F1F5F9 !important;
+}
+.quadsPlanDetailMetaValueBlue {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #60A5FA !important;
+}
+.quadsPlanDetailHeaderMeta { border-right: 1px solid #334155; padding-right: 16px; margin-right: 4px; }
+
+/* Feasible / Risk badges */
+.quadsPlanBadge {
+    border-radius: 4px;
+    padding: 3px 10px;
+    margin: 2px;
+    display: inline-flex;
+    align-items: center;
+}
+.quadsPlanBadgeFeasible  { background: #16A34A; }
+.quadsPlanBadgeInfeasible { background: #DC2626; }
+.quadsPlanBadgeLowRisk   { background: #1D4ED8; }
+.quadsPlanBadgeMedRisk   { background: #D97706; }
+.quadsPlanBadgeText {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #FFF !important;
+    letter-spacing: 0.5px;
+}
+
+/* Body */
+.quadsPlanDetailBody {
+    padding: 16px 20px 24px;
+    background: #F8FAFC;
+}
+
+/* Section wrapper */
+.quadsPlanSection {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+}
+.quadsPlanSectionTitle {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #1E293B !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px !important;
+}
+.quadsPlanSectionSubtitle {
+    font-size: 12px !important;
+    color: #64748B !important;
+    margin-bottom: 12px !important;
+}
+
+/* ── 1. KPI row ── */
+.quadsPlanKpiRow {
+    gap: 0;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.quadsPlanKpiBox {
+    flex: 1;
+    padding: 10px 14px;
+    border-right: 1px solid #E2E8F0;
+    min-width: 110px;
+}
+.quadsPlanKpiBox:last-child { border-right: none; }
+.quadsPlanKpiIcon {
+    font-size: 12px !important;
+    color: #64748B !important;
+    margin-right: 4px;
+}
+.quadsPlanKpiLabel {
+    font-size: 10px !important;
+    color: #64748B !important;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px !important;
+}
+.quadsPlanKpiValue {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #1E293B !important;
+}
+
+/* ── 2. Route row ── */
+.quadsPlanRouteRow {
+    background: #F1F5F9;
+    border-radius: 6px;
+    padding: 16px 24px;
+}
+.quadsPlanRouteBox { min-width: 160px; }
+.quadsPlanRouteIcon {
+    font-size: 24px !important;
+    color: #3B82F6 !important;
+    margin-bottom: 6px;
+}
+.quadsPlanRouteLabel {
+    font-size: 10px !important;
+    color: #64748B !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.quadsPlanRouteName {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1E293B !important;
+}
+.quadsPlanRouteLocation {
+    font-size: 11px !important;
+    color: #64748B !important;
+}
+.quadsPlanRouteArrow { flex: 1; justify-content: center; }
+.quadsPlanRouteArrowIcon {
+    font-size: 28px !important;
+    color: #CBD5E1 !important;
+}
+
+/* ── Cards grid ── */
+.quadsPlanCardsRow {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.quadsPlanCard {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    min-width: 300px;
+}
+.quadsPlanCardHeader {
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+.quadsPlanCardTitle {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #374151 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* Pass/Fail badge inside cards */
+.quadsPlanPassBadge {
+    background: #DCFCE7;
+    border: 1px solid #86EFAC;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.quadsPlanPassIcon {
+    font-size: 11px !important;
+    color: #16A34A !important;
+}
+.quadsPlanPassText {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #16A34A !important;
+    letter-spacing: 0.3px;
+}
+.quadsPlanFailBadge {
+    background: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.quadsPlanFailIcon { font-size: 11px !important; color: #DC2626 !important; }
+.quadsPlanFailText { font-size: 10px !important; font-weight: 700 !important; color: #DC2626 !important; }
+
+/* Column layout inside card */
+.quadsPlanCardColsRow { display: flex; gap: 8px; }
+.quadsPlanCardCol { flex: 1; }
+.quadsPlanColHeader {
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    color: #9CA3AF !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 4px;
+    margin-bottom: 4px !important;
+}
+.quadsPlanColLabel {
+    font-size: 10px !important;
+    color: #6B7280 !important;
+    margin-top: 2px !important;
+}
+.quadsPlanColValue {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #1E293B !important;
+}
+.quadsPlanColValueCost { color: #1D4ED8 !important; }
+.quadsPlanColSmall {
+    font-size: 10px !important;
+    color: #64748B !important;
+}
+
+/* Impact metrics strip */
+.quadsPlanImpactMetrics {
+    border-top: 1px solid #F1F5F9;
+    padding-top: 8px;
+    gap: 0;
+}
+.quadsPlanImpactMetricBox {
+    flex: 1;
+    padding: 4px 6px;
+    border-right: 1px solid #F1F5F9;
+}
+.quadsPlanImpactMetricBox:last-child { border-right: none; }
+.quadsPlanImpactVal {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #1E293B !important;
+}
+.quadsPlanImpactValWarn {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #D97706 !important;
+}
+.quadsPlanSeverityStatus.sapMObjStatus { font-size: 12px !important; }
+.quadsPlanDetailLink { font-size: 11px !important; color: #3B82F6 !important; }
+
+/* ── 7. Rules ── */
+.quadsPlanRulesRow { gap: 12px; }
+.quadsPlanRuleCard {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 12px 14px;
+    min-width: 220px;
+}
+.quadsPlanRuleHeader { border-bottom: 1px solid #F1F5F9; padding-bottom: 6px; margin-bottom: 8px; }
+.quadsPlanRuleTitle {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #374151 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.quadsPlanRuleCheckIcon { font-size: 12px !important; color: #16A34A !important; margin-right: 6px; }
+.quadsPlanRuleText { font-size: 11px !important; color: #374151 !important; }
+

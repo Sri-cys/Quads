@@ -15,33 +15,32 @@ sap.ui.define([
         "checkpoint1Alt": 3,
         "constraints": 4,
         "constraintsAlt": 4,
-        "recoveryPlanning": 5,
-        "recoveryPlanningKebab": 5,
-        "recoveryPlanningAlt": 5,
-        "recoveryPlans": 5,
-        "recoveryPlansAlt": 5,
-        "decision": 6,
-        "decisionAlt": 6,
-        "checkpoint2": 6,
-        "checkpoint2Kebab": 6,
-        "checkpoint2Alt": 6,
-        "executionMonitoring": 7,
-        "executionMonitoringAlt": 7,
-        "monitoring": 7,
-        "monitoringAlt": 7,
-        "outcome": 8,
-        "outcomeAlt": 8
+        "recoveryPlanning": 4,
+        "recoveryPlanningKebab": 4,
+        "recoveryPlanningAlt": 4,
+        "recoveryPlans": 4,
+        "recoveryPlansAlt": 4,
+        "decision": 5,
+        "decisionAlt": 5,
+        "checkpoint2": 5,
+        "checkpoint2Kebab": 5,
+        "checkpoint2Alt": 5,
+        "executionMonitoring": 6,
+        "executionMonitoringAlt": 6,
+        "monitoring": 6,
+        "monitoringAlt": 6,
+        "outcome": 7,
+        "outcomeAlt": 7
     };
 
     var STEP_TO_STAGE_NAME = {
         1: "1. CASE",
         2: "2. IMPACT ANALYSIS",
         3: "3. PRIORITY",
-        4: "4. CONSTRAINTS",
-        5: "5. RECOVERY PLANNING",
-        6: "6. DECISION",
-        7: "7. EXECUTION & MONITORING",
-        8: "8. OUTCOME"
+        4: "4. RECOVERY PLANNING",
+        5: "5. DECISION",
+        6: "6. EXECUTION & MONITORING",
+        7: "7. OUTCOME"
     };
 
     return Controller.extend("com.quads.supplychain.controller.App", {
@@ -104,18 +103,18 @@ sap.ui.define([
 
                     if (sStatus === "RESOLVED") {
                         sStatusText = "Resolved";
-                        nMaxStep = 8;
-                    } else if (["PLAN_APPROVED", "RECOVERY_APPROVED", "EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "ON_TRACK", "AT_RISK", "ACTION_REQUIRED", "REPLANNING", "DELIVERED"].indexOf(sStatus) !== -1) {
-                        sStatusText = "In Execution";
                         nMaxStep = 7;
+                    } else if (["EXECUTION", "EXECUTION_IN_PROGRESS", "MONITORING", "ON_TRACK", "AT_RISK", "ACTION_REQUIRED", "REPLANNING", "DELIVERED"].indexOf(sStatus) !== -1) {
+                        sStatusText = "In Execution";
+                        nMaxStep = 6;
+                    } else if (["PLAN_APPROVED", "RECOVERY_APPROVED"].indexOf(sStatus) !== -1) {
+                        sStatusText = "Awaiting Execution";
+                        nMaxStep = 6;
                     } else if (["DECISION_PENDING", "AWAITING_CHECKPOINT_2", "PLAN_MODIFIED", "PLAN_REJECTED"].indexOf(sStatus) !== -1) {
                         sStatusText = "Decision Pending";
-                        nMaxStep = 6;
-                    } else if (["AGENT3_RUNNING", "AGENT3_COMPLETED", "AGENT3_FAILED"].indexOf(sStatus) !== -1) {
-                        sStatusText = "Evaluating Plans";
                         nMaxStep = 5;
-                    } else if (["AGENT2_RUNNING", "AGENT2_COMPLETED", "AGENT2_FAILED", "RECOVERY_PLANNING"].indexOf(sStatus) !== -1) {
-                        sStatusText = "Generating Plans";
+                    } else if (["AGENT3_RUNNING", "AGENT3_COMPLETED", "AGENT3_FAILED", "AGENT2_RUNNING", "AGENT2_COMPLETED", "AGENT2_FAILED", "RECOVERY_PLANNING"].indexOf(sStatus) !== -1) {
+                        sStatusText = "Evaluating Plans";
                         nMaxStep = 4;
                     } else if (["PRIORITY_SAVED", "CHECKPOINT_APPROVED", "PRIORITY_PENDING"].indexOf(sStatus) !== -1) {
                         sStatusText = "Priority Saved";
@@ -175,7 +174,14 @@ sap.ui.define([
         _updateWorkflowSteps: function (sRouteName) {
             var oAppModel = this.getOwnerComponent().getModel("app");
             var nActiveStep = ROUTE_TO_STEP[sRouteName] || 1;
-            oAppModel.setProperty("/activeStep", nActiveStep);
+            var sCaseId = this._getCaseId();
+            if (sCaseId) {
+                sap.ui.require(["com/quads/supplychain/controller/WorkflowNavHelper"], function(WorkflowNavHelper) {
+                    WorkflowNavHelper.setStepperState(sCaseId, nActiveStep);
+                });
+            } else {
+                oAppModel.setProperty("/activeStep", nActiveStep);
+            }
         },
 
         _showLockedStageDialog: function (sTitle, sMessage, sCurrentRoute) {

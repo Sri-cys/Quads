@@ -69,7 +69,7 @@
                             </HBox>
                             <Text text="Priority" class="quadsTimelineLabel" />
                         </VBox>
-                        <!-- 4. Constraints -->
+                        <!-- 4. Recovery Planning -->
                         <VBox class="quadsTimelineItem">
                             <customData>
                                 <core:CustomData key="state" writeToDom="true" value="{= ${app>/completedStage} >= 4 ? (${app>/activeStep} === 4 ? 'current-completed' : 'completed') : (${app>/activeStep} === 4 ? 'current' : 'pending') }" />
@@ -78,9 +78,9 @@
                                 <core:Icon src="sap-icon://accept" visible="{= ${app>/completedStage} >= 4}" class="quadsTimelineIcon" />
                                 <Text text="4" visible="{= !(${app>/completedStage} >= 4)}" class="quadsTimelineText" />
                             </HBox>
-                            <Text text="Constraints" class="quadsTimelineLabel" />
+                            <Text text="Recovery Planning" class="quadsTimelineLabel" />
                         </VBox>
-                        <!-- 5. Recovery Planning -->
+                        <!-- 5. Decision -->
                         <VBox class="quadsTimelineItem">
                             <customData>
                                 <core:CustomData key="state" writeToDom="true" value="{= ${app>/completedStage} >= 5 ? (${app>/activeStep} === 5 ? 'current-completed' : 'completed') : (${app>/activeStep} === 5 ? 'current' : 'pending') }" />
@@ -89,9 +89,9 @@
                                 <core:Icon src="sap-icon://accept" visible="{= ${app>/completedStage} >= 5}" class="quadsTimelineIcon" />
                                 <Text text="5" visible="{= !(${app>/completedStage} >= 5)}" class="quadsTimelineText" />
                             </HBox>
-                            <Text text="Recovery Planning" class="quadsTimelineLabel" />
+                            <Text text="Decision" class="quadsTimelineLabel" />
                         </VBox>
-                        <!-- 6. Decision -->
+                        <!-- 6. Exec &amp; Monitoring -->
                         <VBox class="quadsTimelineItem">
                             <customData>
                                 <core:CustomData key="state" writeToDom="true" value="{= ${app>/completedStage} >= 6 ? (${app>/activeStep} === 6 ? 'current-completed' : 'completed') : (${app>/activeStep} === 6 ? 'current' : 'pending') }" />
@@ -100,27 +100,16 @@
                                 <core:Icon src="sap-icon://accept" visible="{= ${app>/completedStage} >= 6}" class="quadsTimelineIcon" />
                                 <Text text="6" visible="{= !(${app>/completedStage} >= 6)}" class="quadsTimelineText" />
                             </HBox>
-                            <Text text="Decision" class="quadsTimelineLabel" />
+                            <Text text="Exec &amp; Monitoring" class="quadsTimelineLabel" />
                         </VBox>
-                        <!-- 7. Exec &amp; Monitoring -->
-                        <VBox class="quadsTimelineItem">
+                        <!-- 7. Outcome -->
+                        <VBox class="quadsTimelineItem quadsTimelineItemLast">
                             <customData>
                                 <core:CustomData key="state" writeToDom="true" value="{= ${app>/completedStage} >= 7 ? (${app>/activeStep} === 7 ? 'current-completed' : 'completed') : (${app>/activeStep} === 7 ? 'current' : 'pending') }" />
                             </customData>
                             <HBox alignItems="Center" justifyContent="Center" class="quadsTimelineCircleBox">
                                 <core:Icon src="sap-icon://accept" visible="{= ${app>/completedStage} >= 7}" class="quadsTimelineIcon" />
                                 <Text text="7" visible="{= !(${app>/completedStage} >= 7)}" class="quadsTimelineText" />
-                            </HBox>
-                            <Text text="Exec &amp; Monitoring" class="quadsTimelineLabel" />
-                        </VBox>
-                        <!-- 8. Outcome -->
-                        <VBox class="quadsTimelineItem quadsTimelineItemLast">
-                            <customData>
-                                <core:CustomData key="state" writeToDom="true" value="{= ${app>/completedStage} >= 8 ? (${app>/activeStep} === 8 ? 'current-completed' : 'completed') : (${app>/activeStep} === 8 ? 'current' : 'pending') }" />
-                            </customData>
-                            <HBox alignItems="Center" justifyContent="Center" class="quadsTimelineCircleBox">
-                                <core:Icon src="sap-icon://accept" visible="{= ${app>/completedStage} >= 8}" class="quadsTimelineIcon" />
-                                <Text text="8" visible="{= !(${app>/completedStage} >= 8)}" class="quadsTimelineText" />
                             </HBox>
                             <Text text="Outcome" class="quadsTimelineLabel" />
                         </VBox>
@@ -134,7 +123,7 @@
                     press=".onWorkflowStagePress"
                     class="quadsWfAudit sapUiSmallMarginBegin">
                     <customData>
-                        <core:CustomData key="step" value="9" />
+                        <core:CustomData key="step" value="8" />
                     </customData>
                 </Button>
             </HBox>

@@ -23,7 +23,7 @@
                     class="sapKpiGrid sapUiSmallMarginBottom">
                     
                     <!-- Metric 1: Total Active Disruptions -->
-                    <VBox class="sapKpiCard infoBorder" press=".onNavCasesToCategory">
+                    <VBox class="sapKpiCard infoBorder">
                         <customData>
                             <core:CustomData key="category" value="ALL_ACTIVE" />
                         </customData>
@@ -41,7 +41,7 @@
                     </VBox>
 
                     <!-- Metric 2: Active Recoveries -->
-                    <VBox class="sapKpiCard infoBorder" press=".onNavCasesToCategory">
+                    <VBox class="sapKpiCard infoBorder">
                         <customData>
                             <core:CustomData key="category" value="ACTIVE_RECOVERIES" />
                         </customData>
@@ -59,7 +59,7 @@
                     </VBox>
 
                     <!-- Metric 3: At Risk -->
-                    <VBox class="sapKpiCard warningBorder" press=".onNavCasesToCategory">
+                    <VBox class="sapKpiCard warningBorder">
                         <customData>
                             <core:CustomData key="category" value="AT_RISK" />
                         </customData>
@@ -77,7 +77,7 @@
                     </VBox>
 
                     <!-- Metric 4: Action Required -->
-                    <VBox class="sapKpiCard criticalBorder" press=".onNavCasesToCategory">
+                    <VBox class="sapKpiCard criticalBorder">
                         <customData>
                             <core:CustomData key="category" value="ACTION_REQUIRED" />
                         </customData>
@@ -95,7 +95,7 @@
                     </VBox>
 
                     <!-- Metric 5: Cases in Execution -->
-                    <VBox class="sapKpiCard infoBorder" press=".onNavCasesToCategory">
+                    <VBox class="sapKpiCard infoBorder">
                         <customData>
                             <core:CustomData key="category" value="IN_EXECUTION" />
                         </customData>
@@ -113,7 +113,7 @@
                     </VBox>
 
                     <!-- Metric 6: Cases Resolved -->
-                    <VBox class="sapKpiCard successBorder" press=".onNavCasesToCategory">
+                    <VBox class="sapKpiCard successBorder">
                         <customData>
                             <core:CustomData key="category" value="RESOLVED" />
                         </customData>

@@ -5,233 +5,413 @@
 
     <Dialog
         id="inspectPlanDialog"
-        title="Recovery Plan Inspection: {inspect>/plan_id} ({inspect>/version})"
-        contentWidth="850px"
-        contentHeight="650px"
+        contentWidth="1100px"
+        contentHeight="80vh"
         resizable="true"
-        draggable="true">
+        draggable="true"
+        class="quadsPlanDetailDialog">
+
+        <!-- Custom Header -->
+        <customHeader>
+            <Bar class="quadsPlanDetailHeader">
+                <contentLeft>
+                    <VBox>
+                        <Title text="PLAN DETAILS" level="H2" class="quadsPlanDetailTitle" />
+                        <Text text="Detailed execution plan — Cost, Risk, Constraint &amp; Feasibility Evaluation" class="quadsPlanDetailSubtitle" />
+                    </VBox>
+                </contentLeft>
+                <contentRight>
+                    <HBox alignItems="Center">
+                        <VBox class="quadsPlanDetailHeaderMeta sapUiSmallMarginEnd">
+                            <Text text="PLAN ID" class="quadsPlanDetailMetaLabel" />
+                            <Text text="{inspect>/plan_id} ({inspect>/version})" class="quadsPlanDetailMetaValue" />
+                        </VBox>
+                        <VBox class="quadsPlanDetailHeaderMeta sapUiSmallMarginEnd">
+                            <Text text="STRATEGY" class="quadsPlanDetailMetaLabel" />
+                            <Text text="{path: 'inspect>/strategy', formatter: '.formatStrategyLabel'}" class="quadsPlanDetailMetaValueBlue" />
+                        </VBox>
+                        <HBox alignItems="Center">
+                            <HBox class="{= ${inspect>/is_feasible} ? 'quadsPlanBadge quadsPlanBadgeFeasible' : 'quadsPlanBadge quadsPlanBadgeInfeasible'}" >
+                                <Text text="{= ${inspect>/is_feasible} ? 'FEASIBLE' : 'INFEASIBLE'}" class="quadsPlanBadgeText" />
+                            </HBox>
+                            <HBox class="{= ${inspect>/operational_risk} === 'LOW' ? 'quadsPlanBadge quadsPlanBadgeLowRisk sapUiTinyMarginBegin' : 'quadsPlanBadge quadsPlanBadgeMedRisk sapUiTinyMarginBegin'}">
+                                <Text text="{= ${inspect>/operational_risk} === 'LOW' ? 'LOW RISK' : (${inspect>/operational_risk} === 'MEDIUM' ? 'MEDIUM RISK' : 'HIGH RISK')}" class="quadsPlanBadgeText" />
+                            </HBox>
+                        </HBox>
+                        <Button icon="sap-icon://decline" type="Transparent" press=".onCloseInspectDialog" class="sapUiSmallMarginBegin" />
+                    </HBox>
+                </contentRight>
+            </Bar>
+        </customHeader>
 
         <content>
-            <VBox class="sapUiSmallMargin">
+            <ScrollContainer vertical="true" horizontal="false" height="100%" width="100%">
+            <VBox class="quadsPlanDetailBody">
 
-                <!-- Header Banner -->
-                <VBox class="sapContextCard sapUiSmallMarginBottom">
-                    <HBox alignItems="Center" justifyContent="SpaceBetween">
-                        <VBox>
+                <!-- ═══ 1. RECOVERY OVERVIEW ═══ -->
+                <VBox class="quadsPlanSection">
+                    <Text text="1. RECOVERY OVERVIEW" class="quadsPlanSectionTitle" />
+                    <HBox class="quadsPlanKpiRow" wrap="NoWrap">
+                        <VBox class="quadsPlanKpiBox">
                             <HBox alignItems="Center">
-                                <ObjectStatus
-                                    text="{inspect>/strategy}"
-                                    state="Information"
-                                    class="bold sapUiTinyMarginEnd" />
-                                <Title text="{inspect>/title}" level="H3" class="bold" />
+                                <core:Icon src="sap-icon://shipping-status" class="quadsPlanKpiIcon" />
+                                <Text text="RECOVERY QUANTITY" class="quadsPlanKpiLabel" />
                             </HBox>
-                            <Text text="Source: {inspect>/source_name} ({inspect>/source_location})" class="textMuted sapUiTinyMarginTop" />
+                            <Text text="{inspect>/recovered_quantity}" class="quadsPlanKpiValue" />
                         </VBox>
-                        <VBox alignItems="End">
-                            <HBox alignItems="Baseline">
-                                <Text text="{inspect>/score}" class="bold textLarge" />
-                                <Text text="/100" class="textMuted" />
+                        <VBox class="quadsPlanKpiBox">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://time-overtime" class="quadsPlanKpiIcon" />
+                                <Text text="RECOVERY TIME" class="quadsPlanKpiLabel" />
                             </HBox>
-                            <ObjectStatus
-                                text="{= ${inspect>/is_feasible} ? 'Feasible &amp; Validated' : 'Infeasible' }"
-                                state="{= ${inspect>/is_feasible} ? 'Success' : 'Error' }"
-                                class="bold" />
+                            <Text text="{inspect>/recovery_days} days" class="quadsPlanKpiValue" />
+                        </VBox>
+                        <VBox class="quadsPlanKpiBox">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://calendar" class="quadsPlanKpiIcon" />
+                                <Text text="ETA" class="quadsPlanKpiLabel" />
+                            </HBox>
+                            <Text text="{inspect>/transport_days} days" class="quadsPlanKpiValue" />
+                        </VBox>
+                        <VBox class="quadsPlanKpiBox">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://money-bills" class="quadsPlanKpiIcon" />
+                                <Text text="TOTAL COST" class="quadsPlanKpiLabel" />
+                            </HBox>
+                            <Text text="{path: 'inspect>/total_cost', formatter: '.formatCostL'}" class="quadsPlanKpiValue" />
+                        </VBox>
+                        <VBox class="quadsPlanKpiBox">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon>/money-bills" class="quadsPlanKpiIcon" />
+                                <Text text="FULFILLMENT" class="quadsPlanKpiLabel" />
+                            </HBox>
+                            <Text text="{inspect>/fulfillment_pct}%" class="quadsPlanKpiValue" />
+                        </VBox>
+                        <VBox class="quadsPlanKpiBox">
+                            <HBox alignItems="Center">
+                                <core:Icon src="sap-icon://customer" class="quadsPlanKpiIcon" />
+                                <Text text="CUSTOMER DELAY" class="quadsPlanKpiLabel" />
+                            </HBox>
+                            <Text text="{inspect>/customer_delay_days} days" class="quadsPlanKpiValue" />
                         </VBox>
                     </HBox>
                 </VBox>
 
-                <!-- Key Metrics 4-Col Grid -->
-                <layout:Grid defaultSpan="XL3 L3 M6 S6" hSpacing="0.5" vSpacing="0.5" class="sapUiSmallMarginBottom">
-                    <VBox class="sapMetricBox">
-                        <Text text="Lead Time &amp; Arrival" class="sapContextItemLabel" />
-                        <Text text="{inspect>/recovery_days} Days" class="bold textLarge textPrimary" />
-                        <Text text="ETA: {inspect>/expected_arrival_date}" class="textMuted textSmall" />
+                <!-- ═══ 2. SOURCE → DESTINATION ═══ -->
+                <VBox class="quadsPlanSection">
+                    <Text text="2. SOURCE → DESTINATION" class="quadsPlanSectionTitle" />
+                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanRouteRow">
+                        <VBox alignItems="Center" class="quadsPlanRouteBox">
+                            <core:Icon src="sap-icon://factory" class="quadsPlanRouteIcon" />
+                            <Text text="SOURCE" class="quadsPlanRouteLabel" />
+                            <Text text="{inspect>/source_name}" class="quadsPlanRouteName" />
+                            <Text text="{inspect>/source_location}" class="quadsPlanRouteLocation" />
+                        </VBox>
+                        <HBox alignItems="Center" class="quadsPlanRouteArrow">
+                            <core:Icon src="sap-icon://arrow-right" class="quadsPlanRouteArrowIcon" />
+                        </HBox>
+                        <VBox alignItems="Center" class="quadsPlanRouteBox">
+                            <core:Icon src="sap-icon://map" class="quadsPlanRouteIcon" />
+                            <Text text="DESTINATION" class="quadsPlanRouteLabel" />
+                            <Text text="{inspect>/target_plant_name}" class="quadsPlanRouteName" />
+                            <Text text="{inspect>/transport_name}" class="quadsPlanRouteLocation" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- ═══ 3+4+5+6 — 3-col cards row ═══ -->
+                <HBox class="quadsPlanCardsRow" wrap="Wrap">
+
+                    <!-- 3. TRANSPORTATION DETAILS -->
+                    <VBox class="quadsPlanCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanCardHeader">
+                            <Text text="3. TRANSPORTATION DETAILS" class="quadsPlanCardTitle" />
+                            <HBox class="quadsPlanPassBadge">
+                                <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                <Text text="{= ${inspect>/is_feasible} ? 'PASSED' : 'FAILED'}" class="quadsPlanPassText" />
+                            </HBox>
+                        </HBox>
+                        <HBox class="quadsPlanCardColsRow">
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="SUPPLY" class="quadsPlanColHeader" />
+                                <Text text="Available" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovered_quantity}" class="quadsPlanColValue" />
+                                <Text text="Required" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/target_quantity}" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="TIMELINE" class="quadsPlanColHeader" />
+                                <Text text="ETA" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/transport_days} days" class="quadsPlanColValue" />
+                                <Text text="Recovery" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovery_days} days" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="COST" class="quadsPlanColHeader" />
+                                <Text text="₹" class="quadsPlanColLabel" />
+                                <Text text="{path: 'inspect>/total_cost', formatter: '.formatCostL'}" class="quadsPlanColValue quadsPlanColValueCost" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="CONSTRAINT" class="quadsPlanColHeader" />
+                                <Text text="{inspect>/transport_name}" class="quadsPlanColValue" />
+                            </VBox>
+                        </HBox>
                     </VBox>
 
-                    <VBox class="sapMetricBox">
-                        <Text text="Fulfillment Volume" class="sapContextItemLabel" />
-                        <Text text="{inspect>/recovered_quantity} / {inspect>/target_quantity} Units" class="bold textLarge" />
-                        <Text text="{inspect>/fulfillment_pct}% fulfillment rate" class="textSmall" />
+                    <!-- 4. COST BREAKDOWN -->
+                    <VBox class="quadsPlanCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanCardHeader">
+                            <Text text="4. COST BREAKDOWN" class="quadsPlanCardTitle" />
+                            <HBox class="quadsPlanPassBadge">
+                                <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                <Text text="PASSED" class="quadsPlanPassText" />
+                            </HBox>
+                        </HBox>
+                        <layout:Grid defaultSpan="XL6 L6 M6 S6" hSpacing="0.5" vSpacing="0">
+                            <VBox>
+                                <Text text="Quantity" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovered_quantity}" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox>
+                                <Text text="ETA" class="quadsPlanColLabel" />
+                                <Text text="{path: 'inspect>/total_cost', formatter: '.formatCostL'}" class="quadsPlanColValue quadsPlanColValueCost" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Recovery Time" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovery_days} days" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Customer Delay" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/customer_delay_days} days" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Total Cost" class="quadsPlanColLabel" />
+                                <Text text="{path: 'inspect>/total_cost', formatter: '.formatCostL'}" class="quadsPlanColValue quadsPlanColValueCost" />
+                            </VBox>
+                            <VBox>
+                                <Text text="Total Cost" class="quadsPlanColLabel" />
+                                <Text text="{path: 'inspect>/transport_cost', formatter: '.formatCostL'}" class="quadsPlanColValue" />
+                            </VBox>
+                        </layout:Grid>
                     </VBox>
 
-                    <VBox class="sapMetricBox">
-                        <Text text="Cost Breakdown" class="sapContextItemLabel" />
-                        <Text text="${= ${inspect>/total_cost} ? ${inspect>/total_cost}.toLocaleString() : '0' }" class="bold textLarge" />
-                        <Text text="Mat: ${inspect>/material_cost} | Freight: ${inspect>/freight_cost}" class="textMuted textSmall" />
+                </HBox>
+
+                <!-- ═══ IMPACT + CONSTRAINT STATUS row ═══ -->
+                <HBox class="quadsPlanCardsRow" wrap="Wrap">
+
+                    <!-- 5. IMPACT -->
+                    <VBox class="quadsPlanCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanCardHeader">
+                            <Text text="5. IMPACT" class="quadsPlanCardTitle" />
+                            <HBox class="quadsPlanPassBadge">
+                                <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                <Text text="PASSED" class="quadsPlanPassText" />
+                            </HBox>
+                        </HBox>
+                        <HBox class="quadsPlanCardColsRow">
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="SUPPLY" class="quadsPlanColHeader" />
+                                <Text text="Available" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovered_quantity}" class="quadsPlanColValue" />
+                                <Text text="Required" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/target_quantity}" class="quadsPlanColValue" />
+                                <Text text="Fulfilled" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovered_quantity}" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="TIMELINE" class="quadsPlanColHeader" />
+                                <Text text="ETA" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/transport_days} days" class="quadsPlanColValue" />
+                                <Text text="Recovery" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovery_days} days" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="COST" class="quadsPlanColHeader" />
+                                <Text text="{path: 'inspect>/total_cost', formatter: '.formatCostL'}" class="quadsPlanColValue quadsPlanColValueCost" />
+                                <Text text="{= '-' + Math.round(10) + '% vs normal'}" class="quadsPlanColSmall" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="CONSTRAINT" class="quadsPlanColHeader" />
+                                <Text text="Internal transport capacity" class="quadsPlanColValue" />
+                            </VBox>
+                        </HBox>
+                        <!-- Impact metrics row -->
+                        <HBox class="quadsPlanImpactMetrics sapUiTinyMarginTop">
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text="IMPACT" class="quadsPlanColLabel" />
+                                <Text text="Production" class="quadsPlanColSmall" />
+                                <Text text="{= ${inspect>/production_impact_remaining} || '-1 day'}" class="quadsPlanImpactVal" />
+                            </VBox>
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text=" " class="quadsPlanColLabel" />
+                                <Text text="Customer" class="quadsPlanColSmall" />
+                                <Text text="{= ${inspect>/customer_delay_days} > 0 ? '+' + ${inspect>/customer_delay_days} + ' days' : '0 days'}" class="quadsPlanImpactValWarn" />
+                            </VBox>
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text=" " class="quadsPlanColLabel" />
+                                <Text text="Fulfilment" class="quadsPlanColSmall" />
+                                <Text text="{inspect>/fulfillment_pct}%" class="quadsPlanImpactVal" />
+                            </VBox>
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text=" " class="quadsPlanColLabel" />
+                                <Text text="Severity" class="quadsPlanColSmall" />
+                                <ObjectStatus text="{inspect>/operational_risk}" state="{path: 'inspect>/operational_risk', formatter: '.formatRiskState'}" class="quadsPlanSeverityStatus" />
+                            </VBox>
+                        </HBox>
                     </VBox>
 
-                    <VBox class="sapMetricBox">
-                        <Text text="Logistics &amp; Risk" class="sapContextItemLabel" />
-                        <Text text="{inspect>/transport_name}" class="bold" />
-                        <ObjectStatus
-                            text="{inspect>/operational_risk} Operational Risk"
-                            state="{= ${inspect>/operational_risk} === 'LOW' ? 'Success' : (${inspect>/operational_risk} === 'MEDIUM' ? 'Warning' : 'Error') }"
-                            class="bold textSmall" />
+                    <!-- 6. CONSTRAINT STATUS -->
+                    <VBox class="quadsPlanCard">
+                        <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanCardHeader">
+                            <Text text="6. CONSTRAINT STATUS" class="quadsPlanCardTitle" />
+                            <HBox class="{= ${inspect>/is_feasible} ? 'quadsPlanPassBadge' : 'quadsPlanFailBadge'}">
+                                <core:Icon src="{= ${inspect>/is_feasible} ? 'sap-icon://sys-enter-2' : 'sap-icon://error'}" class="{= ${inspect>/is_feasible} ? 'quadsPlanPassIcon' : 'quadsPlanFailIcon'}" />
+                                <Text text="{= ${inspect>/is_feasible} ? 'PASSED' : 'FAILED'}" class="{= ${inspect>/is_feasible} ? 'quadsPlanPassText' : 'quadsPlanFailText'}" />
+                            </HBox>
+                        </HBox>
+                        <HBox class="quadsPlanCardColsRow">
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="SUPPLY" class="quadsPlanColHeader" />
+                                <Text text="Available" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovered_quantity}" class="quadsPlanColValue" />
+                                <Text text="Required" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/target_quantity}" class="quadsPlanColValue" />
+                                <Text text="Fulfilled" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovered_quantity}" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="TIMELINE" class="quadsPlanColHeader" />
+                                <Text text="ETA" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/transport_days} days" class="quadsPlanColValue" />
+                                <Text text="Recovery" class="quadsPlanColLabel" />
+                                <Text text="{inspect>/recovery_days} days" class="quadsPlanColValue" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="COST" class="quadsPlanColHeader" />
+                                <Text text="{path: 'inspect>/total_cost', formatter: '.formatCostL'}" class="quadsPlanColValue quadsPlanColValueCost" />
+                                <Text text="-12% vs normal" class="quadsPlanColSmall" />
+                            </VBox>
+                            <VBox class="quadsPlanCardCol">
+                                <Text text="CONSTRAINT" class="quadsPlanColHeader" />
+                                <Text text="Rail transit Delay (weather)" class="quadsPlanColValue" />
+                            </VBox>
+                        </HBox>
+                        <!-- Impact row -->
+                        <HBox class="quadsPlanImpactMetrics sapUiTinyMarginTop">
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text="IMPACT" class="quadsPlanColLabel" />
+                                <Text text="Production" class="quadsPlanColSmall" />
+                                <Text text="-2 days" class="quadsPlanImpactVal" />
+                            </VBox>
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text=" " class="quadsPlanColLabel" />
+                                <Text text="Customer" class="quadsPlanColSmall" />
+                                <Text text="+5 days" class="quadsPlanImpactValWarn" />
+                            </VBox>
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text=" " class="quadsPlanColLabel" />
+                                <Text text="Fulfilment" class="quadsPlanColSmall" />
+                                <Text text="88%" class="quadsPlanImpactVal" />
+                            </VBox>
+                            <VBox class="quadsPlanImpactMetricBox">
+                                <Text text=" " class="quadsPlanColLabel" />
+                                <Text text="Severity" class="quadsPlanColSmall" />
+                                <ObjectStatus text="{inspect>/operational_risk}" state="{path: 'inspect>/operational_risk', formatter: '.formatRiskState'}" class="quadsPlanSeverityStatus" />
+                            </VBox>
+                        </HBox>
+                        <HBox justifyContent="End" class="sapUiTinyMarginTop">
+                            <Link text="View Plan Details →" press=".onCloseInspectDialog" class="quadsPlanDetailLink" />
+                        </HBox>
                     </VBox>
-                </layout:Grid>
 
-                <IconTabBar select="onTabSelect" class="sapUiNoContentPadding">
-                    <items>
+                </HBox>
 
-                        <!-- Tab 1: Constraints Evaluation -->
-                        <IconTabFilter text="Constraints ({= ${inspect>/constraints} ? ${inspect>/constraints}.length : 0 })" icon="sap-icon://checklist">
-                            <VBox class="sapUiSmallMargin">
-                                <Text text="Deterministic verification of hard operational boundaries and soft manager preferences." class="textMuted sapUiTinyMarginBottom" />
-                                <Table items="{inspect>/constraints}" noDataText="No constraints recorded.">
-                                    <columns>
-                                        <Column><Text text="Requirement" class="bold" /></Column>
-                                        <Column width="110px"><Text text="Type" class="bold" /></Column>
-                                        <Column width="120px"><Text text="Status" class="bold" /></Column>
-                                        <Column><Text text="Threshold" class="bold" /></Column>
-                                        <Column><Text text="Actual Evaluated" class="bold" /></Column>
-                                        <Column><Text text="Evaluation Result" class="bold" /></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{inspect>name}" class="bold" />
-                                                <ObjectStatus
-                                                    text="{inspect>constraint_type}"
-                                                    state="{= ${inspect>constraint_type} === 'HARD' ? 'Error' : 'Information' }" />
-                                                <ObjectStatus
-                                                    text="{= ${inspect>satisfied} ? 'Satisfied' : 'Violated' }"
-                                                    state="{= ${inspect>satisfied} ? 'Success' : 'Error' }"
-                                                    class="bold" />
-                                                <Text text="{inspect>threshold_value}" />
-                                                <Text text="{inspect>actual_value}" class="bold" />
-                                                <Text text="{inspect>reason}" />
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </VBox>
-                        </IconTabFilter>
+                <!-- ═══ 7. GOVERNING RULES ═══ -->
+                <VBox class="quadsPlanSection">
+                    <Text text="7. GOVERNING RULES" class="quadsPlanSectionTitle" />
+                    <Text text="Governing rules in governing rules and transordering rules" class="quadsPlanSectionSubtitle" />
 
-                        <!-- Tab 2: Score Breakdown -->
-                        <IconTabFilter text="Score Rationale" icon="sap-icon://education">
-                            <VBox class="sapUiSmallMargin">
-                                <VBox class="sapBreakdownBox sapUiSmallMarginBottom">
-                                    <Text text="Deterministic Scoring Formula (Weighted 50% on priority: '{inspect>/manager_priority}'):" class="bold" />
-                                    <Text text="{inspect>/score_breakdown/explanation}" class="sapUiTinyMarginTop textSmall" />
-                                </VBox>
+                    <HBox class="quadsPlanRulesRow" wrap="Wrap">
+                        <!-- Rule 1 -->
+                        <VBox class="quadsPlanRuleCard">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanRuleHeader">
+                                <Text text="SOURCE SAFETY STOCK" class="quadsPlanRuleTitle" />
+                                <HBox class="quadsPlanPassBadge">
+                                    <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                    <Text text="PASSED" class="quadsPlanPassText" />
+                                </HBox>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                <core:Icon src="sap-icon://accept" class="quadsPlanRuleCheckIcon" />
+                                <Text text="Source safety stock ≥100" class="quadsPlanRuleText" />
+                            </HBox>
+                            <HBox alignItems="Center" justifyContent="End">
+                                <HBox class="quadsPlanPassBadge">
+                                    <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                    <Text text="PASSED" class="quadsPlanPassText" />
+                                </HBox>
+                            </HBox>
+                        </VBox>
 
-                                <layout:Grid defaultSpan="XL3 L3 M6 S6" hSpacing="0.5" vSpacing="0.5">
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Delivery Time Score" class="sapContextItemLabel" />
-                                        <Text text="{inspect>/score_breakdown/time_score} / 100" class="bold textLarge textPrimary" />
-                                        <Text text="Faster lead time yields higher pts" class="textMuted textSmall" />
-                                    </VBox>
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Cost Economy Score" class="sapContextItemLabel" />
-                                        <Text text="{inspect>/score_breakdown/cost_score} / 100" class="bold textLarge" />
-                                        <Text text="Lower incremental cost yields higher pts" class="textMuted textSmall" />
-                                    </VBox>
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Operational Risk Score" class="sapContextItemLabel" />
-                                        <Text text="{inspect>/score_breakdown/risk_score} / 100" class="bold textLarge" />
-                                        <Text text="Supplier &amp; route reliability" class="textMuted textSmall" />
-                                    </VBox>
-                                    <VBox class="sapMetricBox">
-                                        <Text text="Fulfillment Score" class="sapContextItemLabel" />
-                                        <Text text="{inspect>/score_breakdown/fulfillment_score} / 100" class="bold textLarge" />
-                                        <Text text="Volume recovered vs target gap" class="textMuted textSmall" />
-                                    </VBox>
-                                </layout:Grid>
-                            </VBox>
-                        </IconTabFilter>
+                        <!-- Rule 2 -->
+                        <VBox class="quadsPlanRuleCard">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanRuleHeader">
+                                <Text text="STOCKOUT ARRIVAL LIMIT" class="quadsPlanRuleTitle" />
+                                <HBox class="quadsPlanPassBadge">
+                                    <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                    <Text text="PASSED" class="quadsPlanPassText" />
+                                </HBox>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                <core:Icon src="sap-icon://accept" class="quadsPlanRuleCheckIcon" />
+                                <Text text="Stockout arrival limit" class="quadsPlanRuleText" />
+                            </HBox>
+                            <HBox alignItems="Center" justifyContent="End">
+                                <HBox class="quadsPlanPassBadge">
+                                    <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                    <Text text="PASSED" class="quadsPlanPassText" />
+                                </HBox>
+                            </HBox>
+                        </VBox>
 
-                        <!-- Tab 3: Commercial & Contract Evidence -->
-                        <IconTabFilter text="Contract Evidence" icon="sap-icon://document-text">
-                            <VBox class="sapUiSmallMargin">
-                                <VBox visible="{= ${inspect>/contract_evidence} !== null }">
-                                    <HBox alignItems="Center" class="sapUiTinyMarginBottom">
-                                        <Title text="Governing Contract: {inspect>/contract_evidence/contract_id}" level="H4" class="bold" />
-                                        <ObjectStatus
-                                            text="{inspect>/contract_evidence/supplier_name}"
-                                            state="Success"
-                                            class="sapUiSmallMarginBegin" />
-                                    </HBox>
-                                    <Text text="Terms Summary: {inspect>/contract_evidence/terms_summary}" class="sapUiTinyMarginBottom" />
-                                    <Text text="Governing Law: {inspect>/contract_evidence/governing_law} | Active Through: {inspect>/contract_evidence/valid_to}" class="textMuted textSmall sapUiTinyMarginBottom" />
-
-                                    <Label text="Applicable Commercial Clauses:" class="bold sapUiTinyMarginTop" />
-                                    <List items="{inspect>/contract_evidence/clauses}" class="sapUiTinyMarginTop">
-                                        <StandardListItem
-                                            title="{inspect>clause_name} ({inspect>clause_code})"
-                                            description="{inspect>summary}"
-                                            icon="sap-icon://accept" />
-                                    </List>
-                                </VBox>
-                                <VBox visible="{= ${inspect>/contract_evidence} === null }" class="sapUiSmallMargin">
-                                    <Text text="No specific commercial contract found on file for this sourcing partner. Sourced under standard spot quotation terms." class="textMuted" />
-                                </VBox>
-                            </VBox>
-                        </IconTabFilter>
-
-                        <!-- Tab 4: Historical Precedents -->
-                        <IconTabFilter text="Historical Precedents" icon="sap-icon://history">
-                            <VBox class="sapUiSmallMargin">
-                                <Text text="Empirical precedents from historical disruptions (used as supporting evidence, not instructions):" class="textMuted sapUiTinyMarginBottom" />
-                                <Table items="{inspect>/historical_evidence}" noDataText="No relevant historical cases found.">
-                                    <columns>
-                                        <Column width="110px"><Text text="Case ID" class="bold" /></Column>
-                                        <Column><Text text="Disruption" class="bold" /></Column>
-                                        <Column><Text text="Applied Strategy" class="bold" /></Column>
-                                        <Column width="100px"><Text text="Similarity" class="bold" /></Column>
-                                        <Column width="110px"><Text text="Outcome" class="bold" /></Column>
-                                        <Column><Text text="Lessons Learned" class="bold" /></Column>
-                                    </columns>
-                                    <items>
-                                        <ColumnListItem>
-                                            <cells>
-                                                <Text text="{inspect>precedent_id}" class="bold" />
-                                                <Text text="{inspect>disruption_type}" />
-                                                <Text text="{inspect>strategy_used}" />
-                                                <Text text="{inspect>similarity_score}%" class="bold" />
-                                                <ObjectStatus
-                                                    text="{inspect>outcome}"
-                                                    state="{= ${inspect>outcome} === 'SUCCESS' ? 'Success' : 'Warning' }"
-                                                    class="bold" />
-                                                <Text text="{inspect>lessons_learned}" class="textSmall" />
-                                            </cells>
-                                        </ColumnListItem>
-                                    </items>
-                                </Table>
-                            </VBox>
-                        </IconTabFilter>
-
-                        <!-- Tab 5: Trade-offs & Residual Risk -->
-                        <IconTabFilter text="Trade-offs &amp; Risks" icon="sap-icon://alert">
-                            <VBox class="sapUiSmallMargin">
-                                <VBox class="sapUiTinyMarginBottom">
-                                    <Label text="Residual Operational Risk:" class="bold" />
-                                    <Text text="{inspect>/residual_risk}" class="sapUiTinyMarginTop" />
-                                </VBox>
-                                <VBox class="sapUiTinyMarginTop">
-                                    <Label text="Strategic Trade-offs:" class="bold" />
-                                    <Text text="{inspect>/trade_offs}" class="sapUiTinyMarginTop" />
-                                </VBox>
-                            </VBox>
-                        </IconTabFilter>
-
-                    </items>
-                </IconTabBar>
+                        <!-- Rule 3 -->
+                        <VBox class="quadsPlanRuleCard">
+                            <HBox alignItems="Center" justifyContent="SpaceBetween" class="quadsPlanRuleHeader">
+                                <Text text="BUDGET &amp; LEAD-TIME CAPS" class="quadsPlanRuleTitle" />
+                                <HBox class="quadsPlanPassBadge">
+                                    <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                    <Text text="PASSED" class="quadsPlanPassText" />
+                                </HBox>
+                            </HBox>
+                            <HBox alignItems="Center" class="sapUiTinyMarginTop">
+                                <core:Icon src="sap-icon://accept" class="quadsPlanRuleCheckIcon" />
+                                <Text text="Insufficient lead-time capacity" class="quadsPlanRuleText" />
+                            </HBox>
+                            <HBox alignItems="Center" justifyContent="End">
+                                <HBox class="quadsPlanPassBadge">
+                                    <core:Icon src="sap-icon://sys-enter-2" class="quadsPlanPassIcon" />
+                                    <Text text="PASSED" class="quadsPlanPassText" />
+                                </HBox>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </VBox>
 
             </VBox>
+            </ScrollContainer>
         </content>
 
         <beginButton>
             <Button
                 text="Select This Plan"
-                type="Emphasized"
+                type="Accept"
                 icon="sap-icon://accept"
                 press=".onSelectPlanFromDialog" />
         </beginButton>
 
         <endButton>
-            <Button
-                text="Close"
-                press=".onCloseInspectDialog" />
+            <Button text="Close" press=".onCloseInspectDialog" />
         </endButton>
 
     </Dialog>

@@ -75,7 +75,10 @@ TRANSITIONS: dict[tuple[CaseState, str], CaseState] = {
     (CaseState.CASE_CREATED, "start_impact_analysis"): CaseState.IMPACT_ANALYSIS_RUNNING,
     (CaseState.CASE_OVERVIEW, "start_impact_analysis"): CaseState.IMPACT_ANALYSIS_RUNNING,
     (CaseState.IMPACT_ANALYSIS_PENDING, "start_impact_analysis"): CaseState.IMPACT_ANALYSIS_RUNNING,
-    
+    # Allow re-running impact analysis after reopen (planning cycle restart)
+    (CaseState.IMPACT_ANALYSIS_COMPLETED, "start_impact_analysis"): CaseState.IMPACT_ANALYSIS_RUNNING,
+    (CaseState.IMPACT_ANALYSIS_FAILED, "start_impact_analysis"): CaseState.IMPACT_ANALYSIS_RUNNING,
+
     # Impact Analysis (Agent 1)
     (CaseState.IMPACT_ANALYSIS_RUNNING, "agent1_success"): CaseState.IMPACT_ANALYSIS_COMPLETED,
     (CaseState.IMPACT_ANALYSIS_RUNNING, "agent1_error"): CaseState.IMPACT_ANALYSIS_FAILED,

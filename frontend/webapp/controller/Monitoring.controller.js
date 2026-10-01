@@ -120,7 +120,9 @@ sap.ui.define([
                     MessageBox.error("Failed to load monitoring data: " + err.message);
                 })
                 .finally(function () {
-                    if (oPage) oPage.setBusy(false);
+                    setTimeout(function() {
+                        if (oPage) oPage.setBusy(false);
+                    }, 1000);
                 });
         },
 

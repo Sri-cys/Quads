@@ -88,5 +88,45 @@
     "material_id": "MAT-105",
     "plant_id": "PLANT-105",
     "quantity": 200
+  },
+  {
+    "material_id": "MAT-11001",
+    "plant_id": "PLANT-11001",
+    "quantity": 120
+  },
+  {
+    "material_id": "MAT-11002",
+    "plant_id": "PLANT-11002",
+    "quantity": 100
+  },
+  {
+    "material_id": "MAT-11003",
+    "plant_id": "PLANT-11003",
+    "quantity": 150
+  },
+  {
+    "material_id": "MAT-11004",
+    "plant_id": "PLANT-11004",
+    "quantity": 150
+  },
+  {
+    "material_id": "MAT-11005",
+    "plant_id": "PLANT-11005",
+    "quantity": 90
+  },
+  {
+    "material_id": "MAT-11006",
+    "plant_id": "PLANT-11006",
+    "quantity": 75
+  },
+  {
+    "material_id": "MAT-11007",
+    "plant_id": "PLANT-11007",
+    "quantity": 100
+  },
+  {
+    "material_id": "MAT-11008",
+    "plant_id": "PLANT-11008",
+    "quantity": 100
   }
 ]

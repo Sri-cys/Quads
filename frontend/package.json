@@ -18,5 +18,8 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "@ui5/cli": "^3.9.0"
+  },
+  "dependencies": {
+    "puppeteer": "^24.43.1"
   }
 }
